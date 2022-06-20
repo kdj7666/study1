@@ -42,6 +42,9 @@ print('113의 예측값은 : ', result) # 항상 결과값은 밑에 주석으�
 
 
 
+list_name_num = [1,2,3,4,5,6]
+list_name_string = ['h','i']
+list_name_word = ['hello']
 
 
 

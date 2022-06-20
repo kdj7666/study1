@@ -1,46 +1,47 @@
-#1. 데이터
-import numpy as np
-from sklearn.metrics import
-x = np.array([1,2,3,])       
-y = np.array([1,2,3,])
+# 과제 파이썬 리스트 알아오기
 
-#2. .모델구성 
-from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import Dense
+list1 = [2, 5, 7, 9, 10]
+print(list1[0])
+print(list1[3])
+print(list1[2]+list1[-1]) # -1 은 뒤에서부터 시작
 
-model = Sequential() 
-model.add(Dense(4, input_dim=1))         
-model.add(Dense(5))  # 오차범위가 훈련양으로 안줄어들면 히든레이어를 늘려도되고 node(뉴런)의 갯수를 늘려도 된다
-model.add(Dense(3))  
-model.add(Dense(2))  
-model.add(Dense(1)) 
+# 리스트 요소 연산자 숫자는 0부터 시작 
+a = [[1, 2, 3], [4, 5, 6], [7, 8, 9]]
+print(a[2])
+print(a[2][1])
 
-#3. 컴파일, 훈련
-model.compile(loss='mse', optimizer='adam')         
-model.fit(x, y, epochs=880) #가중치 보관 밑 xy로 # 훈련양 = 숫자
-# x y 훈련양을 통으로 달라 #최소의 로스 최적의 웨이트
+# 문자열일때
+b = [["문, 자, 열"], ['세', '글', '자']]
+print(b[0])
+print(b[1])
+print(b[1][0])
 
+# 리스트란 숫자형 문자열 구을링형 리스트 한꺼번에 모아서
+# 저장하여 값을 변경하거나 수행하는 것을 리스트 
 
-#4. 평가, 예측
-loss = model.evaluate(x, y) # x y 값을 평가할것이다 그 값을 로스에 넣어주세요 # 웨이트값 # 로스값 
-print("loss : ", loss) #y=wx+b x값을 범위 밖 수를 넣을때 y는 예측값 #최종로스값을 여기다 넣어주세요
+# 리스트의 순서는 인덱스
 
-result = model.predict([113]) 
-print('113의 예측값은 : ', result) # 항상 결과값은 밑에 주석으로 첨부할것
+num = [1,2,3,4,5]
+# 리스트 출력하기
+print(num)
+print(num[4])
+food = ['첵스초코', '도시락', '소보루빵', '팔도 비빔면']
+# 문자열 리스트 출력하기
+print(food)
+print(food[3])
 
-# loss :  4.8553754739650776e-14
-# 83의 예측값은 :  [[83.00007]]
+# 리스트의 특정 구간을 자르는 건 슬라이싱
+print(num[0:2])
 
-# loss :  3.907985046680551e-14 훈련 230 2
-# 113의 예측값은 :  [[112.99999]]
+print(food[-3])
 
-# loss :  0.07363194227218628 훈련 230 3
-# 113의 예측값은 :  [[77.627106]]
+# 리스트 랜덤으로 뽑을수 있음 
+students = ['메이충리엘', 'Kelly', '남재우'
+            , '김민수', '공동동']
 
-# loss :  7.579122740649855e-14 훈련 880 1
-# 113의 예측값은 :  [[113.]] 로스값은 깨졋는데 예측값은 소수점이 생략
+students
+for stu in students:
+    print(stu)
 
-
-
-
-
+import random
+print(random.choice(students))

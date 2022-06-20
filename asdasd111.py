@@ -1,11 +1,9 @@
-print("오늘의 수업은 무엇일까요")
-print(".할만하면 좋을거같아요 주말에 조금만 하고싶어요")
 print(13*int(13-5))
 print('안녕')
 from tensorfow.keras.models import sequential
-텐서플로 케라스 모델 안에 시컨셜을 넣는다 
+# 텐서플로 케라스 모델 안에 시컨셜을 넣는다 
 from tensorflow.keras.layers import dense
-텐서플로 케라스 폴더 안에 
+# 텐서플로 케라스 폴더 안에 
 
 x = np.array(1,2,3)
 y = np.array(1,2,3)
