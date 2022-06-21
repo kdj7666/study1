@@ -21,20 +21,21 @@ print(b[1][0])
 
 # 리스트의 순서는 인덱스
 
-num = [1,2,3,4,5]
+list2 = [1,2,3,4,5]
 # 리스트 출력하기
-print(num)
-print(num[4])
+print(list2)
+print(list2[4])
 food = ['첵스초코', '도시락', '소보루빵', '팔도 비빔면']
 # 문자열 리스트 출력하기
 print(food)
 print(food[0])
 
 # 리스트의 특정 구간을 자르는 건 슬라이싱
-print(num[0:2])
+print(list2[0:2])
 
 print(food[-3])
 
+# 리스트를 랜덤으로 뽑을수 있음 
 students = ['메이충리엘', 'Kelly', '남재우'
             , '김민수', '공동동']
 
