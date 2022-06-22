@@ -11,11 +11,11 @@ y = np.array([1,2,3,4,5,6,7,8,9,10])
 # y_test = np.array([8,9,10])
 
 # [과제] 넘파이 리스트의 슬라이싱!! 7:3으로 잘라라
-x_train = x[0:7]    # 성능이 데이터가 작고 완전히 정제된 데이터 이기에
-x_test = x[0:7]       # 이렇게 할수있음 ( 이런식으론 절대 안한다) 성능 책임x
-y_train = y[7:10]     # 1~10 연산이 오래걸려 30%를 자른다면 부분부분 자른다
-y_test = y[7:10]      # 훈련 셋을 테스트 셋으로 옮길때 ( 16번 )
-                     # 
+x_train = x[0:7]     # 0 : 7 = 0 ~ 7-1 (6)
+x_test = x[0:7]        #    공백으로 처음부터 가능 , 끝가지 가능 
+y_train = y[7:10]
+y_test = y[7:10]
+
 print(x_train)
 print(x_test)
 print(y_train)
@@ -35,5 +35,3 @@ loss = model.evaluate(x_test, y_test)
 print('loss', loss)
 result = model.predict([11])
 print('11의 예측값 : ',result)
-
-
