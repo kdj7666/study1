@@ -23,3 +23,11 @@ print(food[-2])
 
 
 em_list = [1, '한글', [1,2,3]]
+
+# keras  8번 중요 
+# The Boston housing prices dataset has an ethical problem. You can refer to  
+#     the documentation of this function for further details.
+    
+#     lternative datasets include the California housing dataset (i.e.
+#     :func:`~sklearn.datasets.fetch_california_housing`) and the Ames housing    
+#     dataset. You can load the datasets as follows::

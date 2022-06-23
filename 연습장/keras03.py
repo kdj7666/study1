@@ -1,6 +1,6 @@
 #1. 데이터
 import numpy as np
-from sklearn.metrics import
+from sklearn.metrics import loss
 x = np.array([1,2,3,])       
 y = np.array([1,2,3,])
 
