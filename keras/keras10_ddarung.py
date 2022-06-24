@@ -40,7 +40,7 @@ print(y.shape)   # ( 1459 , ) # 벡터가 1개 그래서 최종 아웃풋 갯수
 
 
 x_train, x_test, y_train, y_test = train_test_split(x,y,
-        train_size=0.9, shuffle=True, random_state=86)
+        train_size=0.9, shuffle=False, random_state=30)
 
 # np.logical_or(x, y)
 # print(x = train_set.info(x))
@@ -51,20 +51,18 @@ x_train, x_test, y_train, y_test = train_test_split(x,y,
 model = Sequential()
 model.add(Dense(72, input_dim=9))          # 행 무시 열 우선 필수 
 model.add(Dense(72))
-model.add(Dense(100))
-model.add(Dense(100))
-model.add(Dense(200))
-model.add(Dense(200))
-model.add(Dense(200))
-model.add(Dense(200))
-model.add(Dense(100))
-model.add(Dense(50))
+model.add(Dense(80))
+model.add(Dense(80))
+model.add(Dense(70))
+model.add(Dense(60))
+model.add(Dense(40))
 model.add(Dense(30))
+model.add(Dense(20))
 model.add(Dense(1))
 
 #3. 컴파일 훈련
 model.compile(loss='mse', optimizer = 'adam')        # 평가지표는 프레딕트 결과값 어쩌구 저쩌구 해서 mse 로 가능 비슷하면 된다 
-model.fit(x_train, y_train, epochs=1500, batch_size=100, verbose=0)
+model.fit(x_train, y_train, epochs=3000, batch_size=100)
 
 #4. 평가 예측
 loss = model.evaluate(x_test, y_test)
@@ -95,7 +93,6 @@ print("RMSE : ", rmse)
 # 내가 받아들인 와이와 와이프레딕트 값을 사이킷런에 있는 민 스퀏 에러에 해라 거기에 루트를 씌우겟다 
 # 결과값을 돌려주겠다 
 
-
 # 결과값이 잘나오면 첨부할것 
 # loss :  2298.373046875
 # RMSE :  47.941351250276846
@@ -104,6 +101,8 @@ print("RMSE : ", rmse)
 # RMSE :  46.89455305190569
 
 
+# loss :  2178.99462890625
+# RMSE :  46.67970024480401
 
 
 
