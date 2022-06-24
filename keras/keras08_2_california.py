@@ -22,7 +22,7 @@ print(datasets.feature_names) # - MedInc        median income in block group
 
 print(datasets.DESCR)         #피쳐 아주중요 따로 찾아볼것 
 x_train, x_test, y_train, y_test = train_test_split(x,y,
-        train_size=0.9, shuffle=False, random_state=86)
+        train_size=0.9, shuffle=False)  #random_state=86)
 
 #2. 모델구성
 model = Sequential()
@@ -35,7 +35,7 @@ model.add(Dense(1))
 
 #3. 컴파일 , 훈련
 model.compile(loss='mse', optimizer='adam')     # 회귀 모델의 대표적인 평가 지표 중에 하나 == R2(R제곱) R2수치가 높을수로 좋다 
-model.fit(x_train, y_train, epochs=8000, batch_size=400)
+model.fit(x_train, y_train, epochs=500, batch_size=400)
 
 #4. 평가, 예측
 loss = model.evaluate(x_test, y_test)
@@ -80,3 +80,4 @@ print('r2score : ', r2)
 
 # loss :  0.315838098526001         동일 2회째 
 # r2score :  0.6097119171502551
+
