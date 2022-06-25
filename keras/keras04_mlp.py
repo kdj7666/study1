@@ -30,7 +30,7 @@ model.add(Dense (1))
 
 #3. 컴파일, 훈련
 model.compile(loss='mse', optimizer='adam')
-model.fit(x, y, epochs=400, batch_size=1)                  # batch_size=3일때 123, 456, 789, 10 으로 훈련시킨다
+model.fit(x, y, epochs=2000, batch_size=1)                  # batch_size=3일때 123, 456, 789, 10 으로 훈련시킨다
 
 
 #4. 평가, 예측
