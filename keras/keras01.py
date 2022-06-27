@@ -1,4 +1,5 @@
 #1. 데이터
+from platform import python_version, python_version_tuple
 import numpy as np
 from sklearn.metrics import log_loss
 x = np.array([1,2,3,])       
@@ -39,9 +40,6 @@ print('113의 예측값은 : ', result) # 항상 결과값은 밑에 주석으�
 
 # loss :  7.579122740649855e-14 훈련 880 1
 # 113의 예측값은 :  [[113.]] 로스값은 깨졋는데 예측값은 소수점이 생략
-
-
-
 
 
 

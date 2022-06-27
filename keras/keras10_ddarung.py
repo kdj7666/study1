@@ -15,11 +15,14 @@ print(train_set.shape)       # 1459개의 열과 10개의 컬럼  (1459,10)
 
 test_set = pd.read_csv(path + 'test.csv',
                        index_col=0)     #  예측에서 프레딕트로 쓸것이다
+
+submission = pd.read_csv(path + 'submission.csv')
+
 print(test_set)
 print(test_set.shape)   # 715개의 열과 9개의 컬럼  (715,9)
 
 print(train_set.columns) 
-print(train_set.info())       # 컬럼에 대한 내용이 디테일하게 나온다                ( Non-Null Count ) 이빨이 빠졋다 데이터가 빠졋다  [ 결측치 ] 데이터 전처리에 아주 중요 / [이상치]라는 데이터도 있다 나중에 
+print(train_set.info())       # 컬럼에 대한 내용이 디테일하게 나온다       ( Non-Null Count ) 이빨이 빠졋다 데이터가 빠졋다  [ 결측치 ] 데이터 전처리에 아주 중요 / [이상치]라는 데이터도 있다 나중에 
 print(train_set.describe())               #  describe 묘사하다 서술하다  # 최솟값 최댓값 등 확인       pd 좀더 찾아보기 중요
 
 #### 결측치 처리 1. 제거####
@@ -28,7 +31,6 @@ train_set = train_set.dropna()
 print(train_set.isnull().sum())
 print(train_set.shape)
 #############################
-
 x = train_set.drop(['count'], axis=1)   # drop 날리다 카운트라는 줄을 날릴것이다 소숫점이 1개 
 print(x)
 print(x.columns)
@@ -38,9 +40,10 @@ y = train_set['count']  # 이렇게 하면 빠진다 지금은 이정도 ( [ ] �
 print(y)
 print(y.shape)   # ( 1459 , ) # 벡터가 1개 그래서 최종 아웃풋 갯수는 1개   ( 여기까지가 데이터 )
 
-
 x_train, x_test, y_train, y_test = train_test_split(x,y,
-        train_size=0.9, shuffle=False, random_state=30)
+        train_size=0.989,
+        shuffle=True,
+        random_state=100)
 
 # np.logical_or(x, y)
 # print(x = train_set.info(x))
@@ -49,20 +52,15 @@ x_train, x_test, y_train, y_test = train_test_split(x,y,
 
 #2. 모델구성
 model = Sequential()
-model.add(Dense(72, input_dim=9))          # 행 무시 열 우선 필수 
-model.add(Dense(72))
-model.add(Dense(80))
-model.add(Dense(80))
-model.add(Dense(70))
-model.add(Dense(60))
-model.add(Dense(40))
-model.add(Dense(30))
-model.add(Dense(20))
+model.add(Dense(90, input_dim=9))          # 행 무시 열 우선 필수 
+model.add(Dense(100, activation='swish'))
+model.add(Dense(100, activation='swish'))  
+model.add(Dense(50, activation='swish'))  
 model.add(Dense(1))
 
 #3. 컴파일 훈련
 model.compile(loss='mse', optimizer = 'adam')        # 평가지표는 프레딕트 결과값 어쩌구 저쩌구 해서 mse 로 가능 비슷하면 된다 
-model.fit(x_train, y_train, epochs=3000, batch_size=100)
+model.fit(x_train, y_train, epochs=700, batch_size=60) 
 
 #4. 평가 예측
 loss = model.evaluate(x_test, y_test)
@@ -75,6 +73,45 @@ def RMSE(y_test, y_predict):
 
 rmse = RMSE(y_test, y_predict)
 print("RMSE : ", rmse)
+
+y_summit = model.predict(test_set)
+
+# print(y_summit)
+# print(y_summit.shape) # (715,1)
+
+######################## .to_csv()를 사용해서 아이디값 안됨 카운트값 순서대로 
+### submission.csv를 완성하시오 !!! ( 과제 겸 실습 )
+# dataframe = pd.DataFrame(y_summit)
+# dataframe.to_csv('.csv')
+
+submission['count'] = y_summit
+submission = submission.fillna(submission.mean())
+submission.to_csv(path + 'submission.csv', index=False)
+
+
+
+# loss :  545.470947265625     동일 
+# RMSE :  23.355318360896916
+
+# loss :  398.7279968261719
+# RMSE :  19.96817490940722
+# epochs = 800
+# batch_size  = 60
+# teain_size = 0.989
+# shuffle = True
+# random_state = 100 
+# layer 5층
+# node 90 100 100 50 1   input 9 
+# loss ' mse ' optimizer = 'adam' 
+
+
+
+
+
+
+
+
+
 # loss :  2874.76953125  ㅎㄹㄹ 1000 ㅂㅊ 1500 
 # loss :  2852.6865234375 ㅎㄹㄹ 800 ㅂㅊ 300 
 # loss :  2840.17041015625 ㅎㄹㄹ 800 ㅂㅊ 300 ㄹㅇㅇ 10 
@@ -104,6 +141,37 @@ print("RMSE : ", rmse)
 # loss :  2178.99462890625
 # RMSE :  46.67970024480401
 
+# loss :  1920.60986328125  ㅎㄹㄹ 1000 ㅂㅊㅅㅇㅈ 400 ㄹㅇㅇ 5개 함수 활성화
+# RMSE :  43.82476213596008   트루로 섞고 0.9트레인사이즈 랜덤스테이트31
 
+# loss :  1237.508056640625  ㅎㄹㄹ 2000 ㅂㅊㅅㅇㅈ 300 [ activation='swish' ] 함수 찾아볼것
+# RMSE :  35.17823108072968 트루로 섞고 0.9 트레인사이즈 랜덤스테이트 31
 
+# loss :  1358.9656982421875 동일 ㅎㄹㄹ 3000 ㅂㅊ 50 
+# RMSE :  36.864151575638004
+
+# loss :  660.1187744140625 ㅎㄹㄹ 600 ㅂㅊㅅㅇㅈ 60 activation='swish' 
+# RMSE :  25.692777102099445 트루로 섞고 .989 트레인사이즈 랜덤스테이트 100
+
+########################################################
+# loss :  1173.5157470703125  ㅎㄹㄹ 500 ㅂㅊ 60 activation='swish' 2회 
+# RMSE :  34.25661683053811 트루로 섞고 0.989 랜덤 스테이트 100 
+
+# loss :  1147.8006591796875  동일 
+# RMSE :  33.87920396789233
+
+# loss :  956.2131958007812 동일 4회 
+# RMSE :  30.922699751380193
+
+# loss :  871.3640747070312 훈련량 600으로증가 동일 
+# RMSE :  29.518876324167785
+
+# loss :  813.6890258789062 훈련량 700으로 증가 동일 
+# RMSE :  28.525237451873004
+
+# loss :  795.462890625 훈련량 700 동일 4회 
+# RMSE :  28.20395442089948
+
+# loss :  708.4660034179688 훈련량 800 동일 2회 
+# RMSE :  26.61702357657338
 

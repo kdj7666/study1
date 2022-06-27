@@ -22,7 +22,7 @@ print(datasets.feature_names) # - MedInc        median income in block group
 
 print(datasets.DESCR)         #피쳐 아주중요 따로 찾아볼것 
 x_train, x_test, y_train, y_test = train_test_split(x,y,
-        train_size=0.9, shuffle=False)  #random_state=86)
+        train_size=0.9, shuffle=True, random_state=30)
 
 #2. 모델구성
 model = Sequential()

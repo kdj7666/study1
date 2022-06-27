@@ -3,7 +3,6 @@ from sklearn.datasets import load_diabetes
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense 
 
-from sklearn.datasets import load_diabetes
 datasets = load_diabetes()       # 집합의 이름은 상관없다 다른걸로 해도 
 x = datasets.data
 y = datasets.target
