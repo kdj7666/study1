@@ -60,7 +60,7 @@ model.add(Dense(1))
 
 #3. 컴파일 훈련
 model.compile(loss='mse', optimizer = 'adam')        # 평가지표는 프레딕트 결과값 어쩌구 저쩌구 해서 mse 로 가능 비슷하면 된다 
-model.fit(x_train, y_train, epochs=700, batch_size=60) 
+model.fit(x_train, y_train, epochs=1500, batch_size=100) 
 
 #4. 평가 예측
 loss = model.evaluate(x_test, y_test)
@@ -103,9 +103,6 @@ submission.to_csv(path + 'submission.csv', index=False)
 # layer 5층
 # node 90 100 100 50 1   input 9 
 # loss ' mse ' optimizer = 'adam' 
-
-
-
 
 
 

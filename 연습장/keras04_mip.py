@@ -31,3 +31,4 @@ print("[10, 1.4]위 예측값 : ", result)
 
 
 
+#fdasfds 
