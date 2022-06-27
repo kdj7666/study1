@@ -43,7 +43,7 @@ print(y.shape)   # ( 1459 , ) # 벡터가 1개 그래서 최종 아웃풋 갯수
 x_train, x_test, y_train, y_test = train_test_split(x,y,
         train_size=0.989,
         shuffle=True,
-        random_state=100)
+        random_state=40)
 
 # np.logical_or(x, y)
 # print(x = train_set.info(x))
@@ -53,14 +53,16 @@ x_train, x_test, y_train, y_test = train_test_split(x,y,
 #2. 모델구성
 model = Sequential()
 model.add(Dense(90, input_dim=9))          # 행 무시 열 우선 필수 
-model.add(Dense(100, activation='swish'))
-model.add(Dense(100, activation='swish'))  
+model.add(Dense(80, activation='swish'))
+model.add(Dense(80, activation='swish'))  
+model.add(Dense(50, activation='swish'))
 model.add(Dense(50, activation='swish'))  
+model.add(Dense(50, activation='swish'))   
 model.add(Dense(1))
 
 #3. 컴파일 훈련
-model.compile(loss='mse', optimizer = 'adam')        # 평가지표는 프레딕트 결과값 어쩌구 저쩌구 해서 mse 로 가능 비슷하면 된다 
-model.fit(x_train, y_train, epochs=1500, batch_size=100) 
+model.compile(loss='mae', optimizer = 'adam')        # 평가지표는 프레딕트 결과값 어쩌구 저쩌구 해서 mse 로 가능 비슷하면 된다 
+model.fit(x_train, y_train, epochs=1000, batch_size=100) 
 
 #4. 평가 예측
 loss = model.evaluate(x_test, y_test)
@@ -88,10 +90,19 @@ submission['count'] = y_summit
 submission = submission.fillna(submission.mean())
 submission.to_csv(path + 'submission.csv', index=False)
 
+# loss :  17.521583557128906 동일 
+# RMSE :  21.03790096341299
+
+# loss :  23.78106689453125
+# RMSE :  34.51621760194604
+
+# loss :  19.65888786315918
+# RMSE :  34.915773545704084
 
 
 # loss :  545.470947265625     동일 
 # RMSE :  23.355318360896916
+
 
 # loss :  398.7279968261719
 # RMSE :  19.96817490940722
