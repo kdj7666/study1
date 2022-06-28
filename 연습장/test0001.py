@@ -41,16 +41,3 @@ y = np.array(1,2,3)
 # A0%9C%EA%B3%B1%EC%98%A4%EC%B0%A8MSE-%ED%8F%89%EA%B7%A0%EC%A0%88%EB%8C%80%EC%98%A4%EC%B0%A8MAE
 
 
-
-<<<<<<< HEAD:test0001.py
-=======
-em_list = [1, '한글', [1,2,3]]
-
-# keras  8번 중요 
-# The Boston housing prices dataset has an ethical problem. You can refer to  
-#     the documentation of this function for further details.
-    
-#     lternative datasets include the California housing dataset (i.e.
-#     :func:`~sklearn.datasets.fetch_california_housing`) and the Ames housing    
-#     dataset. You can load the datasets as follows::
->>>>>>> d3aee7d538385768d2cd70df3b49b4f4ed656055:연습장/test0001.py

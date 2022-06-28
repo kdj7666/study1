@@ -27,8 +27,3 @@ print('loss =', loss)
 result = model.predict([[10], [1.4]])
 print("[10, 1.4]위 예측값 : ", result)
 
-
-
-
-
-#fdasfds # fffeee ffe
