@@ -11,7 +11,7 @@ from tensorflow.keras.layers import Dense
 model = Sequential() 
 model.add(Dense(4, input_dim=1))         
 model.add(Dense(5))  # 오차범위가 훈련양으로 안줄어들면 히든레이어를 늘려도되고 node(뉴런)의 갯수를 늘려도 된다
-model.add(Dense(3))  
+model.add(Dense(3))  # 하이퍼 파라미터 튜닝 
 model.add(Dense(2))  
 model.add(Dense(1)) 
 

@@ -51,3 +51,4 @@ print('r2_score : ', r2)
 # tensorflow 자격증 시험본다  
 # tensorflow 시험은 파이참으로 본다 
 # 오후에 구글 자격증에 대해서 
+
