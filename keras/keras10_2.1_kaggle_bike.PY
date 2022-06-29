@@ -7,7 +7,6 @@ from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import nan_euclidean_distances, r2_score, mean_squared_error
-import datetime
 
 #1. data  # 10번 경로  +는 문자가 연결이 된다
 path = './_data2/bike/' 
@@ -51,20 +50,16 @@ x_train, x_test, y_train, y_test = train_test_split(x,y,
 # print(train_set.dropna( subset['Age']))
 # print(pd.isna('nan'))
 
-
 #2. 모델구성
 model = Sequential()
 model.add(Dense(40, input_dim=8))          # 행 무시 열 우선 필수 
-model.add(Dense(80, activation='swish'))
-model.add(Dense(80, activation='swish'))
-model.add(Dense(80, activation='swish'))
 model.add(Dense(80, activation='swish'))
 model.add(Dense(40, activation='swish'))
 model.add(Dense(1))
 
 #3. 컴파일 훈련
 model.compile(loss='mae', optimizer = 'adam')        # 평가지표는 프레딕트 결과값 어쩌구 저쩌구 해서 mse 로 가능 비슷하면 된다 
-model.fit(x_train, y_train, epochs=3000, batch_size=6600) 
+model.fit(x_train, y_train, epochs=2450, batch_size=6600) 
 
 #4. 평가 예측
 loss = model.evaluate(x_test, y_test)
@@ -98,3 +93,4 @@ submission.to_csv(path + 'sampleSubmission.csv', index=False)
 
 # loss :  94.6959228515625
 # RMSE :  136.43502128786216
+
