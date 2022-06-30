@@ -26,8 +26,6 @@ non_encording_columns = ['MSSubClass','LotFrontage','LotArea','OverallQual','Ove
                          'WoodDeckSF','OpenPorchSF','EnclosedPorch','3SsnPorch','ScreenPorch','PoolArea',
                          'MiscVal','MoSold','YrSold']
 
-
-
 #1. 데이터
 path = './_data3/house/'
 train_set = pd.read_csv(path + 'train.csv') # + 명령어는 문자를 앞문자와 더해줌  index_col=n n번째 컬럼을 인덱스로 인식
@@ -60,17 +58,13 @@ Outliers_to_drop = detect_outliers(train_set, 2, ['MSSubClass', 'LotFrontage', '
        'OpenPorchSF', 'EnclosedPorch', '3SsnPorch', 'ScreenPorch', 'PoolArea',
        'MiscVal', 'MoSold', 'YrSold'])
 
-
 train_set.loc[Outliers_to_drop]
-
 
 train_set = train_set.drop(Outliers_to_drop, axis = 0).reset_index(drop=True)
 train_set.shape
 
 print(train_set)
 #############################################################################
-
-
 
 # 수치형 변수와 범주형 변수 찾기
 numerical_feats = train_set.dtypes[train_set.dtypes != "object"].index
@@ -240,33 +234,33 @@ x = train_set.drop(['SalePrice'], axis=1)
 y = train_set['SalePrice']
 
 x_train, x_test, y_train, y_test = train_test_split(x,y,
-                                                    train_size=0.88,
-                                                    random_state=40
+                                                    train_size=0.931,
+                                                    random_state=31
                                                     )
 print(x_train)
 print(y_train)
 
 #2. 모델구성
 model = Sequential()
-model.add(Dense(100, activation='selu', input_dim=12))
-model.add(Dense(600, activation='selu'))
-model.add(Dense(400, activation='selu'))
-model.add(Dense(200, activation='selu'))
-model.add(Dense(90, activation='selu'))
-model.add(Dense(70, activation='selu'))
+model.add(Dense(24, activation='selu', input_dim=12))
+model.add(Dense(48, activation='selu'))
+model.add(Dense(96, activation='selu'))
+model.add(Dense(48, activation='selu'))
+model.add(Dense(24, activation='selu'))
+model.add(Dense(12, activation='selu'))
 model.add(Dense(1))
 
 #3. 컴파일, 훈련
-model.compile(loss='mse', optimizer='adam')
-model.fit(x_train, y_train, epochs=5000, batch_size=1000, verbose=1)
+model.compile(loss='mae', optimizer='adam')
+model.fit(x_train, y_train, epochs=35000, batch_size=1450, verbose=1)
 
 #4. 평가, 예측
-loss = model.evaluate(x_test, y_test) 
+loss = model.evaluate(x_test, y_test)
 print('loss : ', loss)
 
 y_predict = model.predict(x_test)
 
-def RMSE(a, b): 
+def RMSE(a, b):
     return np.sqrt(mean_squared_error(a, b))
 
 rmse = RMSE(y_test, y_predict)
@@ -280,8 +274,8 @@ y_summit = model.predict(test_set)
 print(y_summit)
 print(y_summit.shape) # (1459, 1)
 
-submission_set = pd.read_csv(path + 'sample_submission.csv', # + 명령어는 문자를 앞문자와 더해줌
-                             index_col=0) # index_col=n n번째 컬럼을 인덱스로 인식
+submission_set = pd.read_csv(path + 'sample_submission.csv',   #      + 명령어는 문자를 앞문자와 더해줌
+                             index_col=0)   #          index_col=n n번째 컬럼을 인덱스로 인식
 
 print(submission_set)
 
@@ -290,13 +284,18 @@ print(submission_set)
 
 submission_set.to_csv(path + 'submission.csv', index = True)
 
-# loss :  16607.67578125
-# RMSE :  23327.937209340154
-# r2스코어 :  0.8902162442087134
+#loss :  16146.9072265625
+# RMSE :  20877.92941566324
+# r2스코어 :  0.9134528049073518
 
-# loss :  870659264.0
-# RMSE :  29506.936706799148
-# r2스코어 :  0.7496632059853904
+# loss :  16089.3583984375
+# RMSE :  20708.16156456425
+# r2스코어 :  0.9148545908427052
+
+# loss :  14216.8076171875
+# RMSE :  20269.779435601344
+# r2스코어 :  0.9237841309720972
+
 ################################이 밑으로 안씀####################################
 '''
 le = le.fit(train_set[categorical_feats])   #train['col']을 fit

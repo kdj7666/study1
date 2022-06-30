@@ -10,7 +10,6 @@ datasets = load_boston()              # load_boston 에서 x, y  데이터를 �
 x = datasets.data          #  ( x 의 데이터 로 )
 y = datasets.target        #  ( y 의 값을 구한다 )
 
-
 print(x)     # ( 보스턴 집 값을 위한 데이터 ) 
 
              # 연산자 찾아보기 ( 4.7410e-02)  e-ㅁㅁ 는 소숫점 뒤 0의 갯수   
@@ -25,24 +24,21 @@ print(datasets.feature_names)       # ['CRIM' 'ZN' 'INDUS' 'CHAS' 'NOX' 'RM' 'AG
 
 print(datasets.DESCR)         #피쳐 아주중요 따로 찾아볼것 
 x_train, x_test, y_train, y_test = train_test_split(x,y,
-        train_size=0.7, shuffle=True, random_state=50)
+        train_size=0.7, shuffle=True, random_state=55)
 
-     # [ 실습 ] 아래를 완성할것
-     # 1.  train 0.7
-     # 2.  r2 0.8이상
-
-# 2. 모델구성 
+# 2. 모델구성
 
 model = Sequential()
 model.add(Dense(26, input_dim=13))
-model.add(Dense(20, activation='swish'))
-model.add(Dense(20, activation='swish'))
-model.add(Dense(10, activation='swish'))
+model.add(Dense(40))
+model.add(Dense(50))
+model.add(Dense(60))
 model.add(Dense(1))
 
 #3. 컴파일 , 훈련
 model.compile(loss='mse', optimizer='adam')     # 회귀 모델의 대표적인 평가 지표 중에 하나 == R2(R제곱) R2수치가 높을수로 좋다 
-model.fit(x_train, y_train, epochs=1000, batch_size=50)
+model.fit(x_train, y_train, epochs=820, batch_size=25,
+          validation_split=0.25)
 
 #4. 평가, 예측
 loss = model.evaluate(x_test, y_test)
@@ -54,26 +50,7 @@ from sklearn.metrics import r2_score         # metrics 행렬
 r2 = r2_score(y_test, y_predict)
 print('r2score : ', r2)
 
-
-# loss :  20.77730941772461         # 300 b 4   1
-# r2score :  0.74851080871396
-
-# loss :  19.995521545410156         # 300 b 4   2
-# r2score :  0.7579735630745217
-
-# loss :  18.821191787719727          # 300 4   3 
-# r2score :  0.7721877249524539
-
-# loss :  18.340871810913086        # 400 4 4 
-# r2score :  0.7780014802579737
-
-# loss :  17.845577239990234     ㄹㅇㅇ 26 20 10 1 ㅎㄹㄹ 600  b 40 true 
-# r2score :  0.7839965841474423
-
-# loss :  16.26223373413086       ㄹㅇㅇ 5 swish ㅎㄹㄹ 1000 b 50
-# r2score :  0.8022913341280221   0.7 True 50 
-
-#-------------------------------------------------------------------------
+# 검증 전 결과값 
 
 # loss :  16.504552841186523  0.7 true 50 
 # r2score :  0.7993453422042345 26 20 20 10 1 e 1000 b 50 
@@ -84,5 +61,33 @@ print('r2score : ', r2)
 # loss :  16.888813018798828
 # r2score :  0.7946736682017962 동일 
 
+# loss :  16.26223373413086       ㄹㅇㅇ 5 swish ㅎㄹㄹ 1000 b 50
+# r2score :  0.8022913341280221   0.7 True 50 
 
+# ----------------------------------------------------------------------
+
+# 검증 적용 후
+
+# loss :  19.271127700805664   0.7 True 45 [ 26 20 20 10 1 ] 1회
+# r2score :  0.800477715217355  e 500 b 30 val = 0.25
+
+# loss :  28.190738677978516 동일 2회
+# r2score :  0.708129168319559
+
+# loss :  23.92193031311035  동일 3회
+# r2score :  0.7523259655500283
+
+# 검증 적용 후 튜닝 값 변경 
+
+# loss :  27.269290924072266 0.7 True 55 [ 26 40 50 60 1 ] 1회
+# r2score :  0.6233232773389685 e 820 b 25 val = 0.25
+
+# loss :  20.74823760986328   동일 2회
+# r2score :  0.7133999712507386
+
+# loss :  19.21137809753418   동일 3회
+# r2score :  0.7346289921906355
+
+# loss :  20.784631729125977 동일 4회 
+# r2score :  0.7128972676807577
 

@@ -21,13 +21,6 @@ model.add(Dense(1))  #인풋 2 아웃풋 1
 model. cmopile(loss='mse', optimizer='adam')         # 옵티마이저 단위를 adam [(최적화)]
 model.fit(x, y, epochs=100) #pit 훈련 epochs 훈련횟수
 
-
-
-
-
-
-
-
 fiafnelisainflesaniflesa 
 pritinrtnirt 
 

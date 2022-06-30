@@ -22,65 +22,33 @@ print(datasets.feature_names) # - MedInc        median income in block group
 
 print(datasets.DESCR)         #피쳐 아주중요 따로 찾아볼것 
 x_train, x_test, y_train, y_test = train_test_split(x,y,
-        train_size=0.9, shuffle=True, random_state=31)
+        train_size=0.9, shuffle=True, random_state=77)
 
 #2. 모델구성
 model = Sequential()
-model.add(Dense(16, input_dim=8))
-model.add(Dense(34))
-model.add(Dense(24))
-model.add(Dense(20))
-model.add(Dense(12))
+model.add(Dense(32, input_dim=8))
+model.add(Dense(50))
+model.add(Dense(60))
+model.add(Dense(40))
+model.add(Dense(10))
 model.add(Dense(1))
 
 #3. 컴파일 , 훈련
 model.compile(loss='mse', optimizer='adam')     # 회귀 모델의 대표적인 평가 지표 중에 하나 == R2(R제곱) R2수치가 높을수로 좋다 
-model.fit(x_train, y_train, epochs=1000, batch_size=300)
+model.fit(x_train, y_train, epochs=1500, batch_size=400,
+          validation_split=0.35)
 
 #4. 평가, 예측
 loss = model.evaluate(x_test, y_test)
 print('loss : ', loss)
 
-y_predict = model.predict(x_test)  
+y_predict = model.predict(x_test) 
 
 from sklearn.metrics import r2_score         # metrics 행렬 
 r2 = r2_score(y_test, y_predict)
 print('r2score : ', r2)
 
-
-# loss :  0.6287996172904968
-# r2score :  0.541748011203979
-
-# loss :  0.6250039935112       # 훈련량 5000 배치 1000 레이어층 8 
-# r2score :  0.5445141668253644
-
-# loss :  0.6008335947990417  훈련량 5000 배치 1000 레이어층 2배
-# r2score :  0.5621289239912706
-
-# loss :  0.6219940185546875       훈련량 1000 배치 300 레이어층 
-# model.add(Dense(16, input_dim=8))
-# model.add(Dense(71))
-# model.add(Dense(34))
-# model.add(Dense(24))
-# model.add(Dense(20))
-# model.add(Dense(12))
-# model.add(Dense(1))
-# r2score :  0.5538272124002598
-
-
-# loss :  0.6191340088844299        훈련량 1000 레이어층 71제거 배치 200
-# r2score :  0.5558788847224494     트레이닝 사이즈 0.8 
-
-
-#loss :  0.5983598232269287     ( 71 번 동일 )    랜덤 86
-# r2score :  0.5745712183147    트레이닝 사이즈 0.9
-
-# loss :  0.31384748220443726      훈련량 8000 레이어층 같음 배치 200 랜덤 86
-# r2score :  0.6121719072616624    트레이닝 사이즈 0.9 
-
-# loss :  0.315838098526001         동일 2회째 
-# r2score :  0.6097119171502551
-
+# 검증 전 
 # loss :  0.5835319757461548  True 0.9 31  16 34 24 20 12 1 
 # r2score :  0.5636667427506528   1000 300
  
@@ -92,3 +60,28 @@ print('r2score : ', r2)
 
 # loss :  0.5828465819358826 동일 4회 
 # r2score :  0.5641792756410814
+
+#------------------------------------------
+
+# 검증 후 
+
+# loss :  0.6352787017822266 동일 1회
+# r2score :  0.5249733493717579
+
+# loss :  0.5955377817153931 동일 2회 
+# r2score :  0.5546894334252346
+
+# loss :  0.5969669818878174 동일 3회 
+# r2score :  0.5536207281380396
+
+# 검증 후 튜닝 값 변경
+
+# loss :  0.636787474155426  1회    0.9 True 77 32 50 60 40 10 1 
+# r2score :  0.5091995939672236     1500 400 0.35
+
+# loss :  0.652357280254364 2회 동일 
+# r2score :  0.49719915458148023
+
+# loss :  0.677389919757843 3회 동일 
+# r2score :  0.4779054470042128
+

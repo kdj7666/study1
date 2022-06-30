@@ -11,11 +11,11 @@ y = np.array([1,2,3,4,5,6,7,8,9,10])
 # y_test = np.array([8,9,10])
 
 # [검색] train과 test를 섞어서 7:3으로 찾을 수 있는 방법 찾아라 
-
+                                                                 # train_test_split 를 트레인 테스트에 해달ㄹ ㅏ
 from sklearn.model_selection import train_test_split             # 데이터 훈련은 전체를 다 해주고 그중 일부를 섞어 작업을 해준다 
 x_train, x_test, y_train, y_text = train_test_split(             #train , test 분리해서 작업 해야 하고 간섭이 없어야 한다 ( 필수 )
     x,y, test_size=0.3,  
-    train_size=0.7,
+    train_size=0.7,                      # 전체 데이터 70%를 훈련 시켜라 
     # shuffle=True,                      #shuffle = True = 섞다    shuffle = False = 순차적으로 
     random_state=66
 ) 
@@ -23,10 +23,10 @@ x_train, x_test, y_train, y_text = train_test_split(             #train , test �
 # test_size= 0.4 , train_size= 0.7 일때 1 이상 초과값이나와 오류
 # x_train, x_tset, y_train, y_test = train_test_split(x, y, test_size=0.3, shuffle=False) # True = 무작위 False = 순차적으로
 
-print(x_train)  # 성능이 데이터가 작고 완전히 정제된 데이터 이기에
-print(x_test)     # 이렇게 할수있음 ( 이런식으론 절대 안한다) 성능 책임x  
-print(y_train)  # 1~10 연산이 오래걸려 30%를 자른다면 부분부분 자른다
-print(y_text)    # 훈련 셋을 테스트 셋으로 옮길때 ( 16번 )
+print(x_train)
+print(x_test)
+print(y_train)
+print(y_text)
                      #첫번째 모델에 들어간 데이터  랜덤값으로 들어간 경우 데이터가 다르면 두번째 모델에 들어간 데이터값이 다르다 
                      #두번째 모델에 들어간 데이터 첫번째 모델에서 나온 데이터가 다를경우 데이터값이 다르다 
 

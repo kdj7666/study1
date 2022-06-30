@@ -19,20 +19,21 @@ print(datasets.feature_names)
 
 print(datasets.DESCR)         #피쳐 아주중요 따로 찾아볼것 
 x_train, x_test, y_train, y_test = train_test_split(x,y,
-        train_size=0.9, shuffle=False,) #random_state=100)
+        train_size=0.84, shuffle=False,) #random_state=100)
 
 #2. 모델구성
 model = Sequential()
 model.add(Dense(10, input_dim=10))
-model.add(Dense(20))
 model.add(Dense(30))
-model.add(Dense(20))
-model.add(Dense(10))
+model.add(Dense(40))
+model.add(Dense(30))
+model.add(Dense(50))
 model.add(Dense(1))
 
 #3. 컴파일 , 훈련
 model.compile(loss='mae', optimizer='adam')     # 회귀 모델의 대표적인 평가 지표 중에 하나 == R2(R제곱) R2수치가 높을수로 좋다 
-model.fit(x_train, y_train, epochs=150, batch_size=5)
+model.fit(x_train, y_train, epochs=210, batch_size=10,
+          validation_split=0.45)
 
 #4. 평가, 예측
 loss = model.evaluate(x_test, y_test)
@@ -44,17 +45,8 @@ from sklearn.metrics import r2_score         # metrics 행렬
 r2 = r2_score(y_test, y_predict)
 print('r2score : ', r2)
 
-# loss :  2649.696533203125      # 500 b 10 fdd 10 
-# r2score :  0.5013769471116828
-
-# loss :  33.49235534667969  # 훈련량 150 배치 10 ㄹㅇㅇ 6 개 loss ' mae ' 1회 
-# r2score :  0.6909179158191338
-
-# loss :  34.52722930908203     동일 
-# r2score :  0.6680539770049845
-
-
-# ------------------------------------------------------
+# -----------------------------------------------------------
+# 검증 전 
 
 # loss :  33.37435531616211   1회  0.9 False [10 20 30 20 10 1]
 # r2score :  0.688494931960127     150 5 
@@ -64,4 +56,29 @@ print('r2score : ', r2)
 
 # loss :  33.589744567871094 동일 3회 
 # r2score :  0.6843383946389526
+
+# ------------------------------------------------------------
+# 검증 후 
+
+# loss :  33.36128234863281 1회 동일 
+# r2score :  0.6747233317498502
+
+# loss :  38.329933166503906 2회 동일 
+# r2score :  0.5807784221550469
+
+# loss :  33.784568786621094 3회 동일 
+# r2score :  0.6648666399848596
+
+# ------------------------------------------------
+
+# 검증 후 튜닝 변경 
+
+# loss :  39.26826095581055  1회 0.84 False [10 30 40 50 40 60 1]
+# r2score :  0.5591262634166727  210 10 0.45
+
+# loss :  38.830413818359375  2회 동일 
+# r2score :  0.5582336660186611 
+
+# loss :  39.38062286376953 3회 동일 
+# r2score :  0.5508993737186549
 
