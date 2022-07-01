@@ -1,10 +1,11 @@
+from time import time
 from matplotlib import font_manager
 from sklearn. datasets import load_boston        # 사이킷 런에는 예제 문제가 있고 데이터가 있다
 import numpy as np 
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense 
 from sklearn.model_selection import train_test_split
-
+from gc import callbacks
 # 1. 데이터
 
 datasets = load_boston()              # load_boston 에서 x, y  데이터를 추출 한다 
@@ -51,7 +52,7 @@ a = model.fit(x_train, y_train, epochs=1000, batch_size=1,
           callbacks = [earlystopping],
           verbose=1)   # a 대신에 hist 라고 쓰임 콜백을 하겠다 얼리 스탑잉을               
 
-# end_time = time.time() - start_time
+# end_time = time.time
 print(a)
 print(a.history['val_loss']) # 대괄호로 loss , val loss 값 출력 가능
 

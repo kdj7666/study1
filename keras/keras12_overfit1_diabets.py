@@ -33,7 +33,7 @@ model.add(Dense(1))
 #3. 컴파일 , 훈련
 model.compile(loss='mae', optimizer='adam')     # 회귀 모델의 대표적인 평가 지표 중에 하나 == R2(R제곱) R2수치가 높을수로 좋다 
 a = model.fit(x_train, y_train, epochs=210, batch_size=10,
-          validation_split=0.45)
+          validation_split=0.2)
 
 #4. 평가, 예측
 loss = model.evaluate(x_test, y_test)

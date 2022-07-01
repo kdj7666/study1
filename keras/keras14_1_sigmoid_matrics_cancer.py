@@ -29,12 +29,14 @@ x_train, x_test, y_train, y_test = train_test_split(x,y,
 
 model = Sequential()
 model.add(Dense(100, activation='linear', input_dim=30))
-model.add(Dense(50, activation='linear')) # activation 활성화 함수 이것으로 인해 결과값이 엄청좋아지고 안좋아진다 필수 ( 다시 공부할것 시그모이드 포함 )
-model.add(Dense(50, activation='linear')) # linear 선형 
-model.add(Dense(1, activation='sigmoid')) # sigmoid = 0에서 1으로 한정 시킨다 ( 어떤값을 넣어도 0과 1사이로 표출이 된다 ) 반올림으로 0과 1로 
-  # 이진분류는 무조건 sigmoid 로 끝난다 그다음은 binary_crossentropy 로 쓴다 
-  
-  
+model.add(Dense(50, activation='sigmoid')) # activation 활성화 함수 이것으로 인해 결과값이 엄청좋아지고 안좋아진다 필수 ( 다시 공부할것 시그모이드 포함 )
+model.add(Dense(50, activation='relu'))    #  레이어를 한정시키며 펑 터지는것을 방지한다 ( 찾아볼것 )
+model.add(Dense(50, activation='relu')) # linear 선형  
+model.add(Dense(1, activation='sigmoid')) # sigmoid = 0과 1이 아니고 0에서 1으로 한정 시킨다 ( 어떤값을 넣어도 0과 1사이로 표출이 된다 ) 반올림으로 0과 1로 
+# 이진분류는 무조건 sigmoid 로 끝난다 그다음은 binary_crossentropy 로 쓴다 
+#  activation relu 히든에서만 사용이 가능하다 relu 성능 아주 좋다 85% 성능향상 중요 
+
+
 #3. 컴파일 , 훈련
 model.compile(loss='binary_crossentropy', optimizer='adam',   # 회기모델에서 accuracy , mae 둘다 가능 지표를 찾을 수 있음 
               metrics=['accuracy', 'mse'])    # 정확성  accuracy: 0.9474 / 94.74%     2개 이상은 리스트 형식 더 넣을수있음 프로그래스바에 표츌이 늘어남 
@@ -42,7 +44,7 @@ model.compile(loss='binary_crossentropy', optimizer='adam',   # 회기모델에�
                              # 2진분류로 sigmoid 를 쓸때에는 model.compile)loss='binary_crossentropy', optimizer='adam')      ****** 중요
                              # 로 한다   /   당분간 이거 하나쓴다 ( 나중에 바뀔 수 있음) 0과 1에 한해서                          ****** 중요 
 from tensorflow.python.keras.callbacks import EarlyStopping
-earlystopping = EarlyStopping(monitor='val_loss', patience=100, mode='min', verbose=1, # mode='min'뿐아니라 max도 있음  디폴드값 찾아볼것 모르면 오토 
+earlystopping = EarlyStopping(monitor='val_loss', patience=30, mode='min', verbose=1, # mode='min'뿐아니라 max도 있음  디폴드값 찾아볼것 모르면 오토 
               restore_best_weights=True)  # < - 검색해서 정리할것 (파라미터를 적용을 시켯다 내가 하고싶은데로)
              # 모니터로 보겟다 vla_loss / patience 참다 10번 / mode = 'min'  최솟값을 verbose=1
              # 깃허브 참조 
@@ -54,19 +56,29 @@ a = model.fit(x_train, y_train, epochs=1000, batch_size=50,
           verbose=1)   # a 대신에 hist 라고 쓰임 콜백을 하겠다 얼리 스탑잉을               
 
 # end_time = time.time() - start_time
-print(a)
-print(a.history['val_loss']) # 대괄호로 loss , val loss 값 출력 가능
+
+ # 대괄호로 loss , val loss 값 출력 가능
 
 
 #4. 평가, 예측
 loss = model.evaluate(x_test, y_test)
 print('loss : ', loss)
+print(a.history['val_loss'])
 
-# y_predict = model.predict(x_test)  # 이 값이 54번 으로 
-# from sklearn.metrics import r2_score         # metrics 행렬 
+y_predict = model.predict(x_test)  # 이 값이 54번 으로
+y_predict = y_predict.flatten()
+y_predict = np.where(y_predict > 0.5, 1 , 0)
+print(y_predict)
+
+#### [ 과제 1.] accuracy_score 완성 시키기
+
+
+from sklearn.metrics import r2_score, accuracy_score         # metrics 행렬 
 # r2 = r2_score(y_test, y_predict)
-# print('r2score : ', r2)
+acc = accuracy_score(y_test, y_predict)
+print('acc.score : ', acc)
+# print(y_predict)
 
 # loss :  [0.12730903923511505, 0.9473684430122375]   2번째 위치에 있는것은 metrics=['accuracy']) 의 지표도 같이 나온다 
 
-# loss :  [0.11216503381729126, 0.9649122953414917, 0.031634073704481125] 앞에 두것은 신용해도 된다  
+# loss :  [0.11216503381729126, 0.9649122953414917, 0.031634073704481125] 앞에 두것은 신용해도 된다 

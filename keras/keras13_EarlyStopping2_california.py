@@ -53,7 +53,7 @@ print(late.history['val_loss'])
 loss = model.evaluate(x_test, y_test)
 print('loss : ', loss)
 
-y_predict = model.predict(x_test) 
+y_predict = model.predict(x_test)
 
 from sklearn.metrics import r2_score         # metrics 행렬 
 r2 = r2_score(y_test, y_predict)
