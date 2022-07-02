@@ -4,7 +4,7 @@ from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense 
 
 from sklearn.datasets import fetch_california_housing
-datasets = fetch_california_housing()
+datasets = fetch_california_housing()   # 보스턴 값에서 이제는 fetch_california_housing() 으로 계산하라 
 x = datasets.data  
 y = datasets.target 
 print(x)
@@ -22,62 +22,47 @@ print(datasets.feature_names) # - MedInc        median income in block group
 
 print(datasets.DESCR)         #피쳐 아주중요 따로 찾아볼것 
 x_train, x_test, y_train, y_test = train_test_split(x,y,
-        train_size=0.9, shuffle=True, random_state=35)
+        train_size=0.9, shuffle=True, random_state=77)
 
 #2. 모델구성
 model = Sequential()
-model.add(Dense(16, input_dim=8))
-model.add(Dense(34))
-model.add(Dense(24))
-model.add(Dense(20))
-model.add(Dense(12))
+model.add(Dense(32, input_dim=8))
+model.add(Dense(50))
+model.add(Dense(60))
+model.add(Dense(40))
+model.add(Dense(10))
 model.add(Dense(1))
 
 #3. 컴파일 , 훈련
 model.compile(loss='mse', optimizer='adam')     # 회귀 모델의 대표적인 평가 지표 중에 하나 == R2(R제곱) R2수치가 높을수로 좋다 
-model.fit(x_train, y_train, epochs=25000, batch_size=300)
+late = model.fit(x_train, y_train, epochs=100, batch_size=400,
+          validation_split=0.2)
+
+print(late)
+print(late.history['loss'])
 
 #4. 평가, 예측
 loss = model.evaluate(x_test, y_test)
 print('loss : ', loss)
 
-y_predict = model.predict(x_test)  
+y_predict = model.predict(x_test) 
 
 from sklearn.metrics import r2_score         # metrics 행렬 
 r2 = r2_score(y_test, y_predict)
 print('r2score : ', r2)
 
+import matplotlib.pyplot as plt
 
-# loss :  0.6287996172904968
-# r2score :  0.541748011203979
+plt.figure(figsize=(9,6)) #칸만들기
+plt.plot(late.history['loss'], marker='.', c='pink', label='loss') # 곡선의 꺾임 marker . c = 색깔 red label loss 
 
-# loss :  0.6250039935112       # 훈련량 5000 배치 1000 레이어층 8 
-# r2score :  0.5445141668253644
+#그림그릴거야
 
-# loss :  0.6008335947990417  훈련량 5000 배치 1000 레이어층 2배
-# r2score :  0.5621289239912706
-
-# loss :  0.6219940185546875       훈련량 1000 배치 300 레이어층 
-# model.add(Dense(16, input_dim=8))
-# model.add(Dense(71))
-# model.add(Dense(34))
-# model.add(Dense(24))
-# model.add(Dense(20))
-# model.add(Dense(12))
-# model.add(Dense(1))
-# r2score :  0.5538272124002598
-
-
-# loss :  0.6191340088844299        훈련량 1000 레이어층 71제거 배치 200
-# r2score :  0.5558788847224494     트레이닝 사이즈 0.8 
-
-
-#loss :  0.5983598232269287     ( 71 번 동일 )    랜덤 86
-# r2score :  0.5745712183147    트레이닝 사이즈 0.9
-
-# loss :  0.31384748220443726      훈련량 8000 레이어층 같음 배치 200 랜덤 86
-# r2score :  0.6121719072616624    트레이닝 사이즈 0.9 
-
-# loss :  0.315838098526001         동일 2회째 
-# r2score :  0.6097119171502551
+plt.plot(late.history['val_loss'], marker=',', c='black', label= 'val_loss')
+plt.grid()
+plt.title('late') # 그래프 위의 제목 타이틀 
+plt.ylabel('loss')    # 55번과 57번 색과 그래프의 선이 다름 표현해달라 
+plt.xlabel('epochs')  # x는 epochs 수치를 표현해달라 
+plt.legend(loc='upper right') # 라벨값 위치 생략시 빈자리에 생성
+plt.show() # 이 그래프를 보여달라 
 
