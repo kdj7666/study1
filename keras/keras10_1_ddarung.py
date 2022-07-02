@@ -1,3 +1,5 @@
+# https://dacon.io/competitions/open/235576/overview/description
+
 # 데이콘 따릉이 문제풀이 
 import numpy as np
 import pandas as pd
@@ -86,7 +88,7 @@ y_summit = model.predict(test_set)
 # dataframe = pd.DataFrame(y_summit)
 # dataframe.to_csv('.csv')
 
-submission['count'] = y_summit
+submission['count'] = y_summit        
 submission = submission.fillna(submission.mean())
 submission.to_csv(path + 'submission.csv', index=False)
 
@@ -99,10 +101,8 @@ submission.to_csv(path + 'submission.csv', index=False)
 # loss :  19.65888786315918
 # RMSE :  34.915773545704084
 
-
 # loss :  545.470947265625     동일 
 # RMSE :  23.355318360896916
-
 
 # loss :  398.7279968261719
 # RMSE :  19.96817490940722
@@ -114,11 +114,6 @@ submission.to_csv(path + 'submission.csv', index=False)
 # layer 5층
 # node 90 100 100 50 1   input 9 
 # loss ' mse ' optimizer = 'adam' 
-
-
-
-
-
 
 # loss :  2874.76953125  ㅎㄹㄹ 1000 ㅂㅊ 1500 
 # loss :  2852.6865234375 ㅎㄹㄹ 800 ㅂㅊ 300 

@@ -31,16 +31,13 @@ model.add(Dense (4))
 model.add(Dense (3))
 model.add(Dense (3))
 
-
 #3. 컴파일, 훈련
 model.compile(loss='mse', optimizer='adam')
 model.fit(x, y, epochs=1450)           
-
 
 #4. 평가, 예측
 loss = model.evaluate(x, y)
 print('loss :', loss)                                   # 인공지능 훈련시 
 result = model.predict([9]) #PREDICT ( 예측 )           # 평가 데이터와 학습 데이터는 달라야 한다. 
 print('[9]의 예측값 : ', result) # 10, 1.9 ,0           # 훈련용 데이터와 평가용 데이터는 달라야한다.  
-
 

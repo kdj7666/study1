@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # 과제 파이썬 리스트 알아오기
 
 list1 = [2, 5, 7, 9, 10]
@@ -54,8 +53,7 @@ print(random.choice(students))
 #   이름   강동진
 #   학교   성원고등학교 졸업 
 #   하고싶은 말 
-#   
-=======
+
 # 과제 파이썬 리스트 알아오기
 
 list1 = [2, 5, 7, 9, 10]
@@ -103,5 +101,3 @@ for stu in students:
     
 import random
 print(random.choice(students))
-    
->>>>>>> a4f8ca5fd780ad5430b35d714afd71e341e6d60e

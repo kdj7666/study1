@@ -31,7 +31,11 @@ model.add(Dense(50))
 model.add(Dense(1))
 
 #3. 컴파일 , 훈련
+<<<<<<< HEAD
 model.compile(loss='mse', optimizer='adam')     # 회귀 모델의 대표적인 평가 지표 중에 하나 == R2(R제곱) R2수치가 높을수로 좋다 
+=======
+model.compile(loss='mae', optimizer='adam')     # 회귀 모델의 대표적인 평가 지표 중에 하나 == R2(R제곱) R2수치가 높을수로 좋다 
+>>>>>>> 5f0219be1a123677777cf3b5268873b73cb5b912
 model.fit(x_train, y_train, epochs=210, batch_size=10,
           validation_split=0.45)
 

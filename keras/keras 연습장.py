@@ -1,11 +1,11 @@
 # 정치 종교 젠더 금지 
 
-
+'''
 
 # 데이콘 따릉이 문제풀이 
 import numpy as np
-import pandas as pd
-from tensorflow.keras.models import Sequential
+import pandas as pd                    # Sequential /  class 개념 확인 (과제) 클래스와 함수 정리 클래스는 대문자 함수는 소문자 
+from tensorflow.keras.models import Sequential # 텐서플로 안 케라스 안 모델 안에있는 시컨셜을 임포트 시키겠다 
 from tensorflow.keras.layers import Dense
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import nan_euclidean_distances, r2_score, mean_squared_error
@@ -64,7 +64,7 @@ model.add(Dense(1))
 
 #3. 컴파일 훈련
 model.compile(loss='mae', optimizer = 'adam')        # 평가지표는 프레딕트 결과값 어쩌구 저쩌구 해서 mse 로 가능 비슷하면 된다 
-model.fit(x_train, y_train, epochs=2000, batch_size=200)
+model.fit(x_train, y_train, epochs=2200, batch_size=300)
 
 #4. 평가 예측
 loss = model.evaluate(x_test, y_test)
@@ -77,4 +77,7 @@ def RMSE(y_test, y_predict):
 
 rmse = RMSE(y_test, y_predict)
 print("RMSE : ", rmse)
+
+'''
+
 

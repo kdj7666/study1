@@ -17,7 +17,7 @@ model.add(Dense(2))
 model.add(Dense(1)) 
 
 #3. 컴파일, 훈련
-model.compile(loss='mse', optimizer='adam')         
+model.compile(loss='mse', optimizer='adam')         # compile = 엮다 
 model.fit(x, y, epochs=880, batch_size=1) #가중치 보관 밑 xy로 # 훈련양 = 숫자
 # x y 훈련양을 통으로 달라 #최소의 로스 최적의 웨이트
 
@@ -54,3 +54,6 @@ print('113의 예측값은 : ', result) # 항상 결과값은 밑에 주석으�
 # 131313131313131313333111333131
 # 4411441144444
 # >>>>>>> 7944d3e0b148b6bcda3baa02fde5e9d9c1e73444
+import tensorflow as tf
+print(tf.__version__)
+

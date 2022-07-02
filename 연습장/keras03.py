@@ -1,12 +1,11 @@
-<<<<<<< HEAD:keras03.py
 # 과제 파이썬 리스트 알아오기
-=======
+
 #1. 데이터
 import numpy as np
 from sklearn.metrics import loss
 x = np.array([1,2,3,])       
 y = np.array([1,2,3,])
->>>>>>> d3aee7d538385768d2cd70df3b49b4f4ed656055:연습장/keras03.py
+
 
 list1 = [2, 5, 7, 9, 10]
 print(list1[0])
