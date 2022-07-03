@@ -43,7 +43,7 @@ model.compile(loss='mse', optimizer='adam')     # 회귀 모델의 대표적인 
 from tensorflow.python.keras.callbacks import EarlyStopping
 earlystopping = EarlyStopping(monitor='val_loss', patience=10, mode='min', verbose=1, # mode='min'뿐아니라 max도 있음  디폴드값 찾아볼것 모르면 오토 
               restore_best_weights=True)  # < - 검색해서 정리할것 (파라미터를 적용을 시켯다 내가 하고싶은데로)
-             # 모니터로 보겟다 vla_loss / patience 참다 10번 / mode = 'min'  최솟값을 verbose=1
+             # 모니터로 보겟다 val_loss / patience 참다 10번 / mode = 'min'  최솟값을 verbose=1
              # 깃허브 참조 
              # 이름을 짓는다 earlystopping 변수는 첫번째를 소문자로 
              

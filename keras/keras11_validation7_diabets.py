@@ -31,11 +31,7 @@ model.add(Dense(50))
 model.add(Dense(1))
 
 #3. 컴파일 , 훈련
-<<<<<<< HEAD
 model.compile(loss='mse', optimizer='adam')     # 회귀 모델의 대표적인 평가 지표 중에 하나 == R2(R제곱) R2수치가 높을수로 좋다 
-=======
-model.compile(loss='mae', optimizer='adam')     # 회귀 모델의 대표적인 평가 지표 중에 하나 == R2(R제곱) R2수치가 높을수로 좋다 
->>>>>>> 5f0219be1a123677777cf3b5268873b73cb5b912
 model.fit(x_train, y_train, epochs=210, batch_size=10,
           validation_split=0.45)
 
@@ -78,7 +74,7 @@ print('r2score : ', r2)
 # 검증 후 튜닝 변경 
 
 # loss :  39.26826095581055  1회 0.84 False [10 30 40 50 40 60 1]
-# r2score :  0.5591262634166727  210 10 0.45
+# r2score :  0.5591262634166727 210 10 0.45
 
 # loss :  38.830413818359375  2회 동일 
 # r2score :  0.5582336660186611 

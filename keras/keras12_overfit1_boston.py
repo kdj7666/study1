@@ -4,11 +4,7 @@ import numpy as np
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense 
 from sklearn.model_selection import train_test_split
-<<<<<<< HEAD
 import time
-=======
-
->>>>>>> 5f0219be1a123677777cf3b5268873b73cb5b912
 # 1. 데이터
 
 datasets = load_boston()              # load_boston 에서 x, y  데이터를 추출 한다 
@@ -44,25 +40,17 @@ model.add(Dense(1))
 model.compile(loss='mse', optimizer='adam')     # 회귀 모델의 대표적인 평가 지표 중에 하나 == R2(R제곱) R2수치가 높을수로 좋다 
 a = model.fit(x_train, y_train, epochs=100, batch_size=25,
           validation_split=0.25)   # a 대신에 hist 라고 쓰임 
-<<<<<<< HEAD
 start_time = time.time()
 print(a)
 print(a.history['loss']) # 대괄호로 loss , val loss 값 출력 가능
 end_time = time.time()
-=======
-print(a)
-print(a.history['loss']) # 대괄호로 loss , val loss 값 출력 가능
->>>>>>> 5f0219be1a123677777cf3b5268873b73cb5b912
 
 #4. 평가, 예측
 loss = model.evaluate(x_test, y_test)
 print('loss : ', loss)
 
-<<<<<<< HEAD
 print('걸린시간 : ', end_time)
 
-=======
->>>>>>> 5f0219be1a123677777cf3b5268873b73cb5b912
 y_predict = model.predict(x_test)  # 이 값이 54번 으로 
 
 from sklearn.metrics import r2_score         # metrics 행렬 
