@@ -27,22 +27,28 @@ import tensorflow as tf
 #1. data
 datasets = fetch_covtype()
 x = datasets.data
-y = datasets.target.reshape(-1,1)
+y = datasets.target
 
 print(x.shape, y.shape) #  (581012, 54) (581012,)
 print(np.unique(y, return_counts=True))  # [ 1 2 3 4 5 6 7]
 
 print(datasets.feature_names)
 
-encoder = OneHotEncoder()
-encoder.fit(y)
-y = encoder.transform(y).toarray()
-print(y.shape)
-print(y)
 
+print('====================================')
+print('====================================')
 # ------------------------------------------
 
-# pd.get_dummies(fetch_covtype)
+
+y = pd.get_dummies(y)
+# pd.get_dummies(y, prefix=[x,y], prefix_sep='_ _')
+# pd.get_dummies(y, dummy_na=True)
+# pd.get_dummies(y, columns=['name'],
+#                drop_first=True, dummy_na=True,
+#                dtype=float)
+
+
+print('====================================')
 # print(datasets.feature_names)
 
 # onhot_encoder = OneHotEncoder()
@@ -61,7 +67,7 @@ print(y_train)
 print(y_test)
 
 
-# model 
+# model
 
 model = Sequential()
 model.add(Dense(108, input_dim=54))
@@ -78,7 +84,7 @@ earlystopping = EarlyStopping(monitor='val_loss', patience=150, mode='auto', ver
 model.compile(loss = 'categorical_crossentropy', optimizer = 'adam',
               metrics = ['accuracy'])
 
-a = model.fit(x_train, y_train, epochs=300, batch_size=32,
+a = model.fit(x_train, y_train, epochs=100, batch_size=32,
           validation_split=0.2,
           callbacks = [earlystopping],verbose=1)
 
@@ -86,7 +92,7 @@ a = model.fit(x_train, y_train, epochs=300, batch_size=32,
 
 results = model.evaluate(x_test, y_test)
 print('loss : ', results[0])
-print('accuracy : ', results[1])
+# print('accuracy : ', results[1])
 
 # print('====================================')
 # print(y_test[:5])
@@ -102,7 +108,7 @@ from sklearn.metrics import confusion_matrix
 y_predict = model.predict(x_test)
 y_predict = np.argmax(y_predict, axis=1)
 print(y_predict)
-# y_test = np.argmax(y_test, axis=1)
+y_test = np.argmax(y_test, axis=1)
 print(y_test)
 
 acc = accuracy_score(y_test, y_predict)
