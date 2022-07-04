@@ -47,3 +47,11 @@ print(emlist)
 
 
 
+
+
+
+
+
+
+# one hot encoding 
+# tensorflow , keras 2개의 방법이 있따 ( 따로 공부할것 )

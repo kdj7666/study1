@@ -4,7 +4,7 @@ from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense 
 
 from sklearn.datasets import fetch_california_housing
-datasets = fetch_california_housing()   # 보스턴 값에서 이제는 fetch_california_housing() 으로 계산하라 
+datasets = fetch_california_housing()
 x = datasets.data  
 y = datasets.target 
 print(x)
@@ -22,7 +22,7 @@ print(datasets.feature_names) # - MedInc        median income in block group
 
 print(datasets.DESCR)         #피쳐 아주중요 따로 찾아볼것 
 x_train, x_test, y_train, y_test = train_test_split(x,y,
-        train_size=0.9, shuffle=True, random_state=31)
+        train_size=0.9, shuffle=True, random_state=35)
 
 #2. 모델구성
 model = Sequential()
@@ -35,7 +35,7 @@ model.add(Dense(1))
 
 #3. 컴파일 , 훈련
 model.compile(loss='mse', optimizer='adam')     # 회귀 모델의 대표적인 평가 지표 중에 하나 == R2(R제곱) R2수치가 높을수로 좋다 
-model.fit(x_train, y_train, epochs=1000, batch_size=300)
+model.fit(x_train, y_train, epochs=25000, batch_size=300)
 
 #4. 평가, 예측
 loss = model.evaluate(x_test, y_test)
@@ -81,14 +81,3 @@ print('r2score : ', r2)
 # loss :  0.315838098526001         동일 2회째 
 # r2score :  0.6097119171502551
 
-# loss :  0.5835319757461548  True 0.9 31  16 34 24 20 12 1 
-# r2score :  0.5636667427506528   1000 300
- 
-# loss :  0.5923864841461182  동일 2회
-# r2score :  0.55704577233998
-
-# loss :  0.5876272916793823 동일 3회
-# r2score :  0.560604462382521
-
-# loss :  0.5828465819358826 동일 4회 
-# r2score :  0.5641792756410814

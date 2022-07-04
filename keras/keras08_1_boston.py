@@ -3,7 +3,7 @@ import numpy as np
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense 
 from sklearn.model_selection import train_test_split
-
+import time
 # 1. 데이터
 
 datasets = load_boston()              # load_boston 에서 x, y  데이터를 추출 한다 
@@ -25,7 +25,7 @@ print(datasets.feature_names)       # ['CRIM' 'ZN' 'INDUS' 'CHAS' 'NOX' 'RM' 'AG
 
 print(datasets.DESCR)         #피쳐 아주중요 따로 찾아볼것 
 x_train, x_test, y_train, y_test = train_test_split(x,y,
-        train_size=0.7, shuffle=True, random_state=50)
+        train_size=0.7, shuffle=True, random_state=31)
 
      # [ 실습 ] 아래를 완성할것
      # 1.  train 0.7
@@ -42,13 +42,18 @@ model.add(Dense(1))
 
 #3. 컴파일 , 훈련
 model.compile(loss='mse', optimizer='adam')     # 회귀 모델의 대표적인 평가 지표 중에 하나 == R2(R제곱) R2수치가 높을수로 좋다 
-model.fit(x_train, y_train, epochs=1000, batch_size=50)
+model.fit(x_train, y_train, epochs=30000, batch_size=5)
 
+start_time = time.time()
+
+end_time = time.time()
 #4. 평가, 예측
 loss = model.evaluate(x_test, y_test)
 print('loss : ', loss)
 
-y_predict = model.predict(x_test)  # 이 값이 54번 으로 
+print('걸린시간 : ', end_time)
+
+y_predict = model.predict(x_test)  
 
 from sklearn.metrics import r2_score         # metrics 행렬 
 r2 = r2_score(y_test, y_predict)
@@ -73,16 +78,5 @@ print('r2score : ', r2)
 # loss :  16.26223373413086       ㄹㅇㅇ 5 swish ㅎㄹㄹ 1000 b 50
 # r2score :  0.8022913341280221   0.7 True 50 
 
-#-------------------------------------------------------------------------
-
-# loss :  16.504552841186523  0.7 true 50 
-# r2score :  0.7993453422042345 26 20 20 10 1 e 1000 b 50 
-
-# loss :  17.482885360717773    78번 동일 
-# r2score :  0.7874512046527672
-
-# loss :  16.888813018798828
-# r2score :  0.7946736682017962 동일 
-
-
-
+# loss :  15.887526512145996
+# r2score :  0.8068468499807665

@@ -12,7 +12,7 @@ y = np.array(range(1,17))
 
 x_train, x_test , y_train, y_test = train_test_split(x,y, test_size=0.625, random_state=1) # 이 함수로는 두쌍만 가능 다시 복습할것 
 
-x_val, y_val , x_fdfd , y_fdfd = train_test_split(x_train, y_train, train_size=0.5 , random_state=12)
+x_val, y_val , x_fdfd , y_fdfd = train_test_split(x_train, y_train, train_size=0.5 , random_state=12)  # 13번 트레인 테스트 에서 0.625로 나눈다음 발과 ㄹㅇㄹㅇ 을 0.5로 다시 나눈다 다시 복습할것 
 print(x_train)
 print(x_test)
 print(x_val)
