@@ -23,6 +23,7 @@ print(datasets.DESCR)         #피쳐 아주중요 따로 찾아볼것
 x_train, x_test, y_train, y_test = train_test_split(x,y,
         train_size=0.9, shuffle=True, random_state=100)
 
+
 # 2. 모델구성
 
 model = Sequential()
@@ -39,10 +40,12 @@ model.add(Dense(1, activation='sigmoid')) # sigmoid = 0과 1이 아니고 0에�
 model.compile(loss='binary_crossentropy', optimizer='adam',   # 회기모델에서 accuracy , mae 둘다 가능 지표를 찾을 수 있음 
               metrics=['accuracy', 'mse'])    # 정확성  accuracy: 0.9474 / 94.74%     2개 이상은 리스트 형식 더 넣을수있음 프로그래스바에 표츌이 늘어남 
                              # 회귀 모델의 대표적인 평가 지표 중에 하나 == R2(R제곱) R2수치가 높을수로 좋다  ****** 중요 
+
                              # 2진분류로 sigmoid 를 쓸때에는 model.compile(loss='binary_crossentropy', optimizer='adam')      ****** 중요
                              # 로 한다   /   당분간 이거 하나쓴다 ( 나중에 바뀔 수 있음) 0과 1에 한해서                          ****** 중요 
 from tensorflow.python.keras.callbacks import EarlyStopping
-earlystopping = EarlyStopping(monitor='val_loss', patience=30, mode='auto', verbose=1, # mode='min'뿐아니라 max도 있음  디폴드값 찾아볼것 모르면 오토 
+earlystopping = EarlyStopping(monitor='val_loss', patience=30, mode='min', verbose=1, # mode='min'뿐아니라 max도 있음  디폴드값 찾아볼것 모르면 오토 
+
               restore_best_weights=True)  # < - 검색해서 정리할것 (파라미터를 적용을 시켯다 내가 하고싶은데로)
              # 모니터로 보겟다 vla_loss / patience 참다 10번 / mode = 'min'  최솟값을 verbose=1
              # 깃허브 참조 
@@ -55,7 +58,12 @@ a = model.fit(x_train, y_train, epochs=1000, batch_size=50,
 
 # end_time = time.time() - start_time
 
+
 # 대괄호로 loss , val loss 값 출력 가능
+
+# 대괄호로 loss , val loss 값 출력 가능
+
+
 
 #4. 평가, 예측
 loss = model.evaluate(x_test, y_test)
@@ -69,6 +77,7 @@ print(y_predict)
 
 #### [ 과제 1.] accuracy_score 완성 시키기
 
+
 from sklearn.metrics import r2_score, accuracy_score         # metrics 행렬 
 # r2 = r2_score(y_test, y_predict)
 acc = accuracy_score(y_test, y_predict)
@@ -79,3 +88,4 @@ print('acc.score : ', acc)
 
 # loss :  [0.11216503381729126, 0.9649122953414917, 0.031634073704481125] 앞에 두것은 신용해도 된다 
 
+# acc.score :  0.9122807017543859

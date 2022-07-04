@@ -64,13 +64,17 @@ model.add(Dense(1, activation='sigmoid'))
 
 #3. 컴파일 훈련
 model.compile(loss='binary_crossentropy', optimizer = 'adam',metrics=['accuracy', 'mse'])        # 평가지표는 프레딕트 결과값 어쩌구 저쩌구 해서 mse 로 가능 비슷하면 된다 
+
+model.fit(x_train, y_train, epochs=300, batch_size=100) 
 from tensorflow.python.keras.callbacks import EarlyStopping
-earlystopping = EarlyStopping(monitor='val_loss', patience=30, mode='min', verbose=1, # mode='min'뿐아니라 max도 있음  디폴드값 찾아볼것 모르면 오토 
+earlystopping = EarlyStopping(monitor='val_loss', patience=10, mode='min', verbose=1, # mode='min'뿐아니라 max도 있음  디폴드값 찾아볼것 모르면 오토 
               restore_best_weights=True)  # < - 검색해서 정리할것 (파라미터를 적용을 시켯다 내가 하고싶은데로)
              # 모니터로 보겟다 vla_loss / patience 참다 10번 / mode = 'min'  최솟값을 verbose=1
              # 깃허브 참조 
              # 이름을 짓는다 earlystopping 변수는 첫번째를 소문자로 
 
+
+  
 a = model.fit(x_train, y_train, epochs=1000, batch_size=50,
           validation_split=0.2,
           callbacks = [earlystopping],
@@ -86,6 +90,7 @@ y_predict = y_predict.flatten()
 y_predict = np.where(y_predict > 0.5, 1 , 0)
 print(y_predict)
 
+
 from sklearn.metrics import r2_score, accuracy_score         # metrics 행렬 
 r2 = r2_score(y_test, y_predict)
 acc = accuracy_score(y_test, y_predict)
@@ -94,6 +99,9 @@ print('acc.score : ', acc)
 
 
 y_summit = model.predict(test_set)
+
+# y_summit = model.predict(test_set)
+
 
 # from sklearn.metrics import r2_score
 # r2 = r2_score(y_test, y_predict)
@@ -104,11 +112,19 @@ y_summit = model.predict(test_set)
 
 ######################## .to_csv()를 사용해서 아이디값 안됨 카운트값 순서대로 
 ### submission.csv를 완성하시오 !!! ( 과제 겸 실습 )
+
 dataframe = pd.DataFrame(y_summit)
 dataframe.to_csv('.csv')
 
 submission['count'] = y_summit
 submission = submission.fillna(submission.mean())
+
+# dataframe = pd.DataFrame(y_summit)
+# dataframe.to_csv('.csv')
+
+submission['count'] = y_summit        
+# submission = submission.fillna(submission.mean())
+
 submission.to_csv(path + 'submission.csv', index=False)
 
 # earlystopping 적용 후 
