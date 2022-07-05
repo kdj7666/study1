@@ -13,7 +13,8 @@ y = np.array([1,2,3,4,5,6,7,8,9,10])
 # [검색] train과 test를 섞어서 7:3으로 찾을 수 있는 방법 찾아라 
                                                                  # train_test_split 를 트레인 테스트에 해달ㄹ ㅏ
 from sklearn.model_selection import train_test_split             # 데이터 훈련은 전체를 다 해주고 그중 일부를 섞어 작업을 해준다 
-x_train, x_test, y_train, y_text = train_test_split(             #train , test 분리해서 작업 해야 하고 간섭이 없어야 한다 ( 필수 )
+x_train, x_test, y_train, y_text = train_test_split( 
+                                                #train , test 분리해서 작업 해야 하고 간섭이 없어야 한다 ( 필수 )
     x,y, test_size=0.3,  
     train_size=0.7,                      # 전체 데이터 70%를 훈련 시켜라 
     # shuffle=True,                      #shuffle = True = 섞다    shuffle = False = 순차적으로 
