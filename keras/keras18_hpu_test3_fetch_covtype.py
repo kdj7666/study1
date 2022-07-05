@@ -21,11 +21,18 @@ from sklearn.preprocessing import OneHotEncoder
 from sklearn.preprocessing import MinMaxScaler
 from sklearn.preprocessing import LabelEncoder
 import time
-# ---------------------------------------------------
-import pandas as pd
-import tensorflow as tf
-# ---------------------------------------------------
+
+print(tf.__version__)
+
 gpus = tf.config.experimental.list_physical_devices('GPU')
+print(gpus)
+if(gpus) :
+    print('돈다')
+    aaa = 'gpu'
+else : 
+    print('안돈다')
+    aaa = 'cpu'
+
 
 #1. data
 datasets = fetch_covtype()
@@ -81,7 +88,8 @@ earlystopping = EarlyStopping(monitor='val_loss', patience=150, mode='auto', ver
 model.compile(loss = 'categorical_crossentropy', optimizer = 'adam',
               metrics = ['accuracy'])
 
-a = model.fit(x_train, y_train, epochs=100, batch_size=32,
+start_time = time.time()
+a = model.fit(x_train, y_train, epochs=10, batch_size=320,
           validation_split=0.2,
           callbacks = [earlystopping],verbose=1)
 
@@ -100,10 +108,10 @@ print('accuracy : ', results[1])
 # print(y_pred)
 print('====================================')
 
-start_time = time.time()
 
-end_time = time.time() - start_time
 
+
+end_time = time.time()-start_time
 from sklearn.metrics import confusion_matrix
 
 y_predict = model.predict(x_test)
@@ -111,11 +119,14 @@ y_predict = np.argmax(y_predict, axis=1)
 print(y_predict)
 # y_test = np.argmax(y_test, axis=1)
 print(y_test)
-
+print(aaa, ' 걸린시간 : ', end_time)
 acc = accuracy_score(y_test, y_predict)
 print('acc.score : ', acc)
 
-print(' 걸린시간 : ', end_time)
+
+
+
+
 
 # print('loss : ', loss)
 # print('accuracy : ', acc)
@@ -125,3 +136,7 @@ print(' 걸린시간 : ', end_time)
 # loss :  0.6355554461479187
 # accuracy :  0.7333232760429382
 
+
+
+# cpu  걸린시간 :  15.465159177780151
+# gpu  걸린시간 :  44.551164388656616

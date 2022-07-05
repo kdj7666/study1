@@ -11,9 +11,12 @@ print(tf.__version__)
 
 gpus = tf.config.experimental.list_physical_devices('GPU')
 print(gpus)
-if(gpus) : print('돈다')
-
-else : print('안돈다')
+if(gpus) :
+    print('돈다')
+    aaa = 'gpu'
+else : 
+    print('안돈다')
+    aaa = 'cpu'
 
 
 
@@ -70,7 +73,7 @@ earlystopping = EarlyStopping(monitor='val_loss', patience=200, mode='min', verb
              
 start_time = time.time()
 
-a = model.fit(x_train, y_train, epochs=10, batch_size=1,
+a = model.fit(x_train, y_train, epochs=1500, batch_size=320,
           validation_split=0.2,
           callbacks = [earlystopping],    # 이것도 리스트 형식이라는것 더 넣을수있음 
           verbose=1)   # a 대신에 hist 라고 쓰임 콜백을 하겠다 얼리 스탑잉을               
@@ -110,7 +113,14 @@ print('acc.score : ', acc)
 # acc.score :  0.9122807017543859
 
 
-print(' 걸린시간 : ', end_time)
+print(abc, ' 걸린시간 : ', end_time)
+print(cba, ' 걸린시간 : ', end_time)
 # acc.score :  0.6140350877192983 cpu
 
 # acc.score :  0.6140350877192983 gpu 
+
+# acc.score :  0.9298245614035088
+# cpu  걸린시간 :  9.609723091125488
+
+# acc.score :  0.9298245614035088
+# gpu  걸린시간 :  22.942169427871704
