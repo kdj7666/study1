@@ -247,8 +247,8 @@ print(y_train)
 
 # scaler = MinMaxSc# from sklearn.preprocessing import MinMaxScaler, StandardScaler
 # from sklearn.preprocessing import MaxAbsScaler, RobustScaler
-scaler = RobustScaler()
-# scaler = MaxAbsScaler()
+# scaler = RobustScaler()
+scaler = MaxAbsScaler()
 
 #scaler = MinMaxScaler()
 # scaler = StandardScaler()
@@ -277,13 +277,13 @@ model.compile(loss='mse', optimizer='adam')
 model.fit(x_train, y_train, epochs=10, batch_size=100, verbose=1)
 
 from tensorflow.python.keras.callbacks import EarlyStopping
-earlystopping = EarlyStopping(monitor='val_loss', patience=10, mode='min', verbose=1, # mode='min'뿐아니라 max도 있음  디폴드값 찾아볼것 모르면 오토 
+earlystopping = EarlyStopping(monitor='val_loss', patience=100, mode='min', verbose=1, # mode='min'뿐아니라 max도 있음  디폴드값 찾아볼것 모르면 오토 
               restore_best_weights=True)  # < - 검색해서 정리할것 (파라미터를 적용을 시켯다 내가 하고싶은데로)
              # 모니터로 보겟다 vla_loss / patience 참다 10번 / mode = 'min'  최솟값을 verbose=1
              # 깃허브 참조 
              # 이름을 짓는다 earlystopping 변수는 첫번째를 소문자로 
              
-a = model.fit(x_train, y_train, epochs=1000, batch_size=50,
+a = model.fit(x_train, y_train, epochs=300, batch_size=100,
           validation_split=0.2,
           callbacks = [earlystopping],
           verbose=1)   # a 대신에 hist 라고 쓰임 콜백을 하겠다 얼리 스탑잉을               
@@ -344,3 +344,14 @@ print('걸린시간 : ', end_time)
 # r2스코어 :  0.8338998069718222
 # 걸린시간 :  21.214653253555298
 
+#  RobustScaler
+# loss :  37938495488.0
+# RMSE :  194778.07192883428
+# r2스코어 :  -6.037647091623714
+# 걸린시간 :  8.988311290740967
+
+# MaxAbsScaler
+# loss :  36615225344.0
+# RMSE :  191351.0483089947
+# r2스코어 :  -5.792177888247485
+# 걸린시간 :  24.327194452285767

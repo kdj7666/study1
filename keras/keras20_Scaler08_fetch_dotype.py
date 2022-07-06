@@ -11,7 +11,7 @@ import tensorflow as tf
 tf.random.set_seed(66)
 from matplotlib import pyplot as plt
 from sklearn.metrics import accuracy_score 
-from tensorflow.python.keras.utils import to_categorical
+from tensorflow.keras.utils import to_categorical
 # from tensorflow.keras.preprocessing.text import Tokenizer
 from sklearn.model_selection import train_test_split
 from tensorflow.python.keras.models import Sequential
@@ -72,18 +72,18 @@ print(y_test)
 
 # from sklearn.preprocessing import MinMaxScaler, StandardScaler
 # from sklearn.preprocessing import MaxAbsScaler, RobustScaler
-# scaler = RobustScaler()
+scaler = RobustScaler()
 # scaler = MaxAbsScaler()
 
 # scaler = MinMaxScaler()
 # scaler = StandardScaler()
-# scaler.fit(x_train)
-# x_train = scaler.transform(x_train)
-# x_test = scaler.transform(x_test)
-# print(np.min(x_train))   # 0.0
-# print(np.max(x_train))   # 0.0 컬럼별로 나누어주어야 한다
-# print(np.min(x_test))
-# print(np.max(x_test))
+scaler.fit(x_train)
+x_train = scaler.transform(x_train)
+x_test = scaler.transform(x_test)
+print(np.min(x_train))   # 0.0
+print(np.max(x_train))   # 0.0 컬럼별로 나누어주어야 한다
+print(np.min(x_test))
+print(np.max(x_test))
 
 
 # model 
@@ -102,14 +102,14 @@ model.add(Dense(40, activation='relu'))
 model.add(Dense(7, activation='softmax')) 
 
 # compile , epochs 
-earlystopping = EarlyStopping(monitor='val_loss', patience=150, mode='auto', verbose=1,
+earlystopping = EarlyStopping(monitor='val_loss', patience=100, mode='auto', verbose=1,
                               restore_best_weights=True)
 
 model.compile(loss = 'categorical_crossentropy', optimizer = 'adam',
               metrics = ['accuracy'])
 
 start_time = time.time()
-a = model.fit(x_train, y_train, epochs=100, batch_size=320,
+a = model.fit(x_train, y_train, epochs=300, batch_size=100,
           validation_split=0.2,
           callbacks = [earlystopping],verbose=1)
 
@@ -157,3 +157,14 @@ print('acc.score : ', acc)
 # loss :  0.298806369304657
 # accuracy :  0.8857748508453369
 # gpu  걸린시간 :  218.64443588256836
+
+# RobustScaler
+# loss :  0.2607559859752655
+# accuracy :  0.9038983583450317
+# gpu  걸린시간 :  1803.8720045089722
+
+
+#  MaxAbsScaler
+# loss :  0.2851724624633789
+# accuracy :  0.8942535519599915
+# gpu  걸린시간 :  1891.428293466568

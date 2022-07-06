@@ -54,18 +54,18 @@ x_train, x_test, y_train, y_test = train_test_split(x,y,
 
 # from sklearn.preprocessing import MinMaxScaler, StandardScaler
 # from sklearn.preprocessing import MaxAbsScaler, RobustScaler
-# scaler = RobustScaler()
+scaler = RobustScaler()
 # scaler = MaxAbsScaler()
 
 # scaler = MinMaxScaler()
 # scaler = StandardScaler()
-# scaler.fit(x_train)
-# x_train = scaler.transform(x_train)
-# x_test = scaler.transform(x_test)
-# print(np.min(x_train))   # 0.0
-# print(np.max(x_train))   # 0.0 컬럼별로 나누어주어야 한다
-# print(np.min(x_test))
-# print(np.max(x_test))
+scaler.fit(x_train)
+x_train = scaler.transform(x_train)
+x_test = scaler.transform(x_test)
+print(np.min(x_train))   # 0.0
+print(np.max(x_train))   # 0.0 컬럼별로 나누어주어야 한다
+print(np.min(x_test))
+print(np.max(x_test))
 
 
 
@@ -89,13 +89,13 @@ start_time = time.time()
 model.compile(loss='mse', optimizer = 'adam',metrics=['accuracy', 'mse'])        # 평가지표는 프레딕트 결과값 어쩌구 저쩌구 해서 mse 로 가능 비슷하면 된다 
 
 from tensorflow.python.keras.callbacks import EarlyStopping
-earlystopping = EarlyStopping(monitor='val_loss', patience=10, mode='min', verbose=1, # mode='min'뿐아니라 max도 있음  디폴드값 찾아볼것 모르면 오토 
+earlystopping = EarlyStopping(monitor='val_loss', patience=100, mode='min', verbose=1, # mode='min'뿐아니라 max도 있음  디폴드값 찾아볼것 모르면 오토 
               restore_best_weights=True)  # < - 검색해서 정리할것 (파라미터를 적용을 시켯다 내가 하고싶은데로)
              # 모니터로 보겟다 vla_loss / patience 참다 10번 / mode = 'min'  최솟값을 verbose=1
              # 깃허브 참조 
              # 이름을 짓는다 earlystopping 변수는 첫번째를 소문자로 
 
-a = model.fit(x_train, y_train, epochs=100, batch_size=50,
+a = model.fit(x_train, y_train, epochs=300, batch_size=100,
           validation_split=0.2,
           callbacks = [earlystopping],
           verbose=1)   # a 대신에 hist 라고 쓰임 콜백을 하겠다 얼리 스탑잉을               
@@ -147,3 +147,15 @@ print('걸린시간 : ', end_time)
 # RMSE :  47.473921540802074
 # r2 score :  -2.0123980716002374
 # 걸린시간 :  7.627747297286987
+
+# MaxAbsScaler
+# acc.score :  0.005012531328320802
+# RMSE :  39.94535880096079
+# r2 score :  -2.012073022729322
+# 걸린시간 :  20.278263330459595
+
+#RobustScaler
+# acc.score :  0.005012531328320802
+# RMSE :  44.36130772773391
+# r2 score :  -2.0121798540779796
+# 걸린시간 :  14.987523794174194
