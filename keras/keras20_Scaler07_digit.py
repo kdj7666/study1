@@ -14,8 +14,9 @@ from tensorflow.python.keras.models import Sequential
 from tensorflow.python.keras.layers import Dense
 from tensorflow.python.keras.callbacks import EarlyStopping
 # ---------------------------------
-
-
+from sklearn.preprocessing import MinMaxScaler, StandardScaler
+import time
+from sklearn.preprocessing import MaxAbsScaler, RobustScaler
 #1. data
 datasets = load_digits()
 x = datasets.data
@@ -23,16 +24,31 @@ y = datasets.target
 print(x.shape, y.shape)   #  (1797, 64) (1797,)
 print(np.unique(y, return_counts=True))  # [0 1 2 3 4 5 6 7 8 9]  10 개 
 
-import matplotlib.pyplot as plt
-plt.gray()
-plt.matshow(datasets.images[0])
-plt.show()
+# import matplotlib.pyplot as plt
+# plt.gray()
+# plt.matshow(datasets.images[0])
+# plt.show()
 
 x_train, x_test, y_train, y_test = train_test_split(x,y,
                     train_size=0.2,
                     shuffle=True, random_state=65) # shuffle True False 잘 써야 한다 
 print(y_train)
 print(y_test)
+
+# from sklearn.preprocessing import MinMaxScaler, StandardScaler
+# from sklearn.preprocessing import MaxAbsScaler, RobustScaler
+scaler = RobustScaler()
+# scaler = MaxAbsScaler()
+
+# scaler = MinMaxScaler()
+# scaler = StandardScaler()
+scaler.fit(x_train)
+x_train = scaler.transform(x_train)
+x_test = scaler.transform(x_test)
+print(np.min(x_train))   # 0.0
+print(np.max(x_train))   # 0.0 컬럼별로 나누어주어야 한다
+print(np.min(x_test))
+print(np.max(x_test))
 
 
 # model 
@@ -47,13 +63,14 @@ model.add(Dense(10, activation='softmax'))
 
 
 # compile , epochs 
-earlystopping = EarlyStopping(monitor='val_loss', patience=150, mode='auto', verbose=1,
+start_time = time.time()
+earlystopping = EarlyStopping(monitor='val_loss', patience=100, mode='min', verbose=1,
                               restore_best_weights=True)
 
 model.compile(loss = 'sparse_categorical_crossentropy', optimizer = 'adam',
               metrics = ['accuracy'])
 
-a = model.fit(x_train, y_train, epochs=2500, batch_size=80,
+a = model.fit(x_train, y_train, epochs=300, batch_size=100,
           validation_split=0.2,
           callbacks = [earlystopping],
           verbose=1)
@@ -73,7 +90,7 @@ print('accuracy : ', results[1])
 # print(y_pred)
 print('====================================')
 
-
+end_time = time.time()-start_time
 y_predict = model.predict(x_test)
 y_predict = np.argmax(y_predict, axis=1)
 print(y_predict)
@@ -82,25 +99,35 @@ print(y_test)
 
 acc = accuracy_score(y_test, y_predict)
 print('acc.score : ', acc)
+print('걸린시간 : ', end_time)
 
-
-# print('loss : ', loss)
-# print('accuracy : ', acc)
-
-
-# 5 - accuracy: 0.8832
-# loss :  0.39549848437309265
-# accuracy :  0.8831710815429688
-# ====================================
-# [1 6 7 ... 7 1 2]
-# [1 6 7 ... 7 1 2]
-# acc.score :  0.8831710709318498
-
-
-# 4 - accuracy: 0.8964
-# loss :  0.37935832142829895
+# 없음 
+# loss :  0.3793579339981079
 # accuracy :  0.8963838815689087
-# ====================================
-# [0 7 6 ... 9 2 4]
-# [0 7 6 ... 9 2 4]
 # acc.score :  0.8963838664812239
+# 걸린시간 :  8.7983877658844
+
+# min max 
+# loss :  0.3464629352092743
+# accuracy :  0.9033379554748535
+# acc.score :  0.9033379694019471
+# 걸린시간 :  9.165494918823242
+
+# standard
+# loss :  0.41743403673171997
+# accuracy :  0.8873435258865356
+# acc.score :  0.8873435326842837
+# 걸린시간 :  7.543145895004272
+
+#  MaxAbsScaler
+# loss :  0.35049450397491455
+# accuracy :  0.8949930667877197
+# acc.score :  0.8949930458970793
+# 걸린시간 :  6.067758083343506
+
+# RobustScaler
+# accuracy: 0.8790
+# loss :  0.42870914936065674
+# accuracy :  0.8789986371994019
+# acc.score :  0.8789986091794159
+# 걸린시간 :  5.543474435806274

@@ -8,6 +8,9 @@ from tensorflow.python.keras.layers import Dense
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import nan_euclidean_distances, r2_score, mean_squared_error
 import time
+from sklearn.preprocessing import MinMaxScaler, StandardScaler
+from sklearn.preprocessing import MaxAbsScaler, RobustScaler
+
 #1. data  # 10번 경로  +는 문자가 연결이 된다
 path = './_data/ddarung/' 
 train_set = pd.read_csv(path + 'train.csv', 
@@ -47,6 +50,24 @@ x_train, x_test, y_train, y_test = train_test_split(x,y,
         train_size=0.7,
         shuffle=True,
         random_state=40)
+
+
+# from sklearn.preprocessing import MinMaxScaler, StandardScaler
+# from sklearn.preprocessing import MaxAbsScaler, RobustScaler
+# scaler = RobustScaler()
+# scaler = MaxAbsScaler()
+
+# scaler = MinMaxScaler()
+# scaler = StandardScaler()
+# scaler.fit(x_train)
+# x_train = scaler.transform(x_train)
+# x_test = scaler.transform(x_test)
+# print(np.min(x_train))   # 0.0
+# print(np.max(x_train))   # 0.0 컬럼별로 나누어주어야 한다
+# print(np.min(x_test))
+# print(np.max(x_test))
+
+
 
 # np.logical_or(x, y)
 # print(x = train_set.info(x))
@@ -109,99 +130,20 @@ print("RMSE : ", rmse)
 print('r2 score : ', r2)
 print('걸린시간 : ', end_time)
 
-
+# 없음 
 # acc.score :  0.005012531328320802
 # RMSE :  53.29223877166541
 # r2 score :  -2.0120692960543685
 # 걸린시간 :  5.358732223510742
 
+# min max 
+# acc.score :  0.005012531328320802
+# RMSE :  47.09539614014186
+# r2 score :  -2.0120825464542023
+# 걸린시간 :  8.793152093887329
 
-
-
-
-
-
-
-
-
-
-
-
-
-'''
-y_summit = model.predict(test_set)
-
-print(y_summit)
-print(y_summit.shape) # (715, 1)
-
-submission_set = pd.read_csv(path + 'submission.csv', # + 명령어는 문자를 앞문자와 더해줌
-                             index_col=0) # index_col=n n번째 컬럼을 인덱스로 인식
-
-print(submission_set)
-
-submission_set['count'] = y_summit
-
-print(submission_set)
-
-
-submission_set.to_csv('./_data/ddarung/submission.csv', index = True)
-
-y_predict = model.predict(test_set)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-# y_summit = model.predict(test_set)
-
-# y_summit = model.predict(test_set)
-
-
-# from sklearn.metrics import r2_score
-# r2 = r2_score(y_test, y_predict)
-# print('r2scoer :', r2)
-
-# print(y_summit)
-# print(y_summit.shape) # (715,1)
-
-######################## .to_csv()를 사용해서 아이디값 안됨 카운트값 순서대로 
-### submission.csv를 완성하시오 !!! ( 과제 겸 실습 )
-
-dataframe = pd.DataFrame(y_summit)
-dataframe.to_csv('.csv')
-
-submission['count'] = y_summit
-submission = submission.fillna(submission.mean())
-submission.to_csv(path + 'submission.csv', index=True)
-# dataframe = pd.DataFrame(y_summit)
-# dataframe.to_csv('.csv')
-     
-# submission = submission.fillna(submission.mean())
-
-
-
-# earlystopping 적용 후 
-
-# loss :  38.670223236083984
-# RMSE :  56.808521319454506
-# r2scoer : 0.48441298176352554
-
-# ctivation 적용 후 
-
-# loss :  26.252769470214844
-# RMSE :  38.36484871933018
-# r2scoer : 0.7648516239808246
-
-'''
+#  stendard
+# acc.score :  0.005012531328320802
+# RMSE :  47.473921540802074
+# r2 score :  -2.0123980716002374
+# 걸린시간 :  7.627747297286987

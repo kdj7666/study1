@@ -36,3 +36,74 @@ print('[10, 1.4]의 예측값 : ', result)  # ValueError : Data cardinality is a
                                      # x sizes: 2 y sizes: 10
                                      
 '''
+
+
+
+# 1 그래픽 드라이버 설치 516.59 ( 그래픽 드라이버는 버젼 최신으로 가능 )
+# nvidia graphic driver
+
+# 2 cuda 설치 11.4.4  #  ( 쿠다는 버젼마다 많이 다름 조심할것 )
+# cuda downloads
+
+# 3 cuDNN v8.2.4 for cuda 11.4   # 쿠다 설치위치 필수적으로 확인
+# cudnn download for cuda 11.4    # 쿠타 다운로드에 덮어쓰기 형식 
+# 윈도우용 64빗 다운로드 네트워크 아님 로컬임 
+# cuda 복사붙여넣기 관리자 실행 
+
+
+
+
+# 4 python 3.9.7
+# 가상환경 확인 : conda env list 
+
+# 가상환경 삭제 : conda remove --name 이름 --all 
+
+# 가상환경 삭제 : conda env remove -n 이름   ( --all 안써도 가능 )
+
+# 가상환경 생성 : conda create -n 이름 python=3.9.7 anaconda **
+
+# 가상환경 실행 : activate 이름    # deactivate ( 찾아 볼것 )
+
+# tensorflow 다운 : pip install tensorflow-gpu==2.8.2
+
+# 가상 환경 접속한 후 python 치고 
+# import tensorflow as tf ( 여기서 문제있으면 잔소리가 나온다 )없으면 이상없음 
+# tf.__version__
+# pip list 
+# pip uninstall tensorflow-cpu   ( cpu )
+# pip uninstall tensorflow-gpu  ( gpu )
+
+# base 는 tensorflow-cpu 2.8.1 
+# 베이스는 버리고 
+# tf281cpu -> tensorflow 2.8.1
+# tf281cpu  -> pip install tensorflow-cpu==2.8.1 
+# tf282gpu -> tensorflow 2.8.2
+
+# 가상환경 생성 : conda create -n 이름 python=3.9.7 anaconda 
+#          python=버전 =는 한개     anaconda 필수 무조건 필수 
+# anaconda 를 안쓸경우 통합으로 깔려야할 친구들이 ( sklearn 등 )이 안깔림 
+
+
+# 5 tensorflow-gpu==2.8.2
+
+# 
+
+# cmd 관리자실행
+# conda env list - 콘다 환경 리스트 
+# conda remove --name ㅁㅁ --all      - 이 이름을 가진애를 지워달라  ( --all ) - 모든걸 지워라 
+
+
+# python 3.9.12 cpu   tf281cpu
+# python 3.9.7 gpu    tf282gpu
+
+# activate tf281cpu 
+# activate tf282gpu
+
+
+
+
+
+
+# nvidia-smi 설정 확인 cuda 11.7 을 원해 
+#                               없애야함 
+# 쿠다버젼 확인하는법 nvcc - V 11.4 

@@ -7,7 +7,7 @@ from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import nan_euclidean_distances, r2_score, mean_squared_error
-
+import time
 #1. data  # 10번 경로  +는 문자가 연결이 된다
 path = './_data/ddarung/' 
 train_set = pd.read_csv(path + 'train.csv', 
@@ -63,9 +63,10 @@ model.add(Dense(50, activation='swish'))
 model.add(Dense(1))
 
 #3. 컴파일 훈련
+start_time = time.time()
 model.compile(loss='mae', optimizer = 'adam')        # 평가지표는 프레딕트 결과값 어쩌구 저쩌구 해서 mse 로 가능 비슷하면 된다 
 model.fit(x_train, y_train, epochs=1000, batch_size=100) 
-
+end_time = time.time()-start_time
 #4. 평가 예측
 loss = model.evaluate(x_test, y_test)
 print('loss : ', loss)
@@ -77,6 +78,8 @@ def RMSE(y_test, y_predict):
 
 rmse = RMSE(y_test, y_predict)
 print("RMSE : ", rmse)
+
+print('걸린시간 : ', end_time)
 
 y_summit = model.predict(test_set)
 
@@ -178,3 +181,6 @@ submission.to_csv(path + 'submission.csv', index=False)
 # loss :  708.4660034179688 훈련량 800 동일 2회 
 # RMSE :  26.61702357657338
 
+loss :  42.667667388916016
+RMSE :  66.38048637184875
+걸린시간 :  74.39030742645264
