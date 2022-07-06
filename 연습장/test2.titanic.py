@@ -99,7 +99,7 @@ print(y)
 print(y.shape) # (891,)
 
 x_train, x_test, y_train, y_test = train_test_split(
-    x,y, train_size=0.74, random_state=6 )
+    x,y, train_size=0.77, random_state=6 )
 
 
 #2. 모델구성

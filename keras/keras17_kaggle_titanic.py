@@ -13,7 +13,7 @@ from tensorflow.keras.utils import to_categorical
 from sklearn.model_selection import train_test_split
 from tensorflow.python.keras.models import Sequential
 from tensorflow.python.keras.layers import Dense
-from tensorflow.python.keras.callbacks import EarlyStopping
+from tensorflow.keras.callbacks import EarlyStopping
 from sklearn.preprocessing import OneHotEncoder
 from sklearn.preprocessing import MinMaxScaler
 from sklearn.preprocessing import LabelEncoder
@@ -100,19 +100,22 @@ model.add(Dense(2, activation='sigmoid'))
 #3. 컴파일 훈련
 model.compile(loss='binary_crossentropy', optimizer = 'adam',metrics=['accuracy', 'mse'])        # 평가지표는 프레딕트 결과값 어쩌구 저쩌구 해서 mse 로 가능 비슷하면 된다 
 
-model.fit(x_train, y_train, epochs=10, batch_size=10)
+
 from tensorflow.python.keras.callbacks import EarlyStopping
 earlystopping = EarlyStopping(monitor='val_loss', patience=10, mode='min', verbose=1, # mode='min'뿐아니라 max도 있음  디폴드값 찾아볼것 모르면 오토 
               restore_best_weights=True)  # < - 검색해서 정리할것 (파라미터를 적용을 시켯다 내가 하고싶은데로)
              # 모니터로 보겟다 vla_loss / patience 참다 10번 / mode = 'min'  최솟값을 verbose=1
              # 깃허브 참조 
              # 이름을 짓는다 earlystopping 변수는 첫번째를 소문자로 
-             
+model.fit(x_train, y_train, epochs=100, batch_size=400,
+          validation_split=0.2,
+          callbacks=[earlystopping],
+          verbose=1)             
              
 #4. 평가 예측
 loss = model.evaluate(x_test, y_test)
 print('loss : ', loss)
-print(a.history['val_loss'])
+
 
 y_predict = model.predict(x_test)
 y_predict = y_predict.flatten()

@@ -1,98 +1,3 @@
-'''
-from sklearn.model_selection import train_test_split
-from sklearn.datasets import load_diabetes
-from tensorflow.keras.models import Sequential 
-from tensorflow.keras.layers import Dense
-
-datasets = load_diabetes()
-x = datasets.data
-y = datasets.target
-
-print(x)
-print(y)
-
-print(x.shape, y.shape)
-
-print(datasets.feature_names)
-
-print(datasets.DESCR)  
-x_train, x_test, y_train, y_test = train_test_split(x,y,
-                train_size=0.7,
-                shuffle=True,
-                random_state=44)
-
-#2. 모델구성
-model = Sequential()
-model.add(Dense(13, input_dim=10))
-model.add(Dense(5))
-model.add(Dense(5))
-model.add(Dense(5))
-model.add(Dense(5))
-model.add(Dense(1))
-
-#3. 컴파일 훈련 
-model.compile(loss='mse', optimizer='adam')
-model.fit(x_train, y_train, epochs=150 , batch_size=33)
-
-#4. 평가 예측
-loss = model.evaluate(x_test, y_test)
-print('loss : ', loss)
-
-y_predict = model.predict(x_test)
-
-from sklearn.metrics import r2_score
-
-r2 = r2_score(y_test, y_predict)
-print('r2_score : ', r2)
-
-
-# -------------------------------------------------------------
-# 2022-06-27 
-
-# tensorflow 자격증 시험본다  
-# tensorflow 시험은 파이참으로 본다 
-# 오후에 구글 자격증에 대해서 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-#   data           0 1 2 3 4 5 6 7 8 9 10 11 
-#   train          0 1 2 3   5 6   8
-#   test                   4     7   9 10 11
-#    
-#
-#   data           0 1 2 3 4 5 6 7 8 9 10 11 
-#   train          0 1 2 3   5 6   8 ㅣ
-#   test                   4     7   ㅣ9 10 11
-#                              1이하  -- 1 이상
-
-
-# scaler 트레인만 범위로 잡고 [[ 테스트 , 발리데이션 ]] fit 한 다음 transform ( 동일한 규칙을 갇고 한다 )
-# 1 이상인 과적합을 다시 평가한다  ( 데이터 전처리를 사용한 scaler 그리고 train test split 다시 찾아볼것 )
-# scaler 범위를 잡을땐 전체 데이터를 바로 잡지 않는다 ( 범위 밖도 생각해야하기 때문 )
-    #  트레인 범위만 한다 범위 밖의 애들로 평가를 한다  ( 버릴놈들은 버린다 )
-# 범위 밖 애들은 반드시 과적합 걸린다 
-
-# data 전처리는 컬럼별로 한다 
-
-
-
-'''
-
-
 import seaborn as sns
 import numpy as np
 import pandas as pd
@@ -192,6 +97,22 @@ x_train, x_test, y_train, y_test = train_test_split(x,y,
                                                     )
 
 
+from sklearn.preprocessing import MinMaxScaler, StandardScaler
+from sklearn.preprocessing import MaxAbsScaler, RobustScaler
+# scaler = RobustScaler()
+scaler = MaxAbsScaler()
+
+# scaler = MinMaxScaler()
+# scaler = StandardScaler()
+scaler.fit(x_train)
+x_train = scaler.transform(x_train)
+x_test = scaler.transform(x_test)
+print(np.min(x_train))   # 0.0
+print(np.max(x_train))   # 0.0 컬럼별로 나누어주어야 한다
+print(np.min(x_test))
+print(np.max(x_test))
+
+
 #2. 모델구성
 model = Sequential()
 model.add(Dense(300, input_dim=8, activation='relu')) #sigmoid : 이진분류일때 아웃풋에 activation = 'sigmoid' 라고 넣어줘서 아웃풋 값 범위를 0에서 1로 제한해줌
@@ -207,6 +128,7 @@ model.add(Dense(200, activation='relu'))
 model.add(Dense(1, activation='sigmoid'))   
                                                                         
 #3. 컴파일, 훈련
+start_time = time.time()
 model.compile(loss='binary_crossentropy', optimizer='adam',
               metrics=['accuracy'])   # 이진분류에 한해 로스함수는 무조건 99퍼센트로 'binary_crossentropy'
                                       # 컴파일에있는 metrics는 평가지표라고도 읽힘
@@ -223,7 +145,7 @@ model.fit(x_train, y_train, epochs=30, batch_size=100,
                  callbacks=[earlyStopping],
                  verbose=1)
 
-
+end_time = time.time()-start_time
 #4. 평가, 예측
 loss = model.evaluate(x_test, y_test)
 y_predict = model.predict(x_test)
@@ -259,10 +181,31 @@ submission_set.to_csv(path + 'gender.submission.csv', index = True)
 acc= accuracy_score(y_test, y_predict)
 print('loss : ' , loss)
 print('acc스코어 : ', acc) 
+print('걸린시간 : ', end_time)
 model.summary()
 
-# loss :  0.4480155110359192
-# acc스코어 :  0.8268156424581006
 
-# loss :  [0.4679424464702606, 0.7988826632499695]
-# acc스코어 :  0.7988826815642458
+# 없음 
+# loss :  [0.5118118524551392, 0.7150837779045105]
+# acc스코어 :  0.7150837988826816
+
+# min max 
+# loss :  [0.42979955673217773, 0.7877094745635986]
+# acc스코어 :  0.7877094972067039
+# 걸린시간 :  3.220163583755493
+
+# stendard
+# loss :  [0.479032427072525, 0.8100558519363403]
+# acc스코어 :  0.8100558659217877
+# 걸린시간 :  2.9146084785461426
+
+# RobustScaler
+
+# loss :  [0.4237560033798218, 0.826815664768219]
+# acc스코어 :  0.8268156424581006
+# 걸린시간 :  3.2468488216400146
+
+# MaxAbsScaler
+# loss :  [0.4074428677558899, 0.8435754179954529]
+# acc스코어 :  0.8435754189944135
+# 걸린시간 :  3.2793612480163574

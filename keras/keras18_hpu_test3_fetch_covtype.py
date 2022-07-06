@@ -11,7 +11,7 @@ import tensorflow as tf
 tf.random.set_seed(66)
 from matplotlib import pyplot as plt
 from sklearn.metrics import accuracy_score 
-from tensorflow.keras.utils import to_categorical
+from tensorflow.python.keras.utils import to_categorical
 # from tensorflow.keras.preprocessing.text import Tokenizer
 from sklearn.model_selection import train_test_split
 from tensorflow.python.keras.models import Sequential
@@ -74,11 +74,16 @@ print(y_test)
 # model 
 
 model = Sequential()
-model.add(Dense(108, input_dim=54))
-model.add(Dense(100, activation='relu'))
-model.add(Dense(100, activation='relu'))
-model.add(Dense(100, activation='swish'))
-model.add(Dense(100, activation='swish'))
+model.add(Dense(600, input_dim=54))
+model.add(Dense(500, activation='relu'))
+model.add(Dense(400, activation='relu'))
+model.add(Dense(500, activation='swish'))
+model.add(Dense(400, activation='relu'))
+model.add(Dense(400, activation='relu'))
+model.add(Dense(400, activation='relu'))
+model.add(Dense(400, activation='relu'))
+model.add(Dense(400, activation='relu'))
+model.add(Dense(400, activation='relu'))
 model.add(Dense(7, activation='softmax')) 
 
 # compile , epochs 
@@ -127,7 +132,6 @@ print('acc.score : ', acc)
 
 
 
-
 # print('loss : ', loss)
 # print('accuracy : ', acc)
 
@@ -140,3 +144,10 @@ print('acc.score : ', acc)
 
 # cpu  걸린시간 :  15.465159177780151
 # gpu  걸린시간 :  44.551164388656616
+
+
+
+# gpu  걸린시간 :  62.5988688468933
+# cpu  걸린시간 :  90.8629162311554
+
+
