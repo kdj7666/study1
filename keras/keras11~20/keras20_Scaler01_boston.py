@@ -80,10 +80,16 @@ x_train, x_test, y_train, y_test = train_test_split(x,y,
 scaler = MaxAbsScaler()
 # scaler = MinMaxScaler()
 # scaler = StandardScaler()
+
 # scaler.fit(x_train)
 # x_train = scaler.transform(x_train)
 x_train = scaler.fit_transform(x_train)
 x_test = scaler.fit_transform(x_test)
+
+scaler.fit(x_train)
+x_train = scaler.transform(x_train)
+x_test = scaler.transform(x_test)
+
 print(np.min(x_train))   # 0.0
 print(np.max(x_train))   # 0.0 컬럼별로 나누어주어야 한다
 print(np.min(x_test))
@@ -159,4 +165,8 @@ print('걸린시간 :', end_time)
 # MaxAbsScaler
 # loss :  606.0347900390625
 # r2score :  -7.37129308573221
+
 # 걸린시간 : 3.4653944969177246
+
+# 걸린시간 : 3.4653944969177246
+
