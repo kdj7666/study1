@@ -29,7 +29,7 @@ x_train, x_test, y_train, y_test = train_test_split(x,y,
 
 # from sklearn.preprocessing import MinMaxScaler, StandardScaler
 # from sklearn.preprocessing import MaxAbsScaler, RobustScaler
-# scaler = RobustScaler()
+scaler = RobustScaler()
 scaler = MaxAbsScaler()
 
 # scaler = MinMaxScaler()

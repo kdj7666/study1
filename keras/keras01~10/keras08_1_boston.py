@@ -34,15 +34,15 @@ x_train, x_test, y_train, y_test = train_test_split(x,y,
 # 2. 모델구성 
 
 model = Sequential()
-model.add(Dense(26, input_dim=13))
-model.add(Dense(20, activation='swish'))
-model.add(Dense(20, activation='swish'))
+model.add(Dense(1300, input_dim=13))
+model.add(Dense(10000, activation='swish'))
+model.add(Dense(10000, activation='swish'))
 model.add(Dense(10, activation='swish'))
 model.add(Dense(1))
 
 #3. 컴파일 , 훈련
 model.compile(loss='mse', optimizer='adam')     # 회귀 모델의 대표적인 평가 지표 중에 하나 == R2(R제곱) R2수치가 높을수로 좋다 
-model.fit(x_train, y_train, epochs=30000, batch_size=5)
+model.fit(x_train, y_train, epochs=300, batch_size=20)
 
 start_time = time.time()
 
@@ -80,3 +80,14 @@ print('r2score : ', r2)
 
 # loss :  15.887526512145996
 # r2score :  0.8068468499807665
+
+
+
+# loss :  83.12582397460938
+# 걸린시간 :  1657282796.9778378
+# r2score :  -0.010604947979917956
+
+
+# loss :  360.5030212402344
+# 걸린시간 :  1657282965.8992
+# r2score :  -3.382827415755635

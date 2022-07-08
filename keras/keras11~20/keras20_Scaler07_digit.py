@@ -101,6 +101,8 @@ acc = accuracy_score(y_test, y_predict)
 print('acc.score : ', acc)
 print('걸린시간 : ', end_time)
 
+
+
 # 없음 
 # loss :  0.3793579339981079
 # accuracy :  0.8963838815689087
