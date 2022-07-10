@@ -25,8 +25,6 @@ print(x_test.shape, y_test.shape)     # ( 10000, 32, 32 3) ( 10000, 1 )
 
 x_train = x_train.reshape( 60000, 28*28*1 )
 x_test = x_test.reshape( 10000, 28*28*1 )
-x_train = x_train.reshape( 50000, 32*32*3 )
-x_test = x_test.reshape( 10000, 32*32*3 )
 
 print(x_train.shape)      # (60000, 28, 28, 1)
 print(y_train.shape)
@@ -47,8 +45,6 @@ print(np.max(x_test))
 
 x_train = x_train.reshape( 60000, 28, 28, 1 )
 x_test = x_test.reshape( 10000, 28, 28, 1 )
-x_train = x_train.reshape( 50000, 32, 32, 3 )
-x_test = x_test.reshape( 10000, 32, 32, 3 )
 
 # 만들어봐 
 # acc 0.98 이상 
@@ -65,7 +61,6 @@ y_test = to_categorical(y_test)
 
 
 model.add(Conv2D(filters=64, kernel_size=(3,3), input_shape=(28, 28, 1)))
-model.add(Conv2D(filters=64, kernel_size=(3,3), padding='same', input_shape=(32, 32, 3)))
 
 model.add(Conv2D(10, kernel_size=(3,3)))
 model.add(MaxPooling2D())
@@ -75,7 +70,7 @@ model.add(Flatten())
 model.add(Dense(32, activation='relu'))
 model.add(Dense(32, activation='relu'))
 model.add(Dense(10, activation='softmax'))
-model.add(Dense(100, activation='softmax'))
+model.add(Dense(10, activation='softmax'))
 
 
 
@@ -97,31 +92,51 @@ print(a)
 print(a.history['val_loss'])
 
 
-# 4. evaluate , predict
-result = model.evaluate(x_test, y_tst)
-print('loss : ', result[0])
-print('accuracy : ', result[1])
+# # 4. evaluate , predict
+# result = model.evaluate(x_test, y_test)
+# print('loss : ', result[0])
+# print('accuracy : ', result[1])
 
-loss = model.evaluate(x_test, y_test)
-y_predict = model.predict(x_test)
+# loss = model.evaluate(x_test, y_test)
+# y_predict = model.predict(x_test)
 
-y_test = tf.argmax(y_test, axis=1)
-acc = accuracy_score(y_test, y_predict)
+# y_test = tf.argmax(y_test, axis=1)
+# acc = accuracy_score(x_test, y_test)
 
-print('acc : ', acc)
+# print('acc : ', acc)
+# print('loss : ', loss)
+
+
+# y_predict = model.predict(x_test)
+
+loss = model.evaluate(x_test, y_test) 
 print('loss : ', loss)
 
-
 y_predict = model.predict(x_test)
+y_predict = np.argmax(y_predict, axis= 1)
+y_predict = to_categorical(y_predict)
+
+
+acc = accuracy_score(y_test, y_predict)
+print('acc스코어 : ', acc)
+
 
 # loss: 0.3216 
 # - accuracy: 0.8890
 
 # loss: 0.3179 - accuracy: 0.8926
 
-loss = model.evaluate(x_test, y_test)
-print('loss : ', loss)
 
-y_predict = model.predict(x_test)
+# loss: 0.0688 - accuracy: 0.9887 
+# val_loss: 0.5930 - val_accuracy: 0.8838
 
 
+# loss: 0.6439 
+# accuracy: 0.8721
+# loss :  [0.6439264416694641, 0.8720999956130981]
+# acc스코어 :  0.8721
+
+
+# - accuracy: 0.8739
+# loss :  [0.6156235337257385, 0.8738999962806702]
+# acc스코어 :  0.8739

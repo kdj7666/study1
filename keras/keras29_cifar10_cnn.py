@@ -23,8 +23,8 @@ from sklearn.preprocessing import OneHotEncoder
 print(x_train.shape, y_train.shape)   # ( 50000, 32, 32 3) ( 50000, 1 )
 print(x_test.shape, y_test.shape)     # ( 10000, 32, 32 3) ( 10000, 1 )
 
-x_train = x_train.reshape( 50000, 32, 32, 3 )
-x_test = x_test.reshape( 10000, 32, 32, 3 )
+x_train = x_train.reshape
+x_test = x_test.reshape
 
 print(x_train.shape)      # (60000, 28, 28, 1)
 print(y_train.shape)
@@ -91,5 +91,3 @@ y_predict = model.predict(x_test)
 # print('걸린시간 : ', end_time)
 
 #  accuracy: 0.5266
-
-

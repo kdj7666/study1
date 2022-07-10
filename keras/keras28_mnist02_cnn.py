@@ -87,3 +87,4 @@ y_predict = model.predict(x_test)
 
 #   accuracy: 0.9800
 
+#  accuracy: 0.9807
