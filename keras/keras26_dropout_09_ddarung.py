@@ -4,7 +4,7 @@
 import numpy as np
 import pandas as pd
 from tensorflow.python.keras.models import Sequential, Model
-from tensorflow.python.keras.layers import Dense, Input, Dropout
+from tensorflow.python.keras.layers import Dense, Input, Dropout, Conv2D, Flatten
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import nan_euclidean_distances, r2_score, mean_squared_error
 import time
