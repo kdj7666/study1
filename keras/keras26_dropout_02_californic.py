@@ -1,4 +1,4 @@
-from sklearn.datasets import load_boston
+from sklearn.datasets import fetch_california_housing
 from sklearn.model_selection import train_test_split # 앞에 소문자는 변수 또는 함수 함수로 인식
 import numpy as np
 from sqlalchemy import Time
@@ -10,7 +10,7 @@ from sklearn.preprocessing import MaxAbsScaler, RobustScaler # ( 찾아 본 후 
 from tensorflow.python.keras.callbacks import EarlyStopping, ModelCheckpoint
 
 # data
-datasets = load_boston()
+datasets = fetch_california_housing()
 x = datasets.data
 y = datasets['target']
 

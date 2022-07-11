@@ -38,8 +38,8 @@ scaler.fit(x_train)
 scaler.fit(x_test)
 x_train = scaler.transform(x_train)
 x_test = scaler.transform(x_test)
-print(np.min(x_train))   # 0.0
-print(np.max(x_train))   # 0.0 컬럼별로 나누어주어야 한다
+print(np.min(x_train))
+print(np.max(x_train))
 print(np.min(x_test))
 print(np.max(x_test))
 
@@ -59,12 +59,10 @@ model = Sequential()
 y_train = to_categorical(y_train)
 y_test = to_categorical(y_test)
 
-
+# (model.add(Conv2D))
 model.add(Conv2D(filters=64, kernel_size=(3,3), padding='same', input_shape=(32, 32, 3)))
-
 model.add(Conv2D(10, kernel_size=(3,3)))
 model.add(MaxPooling2D())
-
 model.add(Conv2D(32, (2,2), padding='valid'))
 model.add(Flatten())
 model.add(Dense(32, activation='relu'))
@@ -82,7 +80,7 @@ earlystopping = EarlyStopping(monitor='val_loss', patience=150, mode='min', verb
 model.compile(loss = 'categorical_crossentropy', optimizer = 'adam',
               metrics = ['accuracy'])
 
-a = model.fit(x_train, y_train, epochs=200, batch_size=600,
+a = model.fit(x_train, y_train, epochs=400, batch_size=300,
               validation_split=0.2, callbacks= [earlystopping], verbose=1)
 
 end_time = time.time()-start_time
@@ -96,4 +94,34 @@ loss = model.evaluate(x_test, y_test)
 print('loss : ', loss)
 
 y_predict = model.predict(x_test)
+y_predict = np.argmax(y_predict, axis= 1)
+y_predict = to_categorical(y_predict)
 
+
+acc = accuracy_score(y_test, y_predict)
+print('acc스코어 : ', acc)
+
+
+# loss: 0.3216
+# accuracy: 0.8890
+
+# loss: 0.3179 - accuracy: 0.8926
+
+
+# loss: 0.0688 - accuracy: 0.9887 
+
+# val_loss: 0.5930 
+# val_accuracy: 0.8838
+
+
+# loss: 0.6439 
+# accuracy: 0.8721
+# loss :  [0.6439264416694641, 0.8720999956130981]
+# acc스코어 :  0.8721
+
+
+# accuracy: 0.8739
+# loss :  [0.6156235337257385, 0.8738999962806702]
+# acc스코어 :  0.8739
+
+# accuracy: 0.8919
