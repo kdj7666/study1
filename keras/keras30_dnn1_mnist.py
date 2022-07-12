@@ -43,7 +43,7 @@ y_test = to_categorical(y_test)
 #2. model
 model = Sequential()
 # ( model.add(Dense))
-# model.add(Dense(64, inpot_shape=(28*28,1 ))) #  두가지 다 가능 
+# model.add(Dense(64, inpot_shape=(28*28,1 ))) #  두가지 다 가능 # dnn 2차원  순차적
 model.add(Dense(64,input_shape=(784,)))
 model.add(Dense(61,activation='relu'))
 model.add(Dense(37,activation='relu'))

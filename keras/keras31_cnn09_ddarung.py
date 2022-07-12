@@ -29,7 +29,7 @@ print(train_set.info()) #null은 누락된 값이라고 하고 "결측치"라고
 print(train_set.describe())
 
 print(train_set.isnull().sum())
-test_set = train_set.fillna(test_set.mean())
+train_set = train_set.fillna(train_set.mean())
 print(train_set.isnull().sum())
 print(train_set.shape)
 test_set = test_set.fillna(test_set.median())
@@ -40,29 +40,22 @@ x = train_set.drop(['count'],axis=1)
 y = train_set['count']
 # y = test_set
 
+print(x.shape, y.shape) # (1459, 9) (1459,)
 
 x_train, x_test, y_train, y_test = train_test_split(x,y, # shuffle True False 잘 써야 한다 
-                    train_size=0.7,
-                    shuffle=True, random_state=55)
+                    test_size=0.2,
+                    random_state=30)
 
-print(x_train.shape, x_test.shape)
-print(y_train.shape, y_test.shape)
+print(x_train.shape, x_test.shape) # (1167, 9) (292, 9)
+print(y_train.shape, y_test.shape) # (1167,) (292,)
 
 print(np.unique(y_train, return_counts=True))  # (array([0, 1, 2]), array([59, 71, 48], dtype=int64))]
 print(np.unique(y_test, return_counts=True))
 
-
-print(x_train.shape, x_test.shape) # (1021, 9) (438, 9)
-print(y_train.shape, y_test.shape) # (1021,) (438,)
-print('============================================')
-
-print(x_train.shape, x_test.shape) # (1021, 9) (438, 9)
-
-x_train = x_train.reshape(1021,3,3,1)
-x_test = x_test.reshape(438,3,3,1)
+print('==========================================================')
 
 
-
+# 181번
 
 # from sklearn.preprocessing import MinMaxScaler, StandardScaler
 # from sklearn.preprocessing import MaxAbsScaler, RobustScaler
@@ -70,30 +63,37 @@ x_test = x_test.reshape(438,3,3,1)
 # scaler = MaxAbsScaler()
 
 # scaler = MinMaxScaler()
-# scaler = StandardScaler()
-# scaler.fit(x_train)
-# x_train = scaler.transform(x_train)
-# x_test = scaler.transform(x_test)
-# print(np.min(x_train))   # 0.0
-# print(np.max(x_train))   # 0.0 컬럼별로 나누어주어야 한다
-# print(np.min(x_test))
-# print(np.max(x_test))
+scaler = StandardScaler()
+scaler.fit(x_train)
+x_train = scaler.transform(x_train)
+x_test = scaler.transform(x_test)
+print(np.min(x_train))   # 0.0
+print(np.max(x_train))   # 0.0 컬럼별로 나누어주어야 한다
+print(np.min(x_test))
+print(np.max(x_test))
 
+x_train = x_train.reshape(1167,3,3,1)
+x_test = x_test.reshape(292,3,3,1)
 
-# model 
+print(x_train.shape, x_test.shape)
+
+# model
 
 model = Sequential()
-model.add(Conv2D(filters=64, kernel_size=(1,1),
+model.add(Conv2D(filters=64, kernel_size=(2,2),
                  padding='same', input_shape=(3,3,1)))
-model.add(Conv2D(32, (1,1),
+model.add(Conv2D(32, (2,2),
                  padding='same', activation='relu'))
-model.add(Conv2D(64, (1,1),
+model.add(Conv2D(64, (2,2),
                  padding='same', activation='relu'))
+
+
 model.add(Flatten())
 model.add(Dense(50, activation="swish"))
 model.add(Dense(30, activation='relu'))
 model.add(Dropout(0.3))
 model.add(Dense(1)) 
+model.summary()
 
 # input1 = Input(shape=(13,))
 # dense1 = Dense(10)(input1)
@@ -104,7 +104,7 @@ model.add(Dense(1))
 
 
 # compile , epochs 
-earlystopping = EarlyStopping(monitor='val_loss', patience=100, mode='auto', verbose=1,
+earlystopping = EarlyStopping(monitor='loss', patience=100, mode='min', verbose=1,
                               restore_best_weights=True)
 
 model.compile(loss = 'mae', optimizer = 'adam')
@@ -118,28 +118,20 @@ a = model.fit(x_train, y_train, epochs=300, batch_size=100,
 
 # loss ,acc = model.evaluate(x_test, y_test)
 
-results = model.evaluate(x_test, y_test)
-print('loss : ', results[0])
-print('accuracy : ', results[1])
 
 # print('====================================')
 # print(y_test[:5])
 # print('====================================')
 
-
+loss = model.evaluate(x_test, y_test)
+print('loss : ,', loss)
 # y_pred = model.predict(x_test[:5])
 # print(y_pred)
 print('====================================')
 end_time = time.time()-start_time
 
 y_predict = model.predict(x_test)
-y_predict = np.argmax(y_predict, axis=1)
-print(y_predict)
-y_test = np.argmax(y_test, axis=1)
-print(y_test)
 r2 = r2_score(y_test, y_predict)
-acc = accuracy_score(y_test, y_predict)
-print('acc.score : ', acc)
 print('걸린시간 : ', end_time)
 print('r2.score:', r2)
 model.summary()
@@ -149,3 +141,8 @@ model.summary()
 # acc.score :  0.9074074074074074
 # 걸린시간 :  14.029605388641357
 # r2.score: 0.8362644026682838
+
+# loss : , 30.37053108215332
+# ====================================
+# 걸린시간 :  25.235912084579468
+# r2.score: 0.7459924007308059
