@@ -141,11 +141,11 @@ mcp = ModelCheckpoint(monitor='val_loss', mode='auto', verbose=1,
                       filepath="".join([filepath, '01_', date, '_', filename])
                       )
 start_time = time.time() 
-hist = model.fit(x_train, y_train, epochs=500, batch_size=32,
+hist = model.fit(x_train, y_train, epochs=500, batch_size=320,
                  validation_split=0.2,
                  callbacks=[earlyStopping],
                  verbose=1)
-end_time = time.time() - start_time
+end_time = time.time() - start_time 
 
 
 #4. 평가예측
@@ -170,17 +170,17 @@ y_summit = model.predict(test_set)
 print(y_summit)
 print(y_summit.shape)   # (1458, 1)
 
-submission = pd.read_csv(path + 'submission.csv')
-submission['Weekly_Sales'] = y_summit
+submission_set = pd.read_csv(path + 'sample_submission.csv')
+submission_set['Weekly_Sales'] = y_summit
 
 # Brutal approach to deal with predictions close to outer range 
-q1 = submission['Weekly_Sales'].quantile(0.0045)
-q2 = submission['Weekly_Sales'].quantile(0.99)
+q1 = submission_set['Weekly_Sales'].quantile(0.0045)
+q2 = submission_set['Weekly_Sales'].quantile(0.99)
 
-submission['Weekly_Sales'] = submission['Weekly_Sales'].apply(lambda x: x if x > q1 else x*0.77)
-submission['Weekly_Sales'] = submission['Weekly_Sales'].apply(lambda x: x if x < q2 else x*1.1)
+submission_set['Weekly_Sales'] = submission_set['Weekly_Sales'].apply(lambda x: x if x > q1 else x*0.77)
+submission_set['Weekly_Sales'] = submission_set['Weekly_Sales'].apply(lambda x: x if x < q2 else x*1.1)
 
-submission.to_csv(path + 'submission1.csv', index=False)
+submission_set.to_csv(path + 'sample_submission.csv', index=False)
 
 
 #4_1. 그래프로 비교
@@ -225,3 +225,4 @@ plt.show()
 # RMSE :  521317.6636425292
 # R2 :  0.16262125708309716
 #===================================================================================#
+

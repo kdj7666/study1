@@ -33,7 +33,7 @@ print(np.unique(y_train, return_counts=True))
 print(np.unique(y_test, return_counts=True))
 
 # 2. 모델구성
-
+# cnn ( 4 차원 )
 model = Sequential()
 model.add(Conv2D(filters=32, kernel_size=(1,1),
                  padding='same', input_shape=(13,1,1)))
