@@ -39,11 +39,11 @@ print(np.unique(y_test, return_counts=True))
 
 model = Sequential()
 
-# y_train = pd.get_dummies(y_train)
-# y_test = pd.get_dummies(y_test)
+y_train = pd.get_dummies(y_train)
+y_test = pd.get_dummies(y_test)
 
-y_train = to_categorical(y_train)
-y_test = to_categorical(y_test)
+# y_train = to_categorical(y_train)
+# y_test = to_categorical(y_test)
 
 model = Sequential()
 input1 = Input(shape=(32,32,3))

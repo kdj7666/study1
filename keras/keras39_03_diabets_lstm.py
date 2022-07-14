@@ -1,7 +1,7 @@
 from sklearn.model_selection import train_test_split
 from sklearn.datasets import load_diabetes
 from tensorflow.python.keras.models import Sequential, Model
-from tensorflow.python.keras.layers import Dense, Input, Conv2D, Flatten, Conv1D
+from tensorflow.python.keras.layers import Dense, Input, Conv2D, Flatten, LSTM
 from gc import callbacks
 import numpy as np 
 from tensorflow.python.keras.callbacks import EarlyStopping, ModelCheckpoint
@@ -15,14 +15,18 @@ datasets = load_diabetes()
 x = datasets.data  
 y = datasets.target 
 
+print(x.shape)
+
+x = x.reshape(442,10,1)
+
 x_train, x_test, y_train, y_test = train_test_split(x,y,
         train_size=0.7, shuffle=True, random_state=77)
 
 print(x_train.shape, x_test.shape) # (309, 10) (133, 10)
 print(y_train.shape, y_test.shape) # (309,) (133,)
 
-x_train = x_train.reshape(309,5,2,1)
-x_test = x_test.reshape(133,5,2,1)
+
+
 # from sklearn.preprocessing import MinMaxScaler, StandardScaler
 # from sklearn.preprocessing import MaxAbsScaler, RobustScaler
 # scaler = RobustScaler()
@@ -59,17 +63,11 @@ print(np.unique(y_test, return_counts=True))
 # model = Model(inputs=input1, outputs=output1)
 
 model = Sequential()
-model.add(Conv2D(filters=240, kernel_size=(2,1),
-                 padding='same', input_shape=(5,2,1)))
-model.add(Conv2D(120, (2,1),
-                 padding='valid',
-                 activation='relu'))
-model.add(Conv2D(60, (2,1),
-                 padding='valid',
-                 activation='relu'))
-model.add(Flatten())
+model.add(LSTM(units=64, return_sequences=True,
+               input_shape=(10,1)))
+model.add(LSTM(32, return_sequences=False,
+               activation='relu'))
 model.add(Dense(30, activation='relu'))
-model.add(Dense(15, activation='relu'))
 model.add(Dense(1, activation='linear'))
 
 #3. 컴파일 , 훈련
@@ -82,7 +80,7 @@ model.compile(loss='mse', optimizer='adam',
 earlystopping = EarlyStopping(monitor='val_loss', patience=300, mode='min', verbose=1,
                               restore_best_weights=True)
 
-a = model.fit(x_train, y_train, epochs=1550, batch_size=100,
+a = model.fit(x_train, y_train, epochs=10, batch_size=1000,
           validation_split=0.2,
           callbacks=[earlystopping],
           verbose=1)
@@ -102,4 +100,7 @@ print('r2score : ', r2)
 
 print('걸린시간 : ', end_time)
 
-r2score :  0.5009690974568957
+# r2score :  0.5009690974568957
+
+# r2score :  -3.6907846996467697
+# 걸린시간 :  5.463723421096802

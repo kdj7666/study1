@@ -21,8 +21,8 @@ x_train, x_test, y_train, y_test = train_test_split(x,y,
 print(x_train.shape, x_test.shape) # (309, 10) (133, 10)
 print(y_train.shape, y_test.shape) # (309,) (133,)
 
-x_train = x_train.reshape(309,5,2,1)
-x_test = x_test.reshape(133,5,2,1)
+x_train = x_train.reshape(309,5,2)
+x_test = x_test.reshape(133,5,2)
 # from sklearn.preprocessing import MinMaxScaler, StandardScaler
 # from sklearn.preprocessing import MaxAbsScaler, RobustScaler
 # scaler = RobustScaler()
@@ -59,18 +59,11 @@ print(np.unique(y_test, return_counts=True))
 # model = Model(inputs=input1, outputs=output1)
 
 model = Sequential()
-model.add(Conv2D(filters=240, kernel_size=(2,1),
-                 padding='same', input_shape=(5,2,1)))
-model.add(Conv2D(120, (2,1),
-                 padding='valid',
-                 activation='relu'))
-model.add(Conv2D(60, (2,1),
-                 padding='valid',
-                 activation='relu'))
+model.add(Conv1D(32, 2, padding='same', input_shape=(5,2)))
 model.add(Flatten())
-model.add(Dense(30, activation='relu'))
-model.add(Dense(15, activation='relu'))
-model.add(Dense(1, activation='linear'))
+model.add(Dense(32, activation='relu'))
+model.add(Dense(32, activation='relu'))
+model.add(Dense(1))
 
 #3. 컴파일 , 훈련
 
@@ -82,7 +75,7 @@ model.compile(loss='mse', optimizer='adam',
 earlystopping = EarlyStopping(monitor='val_loss', patience=300, mode='min', verbose=1,
                               restore_best_weights=True)
 
-a = model.fit(x_train, y_train, epochs=1550, batch_size=100,
+a = model.fit(x_train, y_train, epochs=100, batch_size=100,
           validation_split=0.2,
           callbacks=[earlystopping],
           verbose=1)
@@ -102,4 +95,8 @@ print('r2score : ', r2)
 
 print('걸린시간 : ', end_time)
 
-r2score :  0.5009690974568957
+
+
+# loss :  [4294.53173828125, 56.43971252441406]
+# r2score :  0.25143020805788896
+# 걸린시간 :  6.141554355621338

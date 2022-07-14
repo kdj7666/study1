@@ -1,8 +1,16 @@
+# from unicodedata import bidirectional
+# from sklearn.model_selection import train_test_split 
+# from tensorflow.python.keras.models import Sequential
+# from tensorflow.python.keras.layers import Dense, SimpleRNN, LSTM
+# from sklearn.preprocessing import OneHotEncoder, RobustScaler, StandardScaler
+# from keras import Bidirectional
+
+
 import numpy as np
-from sklearn.model_selection import train_test_split 
-from tensorflow.python.keras.models import Sequential
-from tensorflow.python.keras.layers import Dense, SimpleRNN, LSTM
-from sklearn.preprocessing import OneHotEncoder, RobustScaler, StandardScaler
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import Dense, SimpleRNN, LSTM
+# from tensorflow.keras.layers import Bidirectional
+from keras.layers import Bidirectional
 
 # 1. 데이터
 
@@ -30,18 +38,23 @@ model = Sequential()
 # model.add(SimpleRNN(10, input_length=3, input_dim=3)) # 이렇게도 쓸수 잇음 반대로 사용가능하지만 값이 달라짐 
 
 # model.add(SimpleRNN(units=10, input_shape=(3,1)))
-model.add(LSTM(units=10, input_shape=(3,1))) # 연산량이 많아진다 
+# model.add(SimpleRNN(units=50,return_sequences=True, input_shape=(3,1))) # 연산량이 많아진다 
 # model.add(SimpleRNN(32))
 # ValueError: Input 0 of layer simple_rnn_1 is incompatible with the layer: expected ndim=3, found ndim=2. Full 
 # shape received: (None, 10) 
 # (None, 64) 64개를 주었어 
+
+model.add(LSTM(units=50,return_sequences=True, input_shape=(3,1)))
+model.add(Bidirectional(LSTM(20)))           # simpleRNN , LSTM GRU 가능 
 model.add(Dense(100,activation='swish'))     # 윗줄 3차원 받을때는 2차원 ( 물어볼것 )
 model.add(Dense(90,activation='swish'))
 model.add(Dense(80,activation='swish'))
 model.add(Dense(70,activation='swish'))
 model.add(Dense(60,activation='swish'))
 model.add(Dense(50,activation='swish'))
+model.add(Dense(30,activation='relu'))
 model.add(Dense(1))
+
 
 model.summary()
 # [simple] units : 10 ->  10 * (1 + 1 + 10 ) = 120
@@ -54,7 +67,7 @@ model.summary()
 # 3. cmopile , epochs
 model.compile(loss='mse', optimizer='adam')
 
-model.fit(x, y, epochs= 850, batch_size=20, verbose=1)
+model.fit(x, y, epochs= 5500, batch_size=10, verbose=1)
 
 # 4. evaulate , predict
 loss = model.evaluate(x,y)
@@ -64,4 +77,22 @@ result = model.predict(y_pred)
 print('loss : 의 결과 ', loss)
 print('80의 결과 : ', result)
 
+# simpleRNN
+# loss : 의 결과  0.002000854816287756
+# 80의 결과 :  [[78.539406]]
 
+# loss : 의 결과  0.0029086791910231113
+# 80의 결과 :  [[80.33319]]
+
+# loss : 의 결과  0.0018109969096258283
+# 80의 결과 :  [[80.35116]]
+
+
+
+# LSTM
+
+# loss : 의 결과  0.0001374567800667137
+# 80의 결과 :  [[79.49389]]
+
+# loss : 의 결과  4.005658411188051e-05
+# 80의 결과 :  [[73.47472]]

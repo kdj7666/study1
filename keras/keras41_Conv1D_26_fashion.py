@@ -5,7 +5,7 @@ from json import encoder
 from sklearn.model_selection import train_test_split
 from tensorflow.python.keras.callbacks import EarlyStopping
 from tensorflow.python.keras.models import Sequential, Model
-from tensorflow.python.keras.layers import Dense, Conv2D, Flatten, MaxPooling2D, Input # 이미지는 2차원 2d
+from tensorflow.python.keras.layers import Dense, Conv2D, Flatten, MaxPooling2D, Input, Conv1D # 이미지는 2차원 2d
 from tensorflow.keras.datasets import mnist
 from keras.datasets import fashion_mnist
 import numpy as np
@@ -23,8 +23,8 @@ from sklearn.preprocessing import OneHotEncoder, RobustScaler, StandardScaler
 print(x_train.shape, y_train.shape)   # ( 50000, 32, 32 3) ( 50000, 1 )
 print(x_test.shape, y_test.shape)     # ( 10000, 32, 32 3) ( 10000, 1 )
 
-x_train = x_train.reshape( 60000,28*28*1 )
-x_test = x_test.reshape( 10000,28*28*1 )
+x_train = x_train.reshape( 60000,28*28)
+x_test = x_test.reshape( 10000,28*28)
 
 print(x_train.shape)      # (60000, 28, 28, 1)
 print(y_train.shape)
@@ -43,8 +43,8 @@ print(np.max(x_train))
 print(np.min(x_test))
 print(np.max(x_test))
 
-x_train = x_train.reshape( 60000, 28,28,1 )
-x_test = x_test.reshape( 10000, 28,28,1 )
+x_train = x_train.reshape( 60000, 28,28)
+x_test = x_test.reshape( 10000, 28,28 )
 
 # 만들어봐 
 # acc 0.98 이상 
@@ -60,18 +60,11 @@ y_train = to_categorical(y_train)
 y_test = to_categorical(y_test)
 
 
-input1 = Input(shape=(28,28,1))
-dense1 = Conv2D(filters=64, kernel_size=(4,4), padding='same')(input1)
-dense2 = MaxPooling2D(2,2)(dense1)
-dense3 = Conv2D(32, (4,4), padding='valid')(dense2)
-dense4 = MaxPooling2D(2,2)(dense3)
-dense5 = Conv2D(16, (4,4), padding='valid')(dense4)
-
-dense6 = Flatten()(dense5)
-dense7 = Dense(30, activation='relu')(dense6)
-dense8 = Dense(30, activation='relu')(dense7)
-output1 = Dense(10, activation='softmax')(dense8)
-model = Model(inputs=input1, outputs=output1)
+model.add(Conv1D(32, 2, padding='same', input_shape=(28,28)))
+model.add(Flatten())
+model.add(Dense(32, activation='relu'))
+model.add(Dense(32, activation='relu'))
+model.add(Dense(10, activation='softmax'))
 model.summary()
 
 
@@ -104,7 +97,7 @@ earlystopping = EarlyStopping(monitor='val_loss', patience=150, mode='min', verb
 model.compile(loss = 'categorical_crossentropy', optimizer = 'adam',
               metrics = ['accuracy'])
 
-a = model.fit(x_train, y_train, epochs=10, batch_size=300,
+a = model.fit(x_train, y_train, epochs=100, batch_size=300,
               validation_split=0.2, callbacks= [earlystopping], verbose=1)
 
 end_time = time.time()-start_time
@@ -124,6 +117,10 @@ y_predict = to_categorical(y_predict)
 
 acc = accuracy_score(y_test, y_predict)
 print('acc스코어 : ', acc)
-
+print('결과시간 : ', end_time)
 # loss :  [0.32412344217300415, 0.8827000260353088]
 # acc스코어 :  0.8827
+
+# loss :  [1.1703150272369385, 0.8493000268936157]
+# acc스코어 :  0.8493
+# 결과시간 :  66.69824051856995

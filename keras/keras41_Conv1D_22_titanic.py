@@ -125,23 +125,16 @@ print(np.max(x_train))   # 0.0 컬럼별로 나누어주어야 한다
 print(np.min(x_test))
 print(np.max(x_test))
 
-x_train = x_train.reshape(712,4,2,1)
-x_test = x_test.reshape(179,4,2,1)
+x_train = x_train.reshape(712,4,2)
+x_test = x_test.reshape(179,4,2)
 
 #2. 모델구성
 
 model = Sequential()
-model.add(Conv2D(filters=80, kernel_size=(1,1),
-                 padding='same', input_shape=(4,2,1)))
-model.add(Conv2D(70, (1,1), activation='swish'))
-model.add(Conv2D(60, (1,1), activation='relu'))
-model.add(Conv2D(50, (1,1), activation='relu'))
+model.add(Conv1D(32, 2, padding='same', input_shape=(4,2)))
 model.add(Flatten())
-model.add(Dense(150, activation='relu'))
-model.add(Dropout(0.4))
-model.add(Dense(150, activation='swish'))
-model.add(Dropout(0.2))
-model.add(Dense(100, activation='relu'))
+model.add(Dense(32, activation='relu'))
+model.add(Dense(32, activation='relu'))
 model.add(Dense(1, activation='linear'))
 
 # model.add(Dense(300, input_dim=8, activation='relu')) #sigmoid : 이진분류일때 아웃풋에 activation = 'sigmoid' 라고 넣어줘서 아웃풋 값 범위를 0에서 1로 제한해줌
@@ -262,3 +255,9 @@ model.summary()
 # loss :  [0.126992866396904, 0.8100558519363403]
 # acc스코어 :  0.8100558659217877
 # 걸린시간 :  12.499677419662476
+
+
+# loss :  [0.14263693988323212, 0.7877094745635986]
+# acc스코어 :  0.7877094972067039
+# 걸린시간 :  10.93368935585022
+

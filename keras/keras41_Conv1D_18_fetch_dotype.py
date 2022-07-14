@@ -28,8 +28,8 @@ x_train, x_test, y_train, y_test = train_test_split(x,y,
 print(x_train.shape, x_test.shape) # (406708, 54) (174304, 54)
 print(y_train.shape, y_test.shape) # (406708,) (174304,)
 
-x_train = x_train.reshape(406708,9,6,1)
-x_test = x_test.reshape(174304,9,6,1)
+x_train = x_train.reshape(406708,9,6)
+x_test = x_test.reshape(174304,9,6)
 
 print(np.unique(y_train, return_counts=True))
 print(np.unique(y_test, return_counts=True))
@@ -56,16 +56,10 @@ y_test = to_categorical(y_test)
 # model 
 
 model = Sequential()
-model.add(Conv2D(filters=240, kernel_size=(2,2),
-                 padding='same', input_shape=(9,6,1)))
-model.add(Conv2D(120, (2,2),
-                 padding='valid', activation='relu'))
-model.add(Conv2D(60, (2,2),
-                 padding='valid', activation='relu'))
+model.add(Conv1D(32, 2, padding='same', input_shape=(9,6)))
 model.add(Flatten())
-model.add(Dense(50, activation="swish"))
-model.add(Dense(30, activation='relu'))
-model.add(Dropout(0.3))
+model.add(Dense(32, activation='relu'))
+model.add(Dense(32, activation='relu'))
 model.add(Dense(8, activation='softmax')) 
 
 # input1 = Input(shape=(13,))
@@ -85,7 +79,7 @@ model.compile(loss = 'categorical_crossentropy', optimizer = 'adam',
 
 start_time = time.time()
 
-a = model.fit(x_train, y_train, epochs=300, batch_size=100,
+a = model.fit(x_train, y_train, epochs=300, batch_size=1000,
           validation_split=0.2,
           callbacks = [earlystopping],
           verbose=1)
@@ -107,13 +101,13 @@ print('====================================')
 end_time = time.time()-start_time
 
 y_predict = model.predict(x_test)
-y_predict = np.argmax(y_predict, axis=1)
-print(y_predict)
-y_test = np.argmax(y_test, axis=1)
-print(y_test)
+# y_predict = np.argmax(y_predict, axis=1)
+# print(y_predict)
+# y_test = np.argmax(y_test, axis=1)
+# print(y_test)
 r2 = r2_score(y_test, y_predict)
-acc = accuracy_score(y_test, y_predict)
-print('acc.score : ', acc)
+# acc = accuracy_score(y_test, y_predict)
+# print('acc.score : ', acc)
 print('걸린시간 : ', end_time)
 print('r2.score:', r2)
 model.summary()
@@ -123,3 +117,11 @@ model.summary()
 # acc.score :  0.9074074074074074
 # 걸린시간 :  14.029605388641357
 # r2.score: 0.8362644026682838
+
+
+# loss :  0.5401761531829834
+# accuracy :  0.7702347636222839
+# ====================================
+# 걸린시간 :  462.79521131515503
+# r2.score: 0.4110911471011953
+

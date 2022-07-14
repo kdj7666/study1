@@ -95,7 +95,7 @@ dense4 = Dense(50, activation='relu')(drop1)
 dense5 = Dense(50)(dense4)
 dense6 = Dense(50)(dense5)
 drop2 = Dropout(0.15)(dense6)
-output1 = Dense(1, activation='softmax')(drop2)
+output1 = Dense(1)(drop2)
 model = Model(inputs=input1, outputs=output1)
 # model = 대문자Model in 은 시작점 out 은 마지막 
 # model.save('./_save/k23_smm_ddarung.h5')

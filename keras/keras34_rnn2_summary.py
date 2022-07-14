@@ -39,12 +39,12 @@ print(x.shape)
 # rnn 모델 만드는 법 
 model = Sequential()
  # input_shape 는 행을 뺀다 ( 행 무시 열 우선 )                     input_dim
-model.add(SimpleRNN(10, input_shape=(1,3))) # [batch, timesteps, feature]
+model.add(SimpleRNN(85, input_shape=(1,3))) # [batch, timesteps, feature]
 # model.add(SimpleRNN(32))
 # ValueError: Input 0 of layer simple_rnn_1 is incompatible with the layer: expected ndim=3, found ndim=2. Full 
 # shape received: (None, 10) 
 # (None, 64) 64개를 주었어 
-model.add(Dense(5,activation='swish'))     # 윗줄 3차원 받을때는 2차원 ( 물어볼것 )
+model.add(Dense(24,activation='swish'))     # 윗줄 3차원 받을때는 2차원 ( 물어볼것 )
 model.add(Dense(1))
 
 model.summary()
@@ -107,6 +107,10 @@ print('[8,9,10의 결과 : ', result)
 #    10        *   10                 1                   10                 10
  
 
+
+
+
+
 # _________________________________________________________________
 # Layer (type)                 Output Shape              Param #
 # =================================================================
@@ -128,3 +132,4 @@ print('[8,9,10의 결과 : ', result)
 
 # 피쳐 * 유닛 * 바이어스 ) * 유닛 = 파람 
 # feature bias unit
+

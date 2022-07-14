@@ -3,7 +3,7 @@ from matplotlib import font_manager
 from sklearn. datasets import load_boston  
 import numpy as np 
 from tensorflow.python.keras.models import Sequential, Model, load_model
-from tensorflow.python.keras.layers import Dense, Input, Dropout, Conv2D, Flatten
+from tensorflow.python.keras.layers import Dense, Input, Dropout, Conv2D, Flatten, Conv1D
 from sklearn.model_selection import train_test_split
 import time
 from sklearn.preprocessing import MinMaxScaler, StandardScaler
@@ -23,8 +23,8 @@ x_train, x_test, y_train, y_test = train_test_split(x,y,
 print(x_train.shape, x_test.shape) # (354, 13) (152, 13)
 print(y_train.shape, y_test.shape) # (354,) (152,)
 
-x_train= x_train.reshape(354,13,1,1)
-x_test = x_test.reshape(152,13,1,1)
+x_train= x_train.reshape(354,13,1)
+x_test = x_test.reshape(152,13,1)
 
 # print(x.shape)
 # print(y.shape)
@@ -33,20 +33,13 @@ print(np.unique(y_train, return_counts=True))
 print(np.unique(y_test, return_counts=True))
 
 # 2. 모델구성
-# cnn ( 4 차원 )
+# cnn ( 4 차원 ) 이건  rnn 
 model = Sequential()
-model.add(Conv2D(filters=32, kernel_size=(1,1),
-                 padding='same', input_shape=(13,1,1)))
-model.add(Conv2D(16, (1,1), 
-                 padding='valid',
-                 activation='relu'))
-model.add(Conv2D(8, (1,1), 
-                 padding='valid',
-                 activation='relu'))
+model.add(Conv1D(32, 2, padding='same', input_shape=(13,1)))
 model.add(Flatten())
-model.add(Dense(16, activation='relu'))
-model.add(Dense(8, activation='relu'))
-model.add(Dense(1, activation='linear'))
+model.add(Dense(32, activation='relu'))
+model.add(Dense(32, activation='relu'))
+model.add(Dense(1))
 model.summary()
 
 #3. 컴파일 , 훈련
@@ -59,7 +52,7 @@ model.compile(loss='mae', optimizer='adam',
 earlystopping = EarlyStopping(monitor='val_loss', patience=100, mode='min', verbose=1, 
               restore_best_weights=True)
 
-a = model.fit(x_train, y_train, epochs=100, batch_size=10,
+a = model.fit(x_train, y_train, epochs=100, batch_size=100,
                 validation_split=0.2,
                 callbacks=[earlystopping],
                 verbose=1)
@@ -74,11 +67,12 @@ end_time = time.time() - start_time
 loss = model.evaluate(x_test, y_test)
 print('loss : ', loss)
 
+
 y_predict = model.predict(x_test)
-y_predict = np.argmax(y_predict, axis= 1)
-y_predict = to_categorical(y_predict)
+# y_predict = np.argmax(y_predict, axis= 1)
+# y_predict = to_categorical(y_predict)
 
 from sklearn.metrics import r2_score
 r2 = r2_score(y_test, y_predict)
 print('r2스코어 : ', r2)
-
+print('걸린시간 : ', end_time)

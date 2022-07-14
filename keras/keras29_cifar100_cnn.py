@@ -5,7 +5,7 @@ from json import encoder
 from sklearn.model_selection import train_test_split
 from tensorflow.python.keras.callbacks import EarlyStopping
 from tensorflow.python.keras.models import Sequential
-from tensorflow.python.keras.layers import Dense, Conv2D, Flatten, MaxPooling2D, Dropout # 이미지는 2차원 2d 
+from tensorflow.python.keras.layers import Dense, Conv2D, Flatten, MaxPooling2D, Dropout, Conv1D # 이미지는 2차원 2d 
 from tensorflow.keras.datasets import mnist
 from keras.datasets import cifar100
 import numpy as np

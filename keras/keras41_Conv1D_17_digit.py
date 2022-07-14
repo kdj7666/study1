@@ -1,41 +1,50 @@
-import numpy as np
-from sklearn.datasets import fetch_covtype
-from tensorflow.keras.utils import to_categorical
-from sklearn.model_selection import train_test_split
-from tensorflow.python.keras.models import Sequential, Model
-from tensorflow.python.keras.layers import Dense, Input, Dropout, Conv2D, Flatten, Conv1D
-from tensorflow.python.keras.callbacks import EarlyStopping, ModelCheckpoint
+# import numpy as np
+from sklearn.datasets import load_digits
+# -------------------------------
+from cProfile import label
+import numpy as np 
 import tensorflow as tf
 tf.random.set_seed(66)
 from matplotlib import pyplot as plt
 from sklearn.metrics import accuracy_score, r2_score 
-import time
+from tensorflow.keras.utils import to_categorical
+# from tensorflow.keras.preprocessing.text import Tokenizer
+from sklearn.model_selection import train_test_split
+from tensorflow.python.keras.models import Sequential, Model
+from tensorflow.python.keras.layers import Dense, Input, Dropout, Conv2D, Flatten, Conv1D
+from tensorflow.python.keras.callbacks import EarlyStopping, ModelCheckpoint
+# ---------------------------------
 from sklearn.preprocessing import MinMaxScaler, StandardScaler
+import time
 from sklearn.preprocessing import MaxAbsScaler, RobustScaler
 
-
 #1. data
-datasets = fetch_covtype()
+
+datasets = load_digits()
 x = datasets.data
 y = datasets.target
 
-print(np.unique(y, return_counts=True))  # (array([0, 1, 2]), array([59, 71, 48], dtype=int64))]
-
 x_train, x_test, y_train, y_test = train_test_split(x,y,
                     train_size=0.7,
-                    shuffle=True, random_state=55) # shuffle True False 잘 써야 한다 
+                    shuffle=True, random_state=65) # shuffle True False 잘 써야 한다 
 
-print(x_train.shape, x_test.shape) # (406708, 54) (174304, 54)
-print(y_train.shape, y_test.shape) # (406708,) (174304,)
+print(x_train.shape, x_test.shape) # (359,64) (1438,64)
+print(y_train.shape, y_test.shape) # (359,) (1438,)
 
-x_train = x_train.reshape(406708,9,6,1)
-x_test = x_test.reshape(174304,9,6,1)
+x_train = x_train.reshape(1257,8,8)
+x_test = x_test.reshape(540,8,8)
 
-print(np.unique(y_train, return_counts=True))
-print(np.unique(y_test, return_counts=True))
+print(np.unique(y_train, return_counts=True))  # [0 1 2 3 4 5 6 7 8 9]  10 개 
+print(np.unique(y_test, return_counts=True))  # [0 1 2 3 4 5 6 7 8 9]  10 개 
 
 y_train = to_categorical(y_train)
 y_test = to_categorical(y_test)
+
+# import matplotlib.pyplot as plt
+# plt.gray()
+# plt.matshow(datasets.images[0])
+# plt.show()
+
 
 # from sklearn.preprocessing import MinMaxScaler, StandardScaler
 # from sklearn.preprocessing import MaxAbsScaler, RobustScaler
@@ -53,43 +62,40 @@ y_test = to_categorical(y_test)
 # print(np.max(x_test))
 
 
-# model 
+# # model 
 
 model = Sequential()
-model.add(Conv2D(filters=240, kernel_size=(2,2),
-                 padding='same', input_shape=(9,6,1)))
-model.add(Conv2D(120, (2,2),
-                 padding='valid', activation='relu'))
-model.add(Conv2D(60, (2,2),
-                 padding='valid', activation='relu'))
+model.add(Conv1D(32, 2, padding='same', input_shape=(8,8)))
 model.add(Flatten())
-model.add(Dense(50, activation="swish"))
-model.add(Dense(30, activation='relu'))
-model.add(Dropout(0.3))
-model.add(Dense(8, activation='softmax')) 
+model.add(Dense(32, activation='relu'))
+model.add(Dense(32, activation='relu'))
+model.add(Dense(10, activation='softmax')) 
 
-# input1 = Input(shape=(13,))
+
+# input1 = Input(shape=(64,))
 # dense1 = Dense(10)(input1)
 # dense2 = Dense(5, activation='relu')(dense1)
-# dense3 = Dense(3, activation='relu')(dense2)
-# output1 = Dense(3, activation='softmax')(dense3)
+# drop1 = Dropout(0.4)(dense2)
+# dense3 = Dense(3, activation='relu')(drop1)
+# output1 = Dense(10, activation='softmax')(dense3)
 # model = Model(inputs=input1, outputs=output1)
 
 
 # compile , epochs 
-earlystopping = EarlyStopping(monitor='val_loss', patience=100, mode='auto', verbose=1,
+start_time = time.time()
+earlystopping = EarlyStopping(monitor='val_loss', patience=100, mode='min', verbose=1,
                               restore_best_weights=True)
 
 model.compile(loss = 'categorical_crossentropy', optimizer = 'adam',
               metrics = ['accuracy', 'mse'])
 
-start_time = time.time()
 
 a = model.fit(x_train, y_train, epochs=300, batch_size=100,
           validation_split=0.2,
           callbacks = [earlystopping],
           verbose=1)
 
+end_time = time.time()-start_time
 # loss ,acc = model.evaluate(x_test, y_test)
 
 results = model.evaluate(x_test, y_test)
@@ -104,22 +110,26 @@ print('accuracy : ', results[1])
 # y_pred = model.predict(x_test[:5])
 # print(y_pred)
 print('====================================')
-end_time = time.time()-start_time
 
 y_predict = model.predict(x_test)
-y_predict = np.argmax(y_predict, axis=1)
-print(y_predict)
-y_test = np.argmax(y_test, axis=1)
-print(y_test)
+# y_predict = np.argmax(y_predict, axis=1)
+# print(y_predict)
+# y_test = np.argmax(y_test, axis=1)
+# print(y_test)
 r2 = r2_score(y_test, y_predict)
-acc = accuracy_score(y_test, y_predict)
-print('acc.score : ', acc)
+# acc = accuracy_score(y_test, y_predict)
+# print('acc.score : ', acc)
 print('걸린시간 : ', end_time)
 print('r2.score:', r2)
 model.summary()
 
-# loss :  0.338166207075119
-# accuracy :  0.9074074029922485
-# acc.score :  0.9074074074074074
-# 걸린시간 :  14.029605388641357
-# r2.score: 0.8362644026682838
+# acc.score :  0.9814814814814815
+# 걸린시간 :  19.17873787879944
+# r2.score: 0.9758885412737569
+
+
+# loss :  0.12122046947479248
+# accuracy :  0.9666666388511658
+# ====================================
+# 걸린시간 :  18.131508827209473
+# r2.score: 0.9459777087634201
