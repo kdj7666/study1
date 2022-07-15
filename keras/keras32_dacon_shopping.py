@@ -83,7 +83,7 @@ test_set['IsHoliday'] = test_set['IsHoliday'].apply(np.round).astype('float64')
 
 print(train_set.shape, test_set.shape)      # (6255, 13) (180, 12)                                                  
 print(train_set.head(), test_set.head())
-        
+
 train_set = train_set.drop(columns=['id', 'Date'])
 test_set = test_set.drop(columns=['id', 'Date'])
         

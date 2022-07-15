@@ -124,6 +124,9 @@ y_predict = to_categorical(y_predict)
 
 acc = accuracy_score(y_test, y_predict)
 print('acc스코어 : ', acc)
-
+print(' 걸린시간 : ', end_time)
 # loss :  [0.32412344217300415, 0.8827000260353088]
 # acc스코어 :  0.8827
+
+# loss :  [0.3218390941619873, 0.8860999941825867]
+# acc스코어 :  0.8861

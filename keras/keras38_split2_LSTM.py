@@ -19,6 +19,7 @@ def split_x(dataset, size1):
     return np.array(aaa)
 
 x_predict = np.array(range(96,106)) # 96 ~ 105 
+
 size2 = 7
 def split_g(dataset, size2):
     rrr = []

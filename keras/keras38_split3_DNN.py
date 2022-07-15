@@ -18,16 +18,6 @@ def split_x(dataset, size1):
         aaa.append(subset)  
     return np.array(aaa)
 
-x_predict = np.array(range(96,106)) # 96 ~ 105 
-size2 = 7
-def split_g(dataset, size2):
-    rrr = []
-    for l in range(len(dataset) - size2 + 1): # 10 - 7 + 1 = 4
-        subset = dataset[l : (l + size2)]
-        rrr.append(subset)  
-    return np.array(rrr)
-
-
 bbb = split_x(a, size1)
 print(bbb)
 print(bbb.shape) # (96, 5)
@@ -38,9 +28,6 @@ print('===========================================')
 print(x, y)
 print(x.shape, y.shape) # (96, 4) (96,)
 print('===========================================')
-
-qqq = split_g(x_predict, size2)
-print(qqq) # 7,4
 
 print('===========================================')
 
