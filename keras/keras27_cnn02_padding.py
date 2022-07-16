@@ -13,8 +13,6 @@ model.add(Conv2D(filters=64, kernel_size=(3,3),    # filters = 10  이거싱 아
                  padding='same',
                  input_shape=(28, 28, 1)))   # ( batch_size, rows, columns, channels )  6 6 10
 model.add(MaxPooling2D()) # ( 반 나눈다 )
-
-
 model.add(Conv2D(32, (2,2), 
                  padding='valid',
                  activation='relu'))  # ( cnn 모델도 한정이 가능하기에 activation 가능 ) # 출력 : ( 3, 3, 7 )

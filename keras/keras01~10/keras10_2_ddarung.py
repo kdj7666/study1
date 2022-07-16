@@ -45,10 +45,6 @@ print(y.shape)   # ( 1459 , ) # 벡터가 1개 그래서 최종 아웃풋 갯수
 
 
 
-
-
-
-
 x_train, x_test, y_train, y_test = train_test_split(x,y,
         train_size=0.7,
         shuffle=True,
@@ -113,15 +109,6 @@ y_predict = model.predict(test_set)
 
 # loss :  2915.238525390625
 # RMSE :  53.99295020654411
-
-
-
-
-
-
-
-
-
 
 
 

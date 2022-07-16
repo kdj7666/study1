@@ -4,7 +4,7 @@
 import numpy as np
 import pandas as pd
 from tensorflow.python.keras.models import Sequential, Model
-from tensorflow.python.keras.layers import Dense, Input, Dropout
+from tensorflow.python.keras.layers import Dense, Input, Dropout, Conv2D, Flatten
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import nan_euclidean_distances, r2_score, mean_squared_error
 import time
@@ -95,7 +95,7 @@ dense4 = Dense(50, activation='relu')(drop1)
 dense5 = Dense(50)(dense4)
 dense6 = Dense(50)(dense5)
 drop2 = Dropout(0.15)(dense6)
-output1 = Dense(1, activation='softmax')(drop2)
+output1 = Dense(1)(drop2)
 model = Model(inputs=input1, outputs=output1)
 # model = 대문자Model in 은 시작점 out 은 마지막 
 # model.save('./_save/k23_smm_ddarung.h5')

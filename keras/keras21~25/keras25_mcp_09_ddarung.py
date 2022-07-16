@@ -93,7 +93,7 @@ dense3 = Dense(80, activation='relu')(dense2)
 dense4 = Dense(50, activation='relu')(dense3)
 dense5 = Dense(50)(dense4)
 dense6 = Dense(50)(dense5)
-output1 = Dense(1, activation='softmax')(dense6)
+output1 = Dense(1)(dense6)
 model = Model(inputs=input1, outputs=output1)
 # model = 대문자Model in 은 시작점 out 은 마지막 
 # model.save('./_save/k23_smm_ddarung.h5')

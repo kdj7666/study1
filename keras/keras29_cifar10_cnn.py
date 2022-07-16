@@ -23,8 +23,8 @@ from sklearn.preprocessing import OneHotEncoder
 print(x_train.shape, y_train.shape)   # ( 50000, 32, 32 3) ( 50000, 1 )
 print(x_test.shape, y_test.shape)     # ( 10000, 32, 32 3) ( 10000, 1 )
 
-x_train = x_train.reshape
-x_test = x_test.reshape
+x_train = x_train.reshape( 50000, 32, 32, 3 )
+x_test = x_test.reshape( 10000, 32, 32, 3 )
 
 print(x_train.shape)      # (60000, 28, 28, 1)
 print(y_train.shape)
@@ -50,7 +50,6 @@ model.add(Conv2D(filters=64, kernel_size=(3,3), padding='same', input_shape=(32,
 
 model.add(Conv2D(10, kernel_size=(3,3)))
 model.add(MaxPooling2D())
-
 model.add(Conv2D(32, (2,2), padding='valid'))
 model.add(Flatten())
 model.add(Dense(32, activation='relu'))
@@ -62,13 +61,13 @@ model.add(Dense(10, activation='softmax'))
 
 start_time = time.time()
 
-earlystopping = EarlyStopping(monitor='val_loss', patience=150, mode='min', verbose=1,
+earlystopping = EarlyStopping(monitor='val_loss', patience=300, mode='min', verbose=1,
                               restore_best_weights=True)
 
 model.compile(loss = 'categorical_crossentropy', optimizer = 'adam',
               metrics = ['accuracy'])
 
-a = model.fit(x_train, y_train, epochs=200, batch_size=600,
+a = model.fit(x_train, y_train, epochs=1500, batch_size=300,
               validation_split=0.2, callbacks= [earlystopping], verbose=1)
 
 end_time = time.time()-start_time
@@ -90,4 +89,7 @@ y_predict = model.predict(x_test)
 # print('acc.score : ', acc)
 # print('걸린시간 : ', end_time)
 
-#  accuracy: 0.5266
+# accuracy: 0.5266
+
+# accuracy: 0.9819
+
