@@ -52,6 +52,8 @@ print(y_predict)
 x = x.reshape(96, 4, 1)
 print(x.shape)
 
+
+
 # 모델 구성 평가 예측할것 
 
 model = Sequential()

@@ -185,9 +185,9 @@ end_time = time.time()-start_time
 loss = model.evaluate(x_test, y_test)
 y_predict = model.predict(x_test)
 
-print(y_predict)
+# print(y_predict)
 y_predict = y_predict.round(0)
-print(y_predict)
+# print(y_predict)
 
 
 # y_summit = model.predict(test_set)
