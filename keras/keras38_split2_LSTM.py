@@ -34,7 +34,7 @@ print(bbb)
 print(bbb.shape) # (96, 5)
 print('===========================================')
 x = bbb[:, :-1]
-y = bbb[:, -1]
+y = bbb[:, -3]
 print('===========================================')
 print(x, y)
 print(x.shape, y.shape) # (96, 4) (96,)
@@ -45,7 +45,7 @@ print(qqq) # 7,4
 
 print('===========================================')
 
-y_predict = qqq[:, -1]
+y_predict = qqq[:, -3]
 
 print(y_predict)
 

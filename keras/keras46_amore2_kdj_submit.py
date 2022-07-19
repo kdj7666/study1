@@ -8,7 +8,6 @@ import time
 import datetime as dt
 from sklearn.preprocessing import MinMaxScaler
 import pandas as pd
-from sklearn.preprocessing import MinMaxScaler
 
 # 1. 데이터
 path = './_data/test_amore_0718/'
@@ -32,7 +31,7 @@ dataset_amo = dataset_amo.sort_values(by=['일자'], axis=0, ascending=True)
 print(dataset_amo.head) # 앞 다섯개만 보기
 
 feature_cols = ['시가', '고가', '저가', '거래량', '기관', '외국계', '종가']
-label_cols = ['시가']
+label_cols = ['종가']
 
 
 # 시계열 데이터 만드는 함수
@@ -75,20 +74,21 @@ x2_test = x2_test.reshape(204, 20, 7)
 # 2. 모델구성
 # 2-1. 모델1
 input1 = Input(shape=(20, 7))
-dense1 = Conv1D(64, 2, activation='relu', name='d1')(input1)
+dense1 = Conv1D(64, 3, activation='relu', name='d1')(input1)
 dense2 = LSTM(128, activation='relu', name='d2')(dense1)
 dense3 = Dense(64, activation='relu', name='d3')(dense2)
 output1 = Dense(32, activation='relu', name='out_d1')(dense3)
 
 # 2-2. 모델2
 input2 = Input(shape=(20, 7))
-dense11 = Conv1D(64, 2, activation='relu', name='d11')(input2)
+dense11 = Conv1D(64, 3, activation='relu', name='d11')(input2)
 dense12 = LSTM(128, activation='swish', name='d12')(dense11)
 dense13 = Dense(64, activation='relu', name='d13')(dense12)
 dense14 = Dense(32, activation='relu', name='d14')(dense13)
 output2 = Dense(16, activation='relu', name='out_d2')(dense14)
 
 from tensorflow.python.keras.layers import concatenate
+
 merge1 = concatenate([output1, output2], name='m1')
 merge2 = Dense(100, activation='relu', name='mg2')(merge1)
 merge3 = Dense(100, name='mg3')(merge2)
@@ -100,25 +100,28 @@ model = Model(inputs=[input1, input2], outputs=[last_output])
 model.compile(loss='mse', optimizer='adam')
 start_time = time.time()
 Es = EarlyStopping(monitor='val_loss', mode='min', verbose=1, patience=500, restore_best_weights=True)
-# fit_log = model.fit([x1_train, x2_train], y_train, epochs=100, batch_size=60, callbacks=[Es], validation_split=0.1)
+fit_log = model.fit([x1_train, x2_train], y_train, epochs=100, batch_size=60, callbacks=[Es], validation_split=0.1)
 end_time = time.time()
-# model.save('./_save/keras46_125000.h5')
+# model.save('./_test/keras46_125000.h5')
 
-model = load_model('./_save/keras46_125000.h5')
+# model = load_model('./_test/keras46_125000.h5')
 
 # 4. 평가, 예측
 loss = model.evaluate([x1_test, x2_test], y_test)
 predict = model.predict([x1_test, x2_test])
 print('loss: ', loss)
-print('prdict: ', predict[-1:])
+print('predict: ', predict[-1:])
 print('걸린 시간: ', end_time-start_time)
 
 
 # loss:  163640656.0
-# prdict:  [[130347.914]]      
+# predict:  [[130347.914]]      
 # 걸린 시간:  415.1818833351135
 
 
 # 1번 세이브 시키고 
 # 2번 세이브 모델 불러서 값이 바로 나오게끔 해서 세이브파일이랑 본파일 보내기 
 
+# loss:  174203104.0
+# predict:  [[123094.57]]
+# 걸린 시간:  414.8774058818817

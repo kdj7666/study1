@@ -15,11 +15,12 @@ path = './_data/test_amore_0718/'
 dataset_sam = pd.read_csv(path + '삼성전자220718.csv', thousands=',', encoding='cp949')
 dataset_amo = pd.read_csv(path + '아모레220718.csv', thousands=',', encoding='cp949')
 
-dataset_sam = dataset_sam.drop(['전일비','금액(백만)','신용비','개인','외인(수량)','프로그램','외인비'], axis=1)
-dataset_amo = dataset_amo.drop(['전일비','금액(백만)','신용비','개인','외인(수량)','프로그램','외인비'], axis=1)
+dataset_sam = dataset_sam.drop(['금액(백만)','신용비','개인','외인(수량)','프로그램','외인비'], axis=1)
+dataset_amo = dataset_amo.drop(['금액(백만)','신용비','개인','외인(수량)','프로그램','외인비'], axis=1)
 
 # dataset_amo.info()
 # dataset_sam.info()
+
 dataset_sam = dataset_sam.fillna(0)
 dataset_amo = dataset_amo.fillna(0)
 
@@ -31,8 +32,10 @@ dataset_sam = dataset_sam.sort_values(by=['일자'], axis=0, ascending=True) # �
 dataset_amo = dataset_amo.sort_values(by=['일자'], axis=0, ascending=True)
 print(dataset_amo.head) # 앞 다섯개만 보기
 
-feature_cols = ['시가', '고가', '저가', '거래량', '기관', '외국계', '종가']
-label_cols = ['시가']
+feature_cols = ['시가', '고가', '저가', '거래량', '기관', '외국계','종가']
+label_cols = ['종가']
+
+print(dataset_sam.columns, dataset_amo.columns)
 
 
 # 시계열 데이터 만드는 함수
@@ -52,8 +55,8 @@ x1_train, x1_test, x2_train, x2_test, y_train, y_test = train_test_split(x1, x2,
 
 # data 스케일링
 scaler = MinMaxScaler()
-print(x1_train.shape, x1_test.shape) # (812, 20, 7) (204, 20, 7)
-print(x2_train.shape, x2_test.shape) # (812, 20, 7) (204, 20, 7)
+print(x1_train.shape, x1_test.shape) # (812, 20, 8) (204, 20, 8)
+print(x2_train.shape, x2_test.shape) # (812, 20, 8) (204, 20, 8)
 print(y_train.shape, y_test.shape) # (812, 20, 1) (204, 20, 1)
 
 x1_train = x1_train.reshape(812*20,7)
@@ -102,7 +105,7 @@ start_time = time.time()
 Es = EarlyStopping(monitor='val_loss', mode='min', verbose=1, patience=500, restore_best_weights=True)
 fit_log = model.fit([x1_train, x2_train], y_train, epochs=100, batch_size=60, callbacks=[Es], validation_split=0.1)
 end_time = time.time()
-model.save('./_save/keras46_125000.h5')
+# model.save('./_save/keras46_125000.h5')
 
 # model = load_model('./_save/keras46_siga2.h5')
 # 4. 평가, 예측
