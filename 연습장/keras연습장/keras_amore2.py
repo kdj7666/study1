@@ -52,8 +52,8 @@ df1 = df1.loc[df1['일자']>="2018/05/04"]
 df2 = df2.loc[df2['일자']>="2018/05/04"]
 print(df1.shape, df2.shape) # (1035, 20) (1035, 20)
 
-df1 = df1.sort_values(by=['일자'], axis=0, ascending=True) # 오름차순으로 정렬
-df2 = df2.sort_values(by=['일자'], axis=0, ascending=True)
+df1 = df1.sort_values(by=['일자'], axis=0, ascending=False) # 오름차순으로 정렬
+df2 = df2.sort_values(by=['일자'], axis=0, ascending=False)
 
 
 print(df1.head(5))
@@ -62,12 +62,13 @@ print(df2.head(5))
 # df1 = df1.drop(['Date_Time'], axis=1)
 # df2 = df2.drop(['Date_Time'], axis=1)
 
-df1 = df1.drop(['일자','신용비','기관','외국계','프로그램','외인비','개인','금액(백만)','외인(수량)','전일비','Unnamed: 6'], axis=1)
-df2 = df2.drop(['일자','신용비','기관','외국계','프로그램','외인비','개인','금액(백만)','외인(수량)','전일비','Unnamed: 6'], axis=1)
+
+df1 = df1.drop(['금액(백만)','일자','신용비','기관','외국계','프로그램','외인비','개인','외인(수량)','전일비','Unnamed: 6'], axis=1)
+df2 = df2.drop(['금액(백만)','일자','신용비','기관','외국계','프로그램','외인비','개인','외인(수량)','전일비','Unnamed: 6'], axis=1)
 
 print(df1.shape, df1.columns)  # 3180, 10
 print('====================================')
-print(df2.shape, df2.columns)  # 3040, 10 ( 시가 고가 저가 종가 등락률 거래량 연도 월 일 )
+print(df2.shape, df2.columns)  # 3040, 10
 
 # df1['전일비'] = df1['전일비'].astype(int)
 # df2['전일비'] = df2['전일비'].astype(int)
@@ -83,26 +84,32 @@ x2 = df2
 
 print(x1.shape, x2.shape) # (1035, 9) (1035, 9)
 print('==========================================================')
-print('==========================================================')
-print('==========================================================')
 
-y1 = df1['종가']
+
+y1 = df1['시가']
 
 
 # split
 
 size1 = 5
 
-def split_x(df, size1):
-    aaa = []
-    for i in range(len(df) - size1 + 1):
-        subset = df[i : (i + size1)]
-        aaa.append(subset)  
-    return np.array(aaa)
+def split_xy3(dataset, time_step, y_columns):
+    x, y = list(), list()
+    for i in range(len(dataset)):
+        x_end_number = i + time_step
+        y_end_number = x_end_number + y_columns - 1
+        if y_end_number > len(dataset):
+            break
+        tmp_x = dataset[i:x_end_number, : -1]
+        tmp_y = dataset[x_end_number-1:y_end_number, -1]
+        x.append(tmp_x)
+        y.append(tmp_y)
+    return np.array(x), np.array(y)
 
-bbb = split_x(x1, size1)
-ccc = split_x(x2, size1)
-ddd = split_x(y1, size1)
+
+bbb = split_xy3(x1, size1)
+ccc = split_xy3(x2, size1)
+ddd = split_xy3(y1, size1)
 
 print(bbb)
 print(bbb.shape) # (3176, 5, 9)
@@ -114,15 +121,12 @@ y = ddd[:,-3:]
 
 print(y, y.shape)
 
-
 print(x1.shape, y.shape) # (1031, 2, 9) (1031, 3)
-
-print('===================================')
-
 print(x2.shape, y.shape) # (1031, 2, 9) (1031, 3)
+print('============================================================')
 
 x1_train, x1_test, x2_train, x2_test, y_train, y_test= train_test_split(x1,x2,y,
-                    train_size=0.88, shuffle=False)
+                    train_size=0.2, shuffle=False)
 
 
 # x1_train, x1_test, y1_train, y1_test = train_test_split(x1,y1,
@@ -185,6 +189,7 @@ print(a.history['val_loss'])
 
 loss = model.evaluate([x1_test,x2_test], y_test)
 predict= model.predict([x1_test,x2_test])
+
 
 # loss = model.evaluate([x1_test, x2_test], y_test)
 # predict = model.predict([x1_test, x2_test])
