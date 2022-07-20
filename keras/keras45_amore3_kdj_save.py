@@ -151,16 +151,16 @@ model.compile(loss = 'mse', optimizer = 'adam')
 earlystopping = EarlyStopping(monitor='val_loss', patience=100, mode='auto', verbose=1,
                               restore_best_weights=True)
 
-# a = model.fit([x1_train, x2_train],y_train, epochs=216, batch_size=25,
-#               validation_split=0.2,
-#               callbacks= [earlystopping], verbose=1)
+hist = model.fit([x1_train, x2_train],y_train, epochs=216, batch_size=25,
+              validation_split=0.2,
+              callbacks= [earlystopping], verbose=1)
 
 end_time = time.time()-start_time
 
 
-# model.save('./_test/keras46_20.h5')
+# model.save('./_test/keras46_13.h5')
 
-model = load_model('./_test/keras46_20.h5')
+# model = load_model('./_test/keras46_136000.h5')
 
 # 4. evaluate , perdict
 
@@ -171,5 +171,23 @@ print('loss: ', loss)
 print('predict: ', predict[-1:])
 print('걸린 시간: ', end_time)
 print('keras46_amore3_kdj_save.py')
-print('keras save 파일 17번 ')
+print('keras save 파일 13번 ')
+
+import matplotlib.pyplot as plt
+from matplotlib import font_manager, rc
+
+font_path = 'C:\Windows\Fonts\malgun.ttf'
+font = font_manager.FontProperties(fname=font_path).get_name()
+rc('font', family=font)
+plt.figure(figsize=(9,6))
+plt.plot(hist.history['loss'], marker='.', c='red', label='loss')
+plt.plot(hist.history['val_loss'], marker='.', c='blue', label='val_loss')
+plt.grid()
+# plt.title('loss & val_loss')    
+plt.title('로스값과 검증로스값')    
+plt.ylabel('loss')
+plt.xlabel('epochs')
+# plt.legend(loc='upper right')   # 우측상단에 라벨표시
+plt.legend()   # 자동으로 빈 공간에 라벨표시
+plt.show()
 
