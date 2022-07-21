@@ -1,75 +1,70 @@
-
-import numpy as np
+# 3.9.7 데이터셋은 인식 python 인식 안됌 
+from tensorflow.keras.datasets import fashion_mnist
 from keras.preprocessing.image import ImageDataGenerator
+import numpy as np 
 import time
-from sklearn.model_selection import train_test_split
 
-# 1. data
+(x_train, y_train), (x_test, y_test) = fashion_mnist.load_data()
+train_datagen = ImageDataGenerator(
+    rescale=1./255,
+    horizontal_flip=True,
+    # vertical_flip=True,
+    width_shift_range=0.1,
+    height_shift_range=0.1,
+    rotation_range=5,
+    zoom_range=0.1,
+    # shear_range=0.7,
+    fill_mode='nearest'
+)
 
-train_datagen = ImageDataGenerator( # 이미지 데이터를 수치화 
-    rescale=1./255)
-    # horizontal_flip=True,   # 수평 반전
-    # vertical_flip=True,     # 수직 반전
-    # width_shift_range=0.1,  # 가로넒이을 0.1만 옮길수있다
-    # height_shift_range=0.1,  # 세로넒이를 0.1만 옮길수있다            shitf 옮기다 
-    # rotation_range=5,       # 회전은 5만 할수있다 
-    # zoom_range=1.2,     # 확대
-    # shear_range=0.7,    # 깎다
-    # fill_mode='nearest')  # 채우다 
+augment_size = 40000        # 증강 사이즈 
+randidx = np.random.randint(x_train.shape[0], size=augment_size)  # np.random.randint = 무작위로 int(정수)값을 넣어준다 
+print(randidx) # [20762  8095 11489 ... 58612  1518 52314]
+print(x_train.shape) # (60000, 28, 28 )
+print(x_train.shape[0]) # 60000
+print(np.min(randidx), np.max(randidx))  # 0 59999  랜덤 난수 조절 가능 
+print(type(randidx))  # <class 'numpy.ndarray'>
 
-# test_datagen = ImageDataGenerator(
-#     rescale=1./255)
+# 카피 등장
 
-# xy_train 을 폴더에서 가져오겠다 폴더를 directory 
-xy_train = train_datagen.flow_from_directory(
-    'd:/study_data/_data/horse-or-human/',
-    target_size=(50, 50),
-    batch_size=1027,
-    class_mode='binary', # 0아니면 1 이기에 binary 2 이상은 categorical classes
-    # color_mode='', # 컬러작업 쓰지않으면 디폴트는 칼라로 인식된다 
-    shuffle=True,)
+x_augmented = x_train[randidx].copy()     
+y_augmented = y_train[randidx].copy()      # x의 값만 뽑을수 없다 y의 값도 같은위치에 같은걸로 만들어줘야한다 
 
-print(xy_train)
-# Found 1027 images belonging to 2 classes.
+print(x_augmented.shape)   # (40000, 28, 28)  카피본 
+print(y_augmented.shape)   # (40000,)
 
-x = xy_train[0][0]
-print(x,x.shape)  # (1027, 50, 50, 3)
+# 원본 등장 
 
-y = xy_train[0][1]
-print(y,y.shape) # (1027,)
+x_train = x_train.reshape(60000, 28, 28, 1)
+x_test = x_test.reshape(x_test.shape[0], x_test.shape[1], x_test.shape[2], 1)
 
+x_augmented = x_augmented.reshape(x_augmented.shape[0],
+                                  x_augmented.shape[1],
+                                  x_augmented.shape[2], 1)
 
-x_train, x_test, y_train, y_test = train_test_split(x,y,
-            train_size=0.7, shuffle=True, random_state=55)
-np.save('d:/study_data/_save/_npy/keras47_2_train_x(horse_or_human).npy', arr=x_train)
-np.save('d:/study_data/_save/_npy/keras47_2_train_y(horse_or_human).npy', arr=y_train)
-np.save('d:/study_data/_save/_npy/keras47_2_test_x(horse_or_human).npy', arr=x_test)
-np.save('d:/study_data/_save/_npy/keras47_2_test_y(horse_or_human).npy', arr=y_test)
-# # 넌파이 파일로 저장한다 넌파일수치로 저장이 됨
+x_augmented = train_datagen.flow(x_augmented,y_augmented,
+                                 batch_size=augment_size,
+                                 shuffle=False).next()[0]  # 0번째가 x 1번째가 y로
 
-# x_train = np.load('d:/study_data/_save/_npy/keras47_2_train_x(horse_or_human).npy')
-# y_train = np.load('d:/study_data/_save/_npy/keras47_2_train_y(horse_or_human).npy')
-# x_test = np.load('d:/study_data/_save/_npy/keras47_2_test_x(horse_or_human).npy')
-# y_test = np.load('d:/study_data/_save/_npy/keras47_2_test_y(horse_or_human).npy')
+print(x_augmented)
+print(x_augmented.shape) # 40000 28 28 1
 
-# print(x_train.shape) # (10, 150, 150, 1)
-# print(y_train.shape) # (10,)
-# print(x_test.shape) # (10, 150, 150, 1)
-# print(y_test.shape) # (10,)
+# concatenate 사슬처럼 엮다 괄호 2개를 제공 필수임 나중에배우지만 찾아서 공부할것
+x_train = np.concatenate((x_train, x_augmented)) 
+y_train = np.concatenate((y_train, y_augmented))
+
+print(x_train.shape, y_train.shape)  # (100000, 28, 28, 1) (100000,)
 
 
-
-
-
-
-
+#### 모델 구성
+# 성능비교, 증폭 전 후 비교 
 
 #2. model
 from tensorflow.python.keras.models import Sequential
 from tensorflow.python.keras.layers import Dense, Conv2D, Flatten
 
 model = Sequential()
-model.add(Conv2D(64, (2,2), input_shape=(50, 50, 3), activation='relu'))
+model.add(Conv2D(64, (2,2), input_shape=(28, 28, 1), activation='relu'))
 model.add(Conv2D(128, (3,3), activation='relu'))
 model.add(Flatten())
 model.add(Dense(64, activation='relu'))
@@ -83,11 +78,11 @@ model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy']
 
 start_time = time.time()
 
-hist = model.fit(x, y, epochs=100, batch_size=15,
+hist = model.fit(x_train, y_train, epochs=100, batch_size=15,
           validation_split=0.1, verbose=1) # 허나 배치를 최대로 잡으면 이것도 가능하다
 
 
-# hist = model.fit_generator(xy_train, epochs=10, steps_per_epoch=32,    
+# hist = model.fit_generator(x_train,y_train epochs=10, steps_per_epoch=32,    
 #                          # 스텝 펄 에포 ( 통상적으로 batch= 160/5 = 32)  # 훈련 배치 사이즈가 32가 넘어서도 돌아가긴한다 추가적 환경 제공 가능
 #                     validation_data=xy_test,                    # 발리데이션 범주를 테스트로
 #                     validation_steps=2, verbose=1)                         # 발리데이션 스텝 : 한 epoch 종료 시 마다 검증할 때 사용되는 검증 스텝 수를 지정합니다
@@ -105,7 +100,6 @@ print('val_loss : ', val_loss[-1])
 print('val_accuracy : ', val_accuracy[-1])
 print('accuracy : ', acc[-1])
 print('걸린시간 : ', end_time)
-
 
 
 

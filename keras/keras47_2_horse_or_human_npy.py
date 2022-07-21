@@ -49,10 +49,10 @@ print(y,y.shape) # (1027,)
 
 x_train, x_test, y_train, y_test = train_test_split(x,y,
             train_size=0.7, shuffle=True, random_state=55)
-np.save('d:/study_data/_save/_npy/keras47_2_train_x(horse_or_human).npy', arr=x_train[0][0])
-np.save('d:/study_data/_save/_npy/keras47_2_train_y(horse_or_human).npy', arr=y_train[0][1])
-np.save('d:/study_data/_save/_npy/keras47_2_test_x(horse_or_human).npy', arr=x_test[0][0])
-np.save('d:/study_data/_save/_npy/keras47_2_test_y(horse_or_human).npy', arr=x_test[0][1])
+np.save('d:/study_data/_save/_npy/keras47_2_train_x(horse_or_human).npy', arr=x_train)
+np.save('d:/study_data/_save/_npy/keras47_2_train_y(horse_or_human).npy', arr=y_train)
+np.save('d:/study_data/_save/_npy/keras47_2_test_x(horse_or_human).npy', arr=x_test)
+np.save('d:/study_data/_save/_npy/keras47_2_test_y(horse_or_human).npy', arr=y_test)
 # # 넌파이 파일로 저장한다 넌파일수치로 저장이 됨
 
 # x_train = np.load('d:/study_data/_save/_npy/keras47_2_train_x(horse_or_human).npy')

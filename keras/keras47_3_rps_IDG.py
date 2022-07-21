@@ -49,10 +49,10 @@ print(y,y.shape) # (2520, 3)
 
 x_train, x_test, y_train, y_test = train_test_split(x,y,
             train_size=0.7, shuffle=True, random_state=55)
-np.save('d:/study_data/_save/_npy/keras47_3_train_x(rps).npy', arr=x_train[0][0])
-np.save('d:/study_data/_save/_npy/keras47_3_train_y(rps).npy', arr=y_train[0][1])
-np.save('d:/study_data/_save/_npy/keras47_3_test_x(rps).npy', arr=x_test[0][0])
-np.save('d:/study_data/_save/_npy/keras47_3_test_y(rps).npy', arr=x_test[0][1])
+np.save('d:/study_data/_save/_npy/keras47_3_train_x(rps).npy', arr=x_train)
+np.save('d:/study_data/_save/_npy/keras47_3_train_y(rps).npy', arr=y_train)
+np.save('d:/study_data/_save/_npy/keras47_3_test_x(rps).npy', arr=x_test)
+np.save('d:/study_data/_save/_npy/keras47_3_test_y(rps).npy', arr=y_test)
 # # 넌파이 파일로 저장한다 넌파일수치로 저장이 됨
 
 # x_train = np.load('d:/study_data/_save/_npy/keras47_3_train_x(rps).npy')
@@ -101,7 +101,7 @@ model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accur
 
 start_time = time.time()
 
-hist = model.fit(xy_train[0][0], xy_train[0][1], epochs=100, batch_size=15,
+hist = model.fit(xy_train[0][0], xy_train[0][1], epochs=10, batch_size=30,
           validation_split=0.1, verbose=1) # 허나 배치를 최대로 잡으면 이것도 가능하다
 
 

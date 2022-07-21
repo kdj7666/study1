@@ -26,49 +26,58 @@ train_datagen = ImageDataGenerator( # 이미지 데이터를 수치화
 
 # xy_train 을 폴더에서 가져오겠다 폴더를 directory 
 xy_train = train_datagen.flow_from_directory(
-    'd:/study_data/_data/men_or_women/',
-    target_size=(50, 50),
+    'd:/study_data/_data/men_or_women/data',
+    target_size=(100, 100),
     batch_size=10000,
     class_mode='binary', # 0아니면 1 이기에 binary 2 이상은 categorical   / ? classes 의 갯수로 덩어리를 쪼갤수 있다
     # color_mode='', # 컬러작업 쓰지않으면 디폴트는 칼라로 인식된다 
     shuffle=True,)
 
+print(xy_train[0][0].shape)
 
-print(xy_train)
-# Found 6618 images belonging to 3 classes.
-
-# <keras.preprocessing.image.DirectoryIterator object at 0x000001BB8A67CD90>
-
-# from sklearn.datasets import load_boston
-
-# datasets = load_boston()
-# print(datasets)
-
+# # Found 3309 images belonging to 2 classes.
 
 x = xy_train[0][0]
-print(x,x.shape)  # (6618, 150, 150, 3)
+print(x,x.shape)  # (3309, 50, 50, 3)
 
 y = xy_train[0][1]
-print(y,y.shape) # (6618, 3)
+print(y,y.shape) # (3309,)
+
+
+k = train_datagen.flow_from_directory(
+    'D:/study_data/_data/men_or_women/image/',
+    target_size=(100, 100),
+    batch_size=1,
+    class_mode='binary', # 0아니면 1 이기에 binary 2 이상은 categorical   / ? classes 의 갯수로 덩어리를 쪼갤수 있다
+    # color_mode='', # 컬러작업 쓰지않으면 디폴트는 칼라로 인식된다 
+    shuffle=True,)
+# 1 images 1 classes
+
+
+
+
 
 
 x_train, x_test, y_train, y_test = train_test_split(x,y,
             train_size=0.7, shuffle=True, random_state=55)
-np.save('d:/study_data/_save/_npy/keras47_4_train_x(men_women).npy', arr=x_train[0][0])
-np.save('d:/study_data/_save/_npy/keras47_4_train_y(men_women).npy', arr=y_train[0][1])
-np.save('d:/study_data/_save/_npy/keras47_4_test_x(men_women).npy', arr=x_test[0][0])
-np.save('d:/study_data/_save/_npy/keras47_4_test_y(men_women).npy', arr=x_test[0][1])
+
+np.save('d:/study_data/_save/_npy/keras47_4_train_x(men_women).npy', arr=x_train)
+np.save('d:/study_data/_save/_npy/keras47_4_train_y(men_women).npy', arr=y_train)
+np.save('d:/study_data/_save/_npy/keras47_4_test_x(men_women).npy', arr=x_test)
+np.save('d:/study_data/_save/_npy/keras47_4_test_y(men_women).npy', arr=x_test)
+np.save('d:/study_data/_save/_npy/keras47_4_test_k(men_women).npy', arr=k[0][0])
 # # 넌파이 파일로 저장한다 넌파일수치로 저장이 됨
 
 # x_train = np.load('d:/study_data/_save/_npy/keras47_4_train_x(men_women).npy')
 # y_train = np.load('d:/study_data/_save/_npy/keras47_4_train_y(men_women).npy')
 # x_test = np.load('d:/study_data/_save/_npy/keras47_4_test_x(men_women).npy')
 # y_test = np.load('d:/study_data/_save/_npy/keras47_4_test_y(men_women).npy')
+# k_test = np.load('d:/study_data/_save/_npy/keras47_4_test_k(men_women).npy')
+# print(x_train.shape) # (2316, 100, 100, 3)
+# print(y_train.shape) # (2316,)
+# print(x_test.shape) # (993, 100, 100, 3)
+# print(y_test.shape) # (993, 100, 100, 3)
 
-# print(x_train.shape) # (10, 150, 150, 1)
-# print(y_train.shape) # (10,)
-# print(x_test.shape) # (10, 150, 150, 1)
-# print(y_test.shape) # (10,)
 
 
 #2. model
@@ -76,21 +85,21 @@ from tensorflow.python.keras.models import Sequential
 from tensorflow.python.keras.layers import Dense, Conv2D, Flatten
 
 model = Sequential()
-model.add(Conv2D(64, (2,2), input_shape=(150, 150, 3), activation='relu'))
+model.add(Conv2D(64, (2,2), input_shape=(100, 100, 3), activation='relu'))
 model.add(Conv2D(128, (3,3), activation='relu'))
 model.add(Flatten())
 model.add(Dense(64, activation='relu'))
 model.add(Dense(64, activation='relu'))
 model.add(Dense(32, activation='relu'))
-model.add(Dense(3, activation='softmax'))
+model.add(Dense(1, activation='sigmoid'))
 
 #3. compile, epochs
 
-model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
+model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy'])
 
 start_time = time.time()
 
-hist = model.fit(xy_train[0][0], xy_train[0][1], epochs=100, batch_size=15,
+hist = model.fit(x, y, epochs=1, batch_size=15,
           validation_split=0.1, verbose=1) # 허나 배치를 최대로 잡으면 이것도 가능하다
 
 
@@ -151,3 +160,5 @@ plt.show()
 # val_accuracy :  1.0
 # accuracy :  1.0
 # 걸린시간 :  929.3208270072937
+
+
