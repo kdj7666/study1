@@ -1,8 +1,18 @@
+# 증폭해서 npy지점 
+# 48 - 2
+
+
+
+
+
+
+
 # 3.9.7 데이터셋은 인식 python 인식 안됌 
 from tensorflow.keras.datasets import fashion_mnist
 from keras.preprocessing.image import ImageDataGenerator
 import numpy as np 
 import time
+
 
 (x_train, y_train), (x_test, y_test) = fashion_mnist.load_data()
 train_datagen = ImageDataGenerator(
@@ -17,7 +27,7 @@ train_datagen = ImageDataGenerator(
     fill_mode='nearest'
 )
 
-augment_size = 40000        # 증강 사이즈 
+augment_size = 10        # 증강 사이즈 
 randidx = np.random.randint(x_train.shape[0], size=augment_size)  # np.random.randint = 무작위로 int(정수)값을 넣어준다 
 print(randidx) # [20762  8095 11489 ... 58612  1518 52314]
 print(x_train.shape) # (60000, 28, 28 )
@@ -25,13 +35,11 @@ print(x_train.shape[0]) # 60000
 print(np.min(randidx), np.max(randidx))  # 0 59999  랜덤 난수 조절 가능 
 print(type(randidx))  # <class 'numpy.ndarray'>
 
-# 카피 등장
-
 x_augmented = x_train[randidx].copy()     
 y_augmented = y_train[randidx].copy()      # x의 값만 뽑을수 없다 y의 값도 같은위치에 같은걸로 만들어줘야한다 
 
-print(x_augmented.shape)   # (40000, 28, 28)  카피본 
-print(y_augmented.shape)   # (40000,)
+print(x_augmented.shape)   # (10, 28, 28)  카피본 
+print(y_augmented.shape)   # (10,)
 
 # 원본 등장 
 
@@ -49,11 +57,16 @@ x_augmented = train_datagen.flow(x_augmented,y_augmented,
 print(x_augmented)
 print(x_augmented.shape) # 40000 28 28 1
 
-# concatenate 사슬처럼 엮다 괄호 2개를 제공 필수임 나중에배우지만 찾아서 공부할것
+# concatenate 사슬처럼 엮다 괄호 2개 필수 제공 나중에 배우지만 찾아서 공부할것
 x_train = np.concatenate((x_train, x_augmented)) 
 y_train = np.concatenate((y_train, y_augmented))
 
 print(x_train.shape, y_train.shape)  # (100000, 28, 28, 1) (100000,)
+
+
+# [ 실습 ]
+# 1, x_augmented 10개와 x_train 10개를 비교하는 이미지 출력할 것!!  x_train subplot 
+
 
 
 #### 모델 구성
@@ -78,7 +91,7 @@ model.compile(loss='mse', optimizer='adam', metrics=['accuracy'])
 
 start_time = time.time()
 
-hist = model.fit(x_train, y_train, epochs=3, batch_size=15,
+hist = model.fit(x_train, y_train, epochs=3, batch_size=32,
           validation_split=0.1, verbose=1) # 허나 배치를 최대로 잡으면 이것도 가능하다
 
 
@@ -102,9 +115,6 @@ print('accuracy : ', acc[-1])
 print('걸린시간 : ', end_time)
 
 
-
-# 그림그리기 
-
 import matplotlib.pyplot as plt
 from matplotlib import font_manager, rc
 
@@ -125,16 +135,4 @@ plt.legend(loc='upper right')   # 우측상단에 라벨표시
 plt.legend()   # 자동으로 빈 공간에 라벨표시
 plt.show()
 
-# loss :  0.6771479249000549
-# val_loss :  0.6616235375404358
-# val_accuracy :  0.6499999761581421
-# accuracy :  0.5874999761581421
-# 걸린시간 :  478.4866187572479
 
-
-
-# loss :  1.477608561515808
-# val_loss :  1.950744390487671
-# val_accuracy :  0.10040000081062317
-# accuracy :  0.12806667387485504
-# 걸린시간 :  92.03242325782776

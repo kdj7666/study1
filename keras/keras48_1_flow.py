@@ -22,8 +22,8 @@ print(x_train[0].shape) # (28, 28)
 print(x_train[0].reshape(28*28).shape) # (784,) 스칼라가 784 개로 리쉐이프
 print(np.tile(x_train[0].reshape(28*28), augument_size).reshape(-1,28,28,1).shape)      # (100, 28, 28, 1)
 print(np.zeros(augument_size))
-print(np.zeros(augument_size).shape) # (100,)
-
+print(np.zeros(augument_size).shape) # (100,) # np.zeros 기존 배열에 0으로 채워진 모양과 유형의 배열을 반환시킨다
+                                     # 0~99이지만 들어가있는 배열은 0~99 실제는 0~00 
 x_data = train_datagen.flow(
     np.tile(x_train[0].reshape(28*28), augument_size).reshape(-1,28,28,1),   # x
     np.zeros(augument_size),                                                 # y

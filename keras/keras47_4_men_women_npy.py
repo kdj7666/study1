@@ -16,7 +16,7 @@ from sklearn.model_selection import train_test_split
 # np.save('d:/study_data/_save/_npy/keras47_4_train_x(men_women).npy', arr=x_train)
 # np.save('d:/study_data/_save/_npy/keras47_4_train_y(men_women).npy', arr=y_train)
 # np.save('d:/study_data/_save/_npy/keras47_4_test_x(men_women).npy', arr=x_test)
-# np.save('d:/study_data/_save/_npy/keras47_4_test_y(men_women).npy', arr=x_test)
+# np.save('d:/study_data/_save/_npy/keras47_4_test_y(men_women).npy', arr=y_test)
 # np.save('d:/study_data/_save/_npy/keras47_4_test_k(men_women).npy', arr=kim[0][0])
 # # 넌파이 파일로 저장한다 넌파일수치로 저장이 됨
 
@@ -52,7 +52,7 @@ model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy']
 
 start_time = time.time()
 
-hist = model.fit(x_train,y_train, epochs=10, batch_size=1,
+hist = model.fit(x_train,y_train, epochs=15, batch_size=100,
           validation_split=0.2, verbose=1) # 허나 배치를 최대로 잡으면 이것도 가능하다
 
 
@@ -83,14 +83,15 @@ print("====================")
 
 
 y_predict = model.predict(k_test)
+print(y_predict)
 
 if 	y_predict >= 0.5 :
     print('여자다') # 출력값: 
 else :
     print('남자다') # 출력값:
+print('keras47_4_에ㅔ베베')
 
-
-# 그림그리기
+# # 그림그리기
 
 # import matplotlib.pyplot as plt
 # from matplotlib import font_manager, rc

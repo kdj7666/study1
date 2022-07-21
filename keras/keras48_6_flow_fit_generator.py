@@ -1,3 +1,4 @@
+# 48 - 3 ㅂㅂ
 # 3.9.7 데이터셋은 인식 python 인식 안됌 
 from tensorflow.keras.datasets import fashion_mnist
 from keras.preprocessing.image import ImageDataGenerator
@@ -16,8 +17,12 @@ train_datagen = ImageDataGenerator(
     # shear_range=0.7,
     fill_mode='nearest'
 )
+train_datagen2 = ImageDataGenerator(
+    rescale=1./255,)
 
-augment_size = 40000        # 증강 사이즈 
+
+augment_size = 400        # 증강 사이즈 
+
 randidx = np.random.randint(x_train.shape[0], size=augment_size)  # np.random.randint = 무작위로 int(정수)값을 넣어준다 
 print(randidx) # [20762  8095 11489 ... 58612  1518 52314]
 print(x_train.shape) # (60000, 28, 28 )
@@ -42,18 +47,34 @@ x_augmented = x_augmented.reshape(x_augmented.shape[0],
                                   x_augmented.shape[1],
                                   x_augmented.shape[2], 1)
 
+print('======================================================')
+print(x_train.shape, y_train.shape)  # (60000, 28, 28, 1) (60000,)
+print('======================================================')
+
+
 x_augmented = train_datagen.flow(x_augmented,y_augmented,
                                  batch_size=augment_size,
-                                 shuffle=False).next()[0]  # 0번째가 x 1번째가 y로
+                                 shuffle=False
+                                 )#.next()[0]  # 0번째가 x 1번째가 y로
+
+x_train = np.concatenate((x_train, x_augmented)) 
+y_train = np.concatenate((y_train, y_augmented))
+
+xy_train = train_datagen2.flow(x_train, y_train,
+                              batch_size=30,
+                              shuffle=False)
+
 
 print(x_augmented)
 print(x_augmented.shape) # 40000 28 28 1
 
 # concatenate 사슬처럼 엮다 괄호 2개를 제공 필수임 나중에배우지만 찾아서 공부할것
-x_train = np.concatenate((x_train, x_augmented)) 
-y_train = np.concatenate((y_train, y_augmented))
-
-print(x_train.shape, y_train.shape)  # (100000, 28, 28, 1) (100000,)
+# x_train = np.concatenate((x_train, x_augmented)) 
+# y_train = np.concatenate((y_train, y_augmented))
+print('======================================================')
+print(x_train.shape, y_train.shape)  # (60000, 28, 28, 1) (60000,)
+print('======================================================')
+print('======================================================')
 
 
 #### 모델 구성
@@ -64,21 +85,21 @@ from tensorflow.python.keras.models import Sequential
 from tensorflow.python.keras.layers import Dense, Conv2D, Flatten
 
 model = Sequential()
-model.add(Conv2D(64, (2,2), input_shape=(28, 28, 1), activation='relu'))
-model.add(Conv2D(128, (3,3), activation='relu'))
+model.add(Conv2D(10, (2,2), input_shape=(28, 28, 1), activation='relu'))
+model.add(Conv2D(10, (3,3), activation='relu'))
 model.add(Flatten())
 model.add(Dense(64, activation='relu'))
 model.add(Dense(64, activation='relu'))
 model.add(Dense(32, activation='relu'))
-model.add(Dense(1))
+model.add(Dense(10, activation='softmax'))
 
 #3. compile, epochs
 
-model.compile(loss='mse', optimizer='adam', metrics=['accuracy'])
+model.compile(loss='sparse_categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
 
 start_time = time.time()
 
-hist = model.fit(x_train, y_train, epochs=3, batch_size=15,
+hist = model.fit(x_train, y_train, epochs=3, batch_size=30,
           validation_split=0.1, verbose=1) # 허나 배치를 최대로 잡으면 이것도 가능하다
 
 
@@ -124,6 +145,7 @@ plt.xlabel('epochs')
 plt.legend(loc='upper right')   # 우측상단에 라벨표시
 plt.legend()   # 자동으로 빈 공간에 라벨표시
 plt.show()
+
 
 # loss :  0.6771479249000549
 # val_loss :  0.6616235375404358
