@@ -6,7 +6,7 @@ from tensorflow.python.keras.layers import Dense, LSTM, Flatten, Embedding, Resh
 # 1. data
 
 (x_train, y_train), (x_test, y_test) = reuters.load_data(
-    num_words=10000, test_split=0.2)
+    num_words=10000)
 
 print(x_train.shape)             # ( 8982 , ) 리스트가 8982개 이다 
 print(x_test.shape)              # ( 2246 , ) 
@@ -50,17 +50,16 @@ model = Sequential()
 model.add(Embedding(input_dim=10000, output_dim=100))
 model.add(LSTM(32))
 model.add(Flatten())
-
 model.add(Dense(32, activation='relu'))
 model.add(Dense(46, activation='softmax'))
 model.summary()
 
 # 3. compile , epochs
-model.compile(loss='sparse_categorical_crossentropy', optimizer='SGD', metrics=['acc'])
-model.fit(x_train,y_train, epochs=3, batch_size=50)
+model.compile(loss='sparse_categorical_crossentropy', optimizer='adam', metrics=['acc'])
+model.fit(x_train,y_train, epochs=1, batch_size=4000)
 
 # 4. evaluate , predict
 
-acc = model.evaluate(y_test)[1]
+acc = model.evaluate(x_test, y_test)
 print('acc : ', acc)
 
