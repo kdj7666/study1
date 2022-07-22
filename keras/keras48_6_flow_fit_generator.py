@@ -1,5 +1,6 @@
 # 48 - 3 ㅂㅂ
 # 3.9.7 데이터셋은 인식 python 인식 안됌 
+from click import argument
 from tensorflow.keras.datasets import fashion_mnist
 from keras.preprocessing.image import ImageDataGenerator
 import numpy as np 
@@ -21,48 +22,34 @@ train_datagen2 = ImageDataGenerator(
     rescale=1./255,)
 
 
-augment_size = 400        # 증강 사이즈 
+augment_size = 40000        # 증강 사이즈 
+
+# batch_size=100000
 
 randidx = np.random.randint(x_train.shape[0], size=augment_size)  # np.random.randint = 무작위로 int(정수)값을 넣어준다 
-print(randidx) # [20762  8095 11489 ... 58612  1518 52314]
-print(x_train.shape) # (60000, 28, 28 )
-print(x_train.shape[0]) # 60000
-print(np.min(randidx), np.max(randidx))  # 0 59999  랜덤 난수 조절 가능 
-print(type(randidx))  # <class 'numpy.ndarray'>
-
-# 카피 등장
 
 x_augmented = x_train[randidx].copy()     
 y_augmented = y_train[randidx].copy()      # x의 값만 뽑을수 없다 y의 값도 같은위치에 같은걸로 만들어줘야한다 
 
 print(x_augmented.shape)   # (40000, 28, 28)  카피본 
 print(y_augmented.shape)   # (40000,)
-
-# 원본 등장 
-
 x_train = x_train.reshape(60000, 28, 28, 1)
-x_test = x_test.reshape(x_test.shape[0], x_test.shape[1], x_test.shape[2], 1)
-
 x_augmented = x_augmented.reshape(x_augmented.shape[0],
                                   x_augmented.shape[1],
                                   x_augmented.shape[2], 1)
 
-print('======================================================')
-print(x_train.shape, y_train.shape)  # (60000, 28, 28, 1) (60000,)
-print('======================================================')
+xy_ab = x_train.reshape(x_train.shape[0],
+                        x_train.shape[1],
+                        x_train.shape[2], 1)
 
+x_train1 = train_datagen.flow(x_augmented,y_augmented,
+                                 batch_size=augment_size, shuffle=False)
 
-x_augmented = train_datagen.flow(x_augmented,y_augmented,
-                                 batch_size=augment_size,
-                                 shuffle=False
-                                 )#.next()[0]  # 0번째가 x 1번째가 y로
+x_ab = np.concatenate((x_train, x_augmented)) 
+y_ab = np.concatenate((y_train, y_augmented))
 
-x_train = np.concatenate((x_train, x_augmented)) 
-y_train = np.concatenate((y_train, y_augmented))
-
-xy_train = train_datagen2.flow(x_train, y_train,
-                              batch_size=30,
-                              shuffle=False)
+xy_ab2 = train_datagen2.flow(x_ab, y_ab,
+                              batch_size=augment_size, shuffle=False)
 
 
 print(x_augmented)
@@ -72,10 +59,7 @@ print(x_augmented.shape) # 40000 28 28 1
 # x_train = np.concatenate((x_train, x_augmented)) 
 # y_train = np.concatenate((y_train, y_augmented))
 print('======================================================')
-print(x_train.shape, y_train.shape)  # (60000, 28, 28, 1) (60000,)
-print('======================================================')
-print('======================================================')
-
+print(x_train1.shape, xy_ab2.shape)  # (60000, 28, 28, 1) (60000,)
 
 #### 모델 구성
 # 성능비교, 증폭 전 후 비교 
@@ -85,12 +69,9 @@ from tensorflow.python.keras.models import Sequential
 from tensorflow.python.keras.layers import Dense, Conv2D, Flatten
 
 model = Sequential()
-model.add(Conv2D(10, (2,2), input_shape=(28, 28, 1), activation='relu'))
-model.add(Conv2D(10, (3,3), activation='relu'))
+model.add(Conv2D(10, (1,1), input_shape=(28, 28, 1), activation='relu'))
 model.add(Flatten())
 model.add(Dense(64, activation='relu'))
-model.add(Dense(64, activation='relu'))
-model.add(Dense(32, activation='relu'))
 model.add(Dense(10, activation='softmax'))
 
 #3. compile, epochs
@@ -103,14 +84,14 @@ hist = model.fit(x_train, y_train, epochs=3, batch_size=30,
           validation_split=0.1, verbose=1) # 허나 배치를 최대로 잡으면 이것도 가능하다
 
 
-# hist = model.fit_generator(x_train,y_train epochs=10, steps_per_epoch=32,    
+# hist = model.fit_generator(xy_ab2, epochs=1,
+#                           validation_data=xy_ab2,
 #                          # 스텝 펄 에포 ( 통상적으로 batch= 160/5 = 32)  # 훈련 배치 사이즈가 32가 넘어서도 돌아가긴한다 추가적 환경 제공 가능
-#                     validation_data=xy_test,                    # 발리데이션 범주를 테스트로
-#                     validation_steps=2, verbose=1)                         # 발리데이션 스텝 : 한 epoch 종료 시 마다 검증할 때 사용되는 검증 스텝 수를 지정합니다
+#                          steps_per_epoch=augment_size,   verbose=2)                     # 발리데이션 범주를 테스트로                        # 발리데이션 스텝 : 한 epoch 종료 시 마다 검증할 때 사용되는 검증 스텝 수를 지정합니다
 
 end_time = time.time()-start_time
 
-#4. evluate, predict
+# #4. evluate, predict
 acc = hist.history['accuracy']
 val_accuracy = hist.history['val_accuracy']
 loss = hist.history['loss']
@@ -126,25 +107,25 @@ print('걸린시간 : ', end_time)
 
 # 그림그리기 
 
-import matplotlib.pyplot as plt
-from matplotlib import font_manager, rc
+# import matplotlib.pyplot as plt
+# from matplotlib import font_manager, rc
 
-font_path = 'C:\Windows\Fonts\malgun.ttf'
-font = font_manager.FontProperties(fname=font_path).get_name()
-rc('font', family=font)
-plt.figure(figsize=(9,6))
-plt.plot(hist.history['loss'], marker='.', c='red', label='loss')
-plt.plot(hist.history['val_loss'], marker='.', c='blue', label='val_loss')
-plt.plot(hist.history['val_accuracy'], marker='.', c='pink', label='val_accuracy')
-plt.plot(hist.history['accuracy'], marker='.', c='green', label='accuracy')
-plt.grid()
-plt.title('loss & val_loss')    
-plt.title('로스값과 검증로스값')    
-plt.ylabel('loss')
-plt.xlabel('epochs')
-plt.legend(loc='upper right')   # 우측상단에 라벨표시
-plt.legend()   # 자동으로 빈 공간에 라벨표시
-plt.show()
+# font_path = 'C:\Windows\Fonts\malgun.ttf'
+# font = font_manager.FontProperties(fname=font_path).get_name()
+# rc('font', family=font)
+# plt.figure(figsize=(9,6))
+# plt.plot(hist.history['loss'], marker='.', c='red', label='loss')
+# plt.plot(hist.history['val_loss'], marker='.', c='blue', label='val_loss')
+# plt.plot(hist.history['val_accuracy'], marker='.', c='pink', label='val_accuracy')
+# plt.plot(hist.history['accuracy'], marker='.', c='green', label='accuracy')
+# plt.grid()
+# plt.title('loss & val_loss')    
+# plt.title('로스값과 검증로스값')    
+# plt.ylabel('loss')
+# plt.xlabel('epochs')
+# plt.legend(loc='upper right')   # 우측상단에 라벨표시
+# plt.legend()   # 자동으로 빈 공간에 라벨표시
+# plt.show()
 
 
 # loss :  0.6771479249000549
@@ -160,3 +141,4 @@ plt.show()
 # val_accuracy :  0.10040000081062317
 # accuracy :  0.12806667387485504
 # 걸린시간 :  92.03242325782776
+

@@ -2,17 +2,23 @@ import numpy as np
 from keras.preprocessing.image import ImageDataGenerator
 
 # 1. 데이터
-x_train = np.load('d:/study_data/_save/_npy/keras49_5_train_x(brain).npy')
-y_train = np.load('d:/study_data/_save/_npy/keras49_5_train_y(brain).npy')
-x_test = np.load('d:/study_data/_save/_npy/keras49_5_test_x(brain).npy')
-y_test = np.load('d:/study_data/_save/_npy/keras49_5_test_y(brain).npy')
+x_train = np.load('d:/study_data/_save/_npy/keras49_9_train_x(men_or_women).npy')
+y_train = np.load('d:/study_data/_save/_npy/keras49_9_train_y(men_or_women).npy')
+x_test = np.load('d:/study_data/_save/_npy/keras49_9_test_x(men_or_women).npy')
+y_test = np.load('d:/study_data/_save/_npy/keras49_9_test_y(men_or_women).npy')
+
+print(x_train.shape) # (1500, 50, 50, 1)
+print(y_train.shape) # (1500,)
+print(x_test.shape) # (500, 50, 50, 1)
+print(y_test.shape) # (500,)
+
 
 # 2. 모델
 from tensorflow.python.keras.models import Sequential
 from tensorflow.python.keras.layers import Dense, Conv2D, Flatten
 
 model = Sequential()
-model.add(Conv2D(64, (2,2), input_shape=(150,150,1), activation='relu'))
+model.add(Conv2D(64, (2,2), input_shape=(50,50,1), activation='relu'))
 model.add(Conv2D(128, (3,3), activation='relu'))
 model.add(Flatten())
 model.add(Dense(64, activation='relu'))
@@ -52,16 +58,13 @@ print('val_accuracy: ', val_accuracy[-1])
 # plt.legend()
 # plt.show()
 
-# 증폭 전
-# loss:  0.23752331733703613
-# accuracy:  0.8409090638160706
-# val_loss:  1.1625388860702515
-# val_accuracy:  0.689393937587738
+# loss:  0.789369523525238
+# accuracy:  0.5774999856948853
+# val_loss:  1.6903252601623535
+# val_accuracy:  0.3799999952316284
 
 
-# 증폭 후
-# loss:  0.2102251499891281
-# accuracy:  0.8484848737716675
-# val_loss:  3.3091487884521484
-# val_accuracy:  0.5984848737716675
-
+# loss:  0.32662373781204224
+# accuracy:  0.7691666483879089
+# val_loss:  2.032010555267334
+# val_accuracy:  0.6433333158493042

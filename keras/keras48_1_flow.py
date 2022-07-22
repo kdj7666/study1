@@ -29,7 +29,7 @@ x_data = train_datagen.flow(
     np.zeros(augument_size),                                                 # y
     batch_size=augument_size,                                                # 배치사이즈에 넣는 엑스와이는 ㅍ르로우에 이다
     shuffle=True,
-) # .next() # [] 하나를 제거시킨다 인식이 가능하다 
+) .next() # [] 하나를 제거시킨다 인식이 가능하다 
 
 
 #### .next() 사용

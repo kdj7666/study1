@@ -78,7 +78,7 @@ model.compile(loss='mse', optimizer='adam', metrics=['accuracy'])
 
 start_time = time.time()
 
-hist = model.fit(x_train, y_train, epochs=3, batch_size=15,
+hist = model.fit(x_train, y_train, epochs=5, batch_size=15,
           validation_split=0.1, verbose=1) # 허나 배치를 최대로 잡으면 이것도 가능하다
 
 

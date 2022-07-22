@@ -14,22 +14,24 @@ train_datagen = ImageDataGenerator(
     fill_mode='nearest'
     )
 
-scale_datagen = ImageDataGenerator(rescale=1./255)
+scale_datagen = ImageDataGenerator(
+    rescale=1./255,
+)
 
 xy_train = scale_datagen.flow_from_directory(
-    'd:/study_data/_data/rps/rps/',
-    target_size=(150, 150),
+    'd:/study_data/_data/men_or_women/data/',
+    target_size=(50, 50),
     batch_size=500,
-    class_mode='categorical',
+    class_mode='binary',
     color_mode='grayscale',
     shuffle=True
 )
 
 xy_test = scale_datagen.flow_from_directory(
-    'd:/study_data/_data/rps/rps/',
-    target_size=(150, 150),
+    'd:/study_data/_data/men_or_women/data/',
+    target_size=(50, 50),
     batch_size=500,
-    class_mode='categorical',
+    class_mode='binary',
     color_mode='grayscale',
     shuffle=True
 ) # Found 120 images belonging to 2 classes.
@@ -40,7 +42,7 @@ x_test = xy_test[0][0]
 y_test = xy_test[0][1]
 
 # 증폭 사이즈만큼 난수 뽑아서
-augument_size = 500
+augument_size = 40000
 randidx = np.random.randint(x_train.shape[0], size=augument_size)
 # 각각 인덱스에 난수 넣고 돌려가면서 이미지 저장
 x_augument = x_train[randidx].copy()
@@ -60,8 +62,8 @@ x_train = scale_datagen.flow(x_train, y_train, batch_size=augument_size, shuffle
 x_train = np.concatenate((x_train, x_augument))
 y_train = np.concatenate((y_train, y_augument))
 
-np.save('d:/study_data/_save/_npy/keras49_7_train_x(rps).npy', arr =x_train)
-np.save('d:/study_data/_save/_npy/keras49_7_train_y(rps).npy', arr =y_train)
-np.save('d:/study_data/_save/_npy/keras49_7_test_x(rps).npy', arr =x_test)
-np.save('d:/study_data/_save/_npy/keras49_7_test_y(rps).npy', arr =y_test)
+np.save('d:/study_data/_save/_npy/keras49_9_train_x(men_or_women).npy', arr =x_train)
+np.save('d:/study_data/_save/_npy/keras49_9_train_y(men_or_women).npy', arr =y_train)
+np.save('d:/study_data/_save/_npy/keras49_9_test_x(men_or_women).npy', arr =x_test)
+np.save('d:/study_data/_save/_npy/keras49_9_test_y(men_or_women).npy', arr =y_test)
 
