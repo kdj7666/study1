@@ -1,6 +1,6 @@
 # 12개 만들고 최적의 weight 가중치 파일을 저장할것 
 from matplotlib import font_manager
-from sklearn. datasets import load_boston  
+from tensorflow.keras.datasets import mnist
 import numpy as np 
 from tensorflow.python.keras.models import Sequential, Model, load_model
 from tensorflow.python.keras.layers import Dense, Input, Dropout, Conv2D, Flatten, Conv1D
@@ -13,8 +13,7 @@ from sklearn.metrics import accuracy_score
 from tensorflow.python.keras.callbacks import EarlyStopping, ModelCheckpoint
 
 # 1. 데이터
-
-datasets = load_boston()
+datasets = mnist.load_data()
 x, y = datasets.data, datasets.target
 
 x_train, x_test, y_train, y_test = train_test_split(x,y,
@@ -80,3 +79,4 @@ print('걸린시간 : ', end_time)
 # loss :  [4.793026924133301, 40.22924041748047]
 # r2스코어 :  0.4443046083577492
 # 걸린시간 :  16.457614183425903
+

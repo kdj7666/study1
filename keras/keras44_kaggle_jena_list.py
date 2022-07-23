@@ -45,17 +45,17 @@ print('====================================')
 print(f.info())
 # f_set = f.dropna(columns=['Date Time'], axis=1)
 
+
 print(f.shape)   # (420551, 14)
-print('====================================')
+print('==========================================================')
+
 print(f.columns)
+
 
 # x_train, x_test, y_train, y_test = train_test_split(x,y,
 #         train_size=0.8, shuffle=True, random_state=55)
 
 print('==========================================================')
-
-
-
 
 
 model = Sequential()
@@ -72,11 +72,13 @@ model.summary()
 
 model.compile(loss='mse', optimizer='adam')
 
-model.fit(x, y, epochs=1500 , batch_size=2000, verbose=1)
+model.fit(x, y, epochs=10 , batch_size=2000, verbose=1)
 
 
 loss = model.evaluate(x,y)
 
 print('loss : 의 결과 ', loss)
 
+
+# loss : 의 결과  145113.984375
 

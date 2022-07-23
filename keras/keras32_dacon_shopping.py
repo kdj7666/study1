@@ -197,6 +197,10 @@ submission_set.to_csv(path + 'sample_submission.csv', index=False)
 
 
 #4_2. loss & val_loss
+
+import matplotlib.pyplot as plt
+from matplotlib import font_manager, rc
+
 font_path = 'C:\Windows\Fonts\malgun.ttf'
 font = font_manager.FontProperties(fname=font_path).get_name()
 rc('font', family=font)
