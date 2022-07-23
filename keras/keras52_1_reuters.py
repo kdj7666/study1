@@ -54,12 +54,14 @@ model.add(Dense(110, activation='relu'))
 model.add(Dense(130, activation='relu'))
 model.add(Dense(140, activation='relu'))
 model.add(Dense(60, activation='relu'))
+model.add(Dense(32, activation='relu'))
 model.add(Dense(46, activation='softmax'))
 model.summary()
 
 # 3. compile , epochs
 model.compile(loss='sparse_categorical_crossentropy', optimizer='adam', metrics=['acc'])
 model.fit(x_train,y_train, epochs=330, batch_size=400)
+model.fit(x_train,y_train, epochs=1, batch_size=4000)
 
 # 4. evaluate , predict
 
