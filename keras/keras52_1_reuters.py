@@ -50,21 +50,35 @@ model = Sequential()
 model.add(Embedding(input_dim=10000, output_dim=100))
 model.add(LSTM(32))
 model.add(Flatten())
-model.add(Dense(110, activation='relu'))
-model.add(Dense(130, activation='relu'))
-model.add(Dense(140, activation='relu'))
-model.add(Dense(60, activation='relu'))
+model.add(Dense(32, activation='relu'))
+model.add(Dense(32, activation='relu'))
+model.add(Dense(32, activation='relu'))
+model.add(Dense(32, activation='relu'))
 model.add(Dense(32, activation='relu'))
 model.add(Dense(46, activation='softmax'))
 model.summary()
 
 # 3. compile , epochs
+import time
+start_time = time.time()
 model.compile(loss='sparse_categorical_crossentropy', optimizer='adam', metrics=['acc'])
-model.fit(x_train,y_train, epochs=330, batch_size=400)
-model.fit(x_train,y_train, epochs=1, batch_size=4000)
-
+model.fit(x_train,y_train, epochs=650, batch_size=600)
+end_time = time.time() - start_time
 # 4. evaluate , predict
 
 acc = model.evaluate(x_test, y_test)
 print('acc : ', acc)
+print('걸린시간 : ', end_time)
 
+
+
+# acc :  [4.469789028167725, 0.6242208480834961]
+# 걸린시간 :  6332.253529548645
+
+
+
+# acc :  [4.615542888641357, 0.6317898631095886]
+# 걸린시간 :  5112.622207403183
+
+# acc :  [13.58715534210205, 0.5565449595451355]
+# 걸린시간 :  5072.371233463287
