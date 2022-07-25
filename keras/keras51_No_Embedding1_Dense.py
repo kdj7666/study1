@@ -40,6 +40,7 @@ model = Sequential()
 # model.add(Embedding(input_dim=31, output_dim=10, input_length=5))
 # model.add(LSTM(32))
 model.add(Dense(32, input_shape=(5,)))
+model.add(Dense(40, activation='relu'))
 model.add(Dense(1, activation='sigmoid'))
 model.summary()
 
@@ -53,52 +54,45 @@ print('acc : ', acc)
 
 # [ 실습 ] # 
 
-# x_predict = '나는 형권이가 정말 재미없다 너무 정말 '
+x_predict = '나는 형권이가 정말 재미없다 너무 정말 '
 
 
-# #  긍정 1 부정 0 
-# x_ll = np.array([x_predict])  # 14 
+#  긍정 1 부정 0 
+x_ll = np.array([x_predict])  # 14 
 
-# token = Tokenizer()
-# token.fit_on_texts(x_predict)
-# print(token.word_index)
+token = Tokenizer()
+token.fit_on_texts(x_predict)
+print(token.word_index)
 
-# x_ll = token.texts_to_sequences(x_predict)
-# print(x)
+x_ll = token.texts_to_sequences(x_predict)
+print(x)
 
-# x_ll = pad_sequences(x_ll, padding='pre')
-# y_predict = model.predict(x_ll)
-# print(y_predict)
-# score = Float(model.predict(x_ll))
-# # 4. evaluate , predict
-# acc = model.evaluate(pad_x, labels)[1]
-# print('acc : ', acc)
+x_ll = pad_sequences(x_ll, padding='pre')
+y_predict = model.predict(x_ll)
+
+print(y_predict)
+score = Float(model.predict(x_ll))
+
+# 4. evaluate , predict
+
+acc = model.evaluate(pad_x, labels)[1]
+print('acc : ', acc)
+
+if x11>=0.5:
+        print('긍정')
+else:
+        print('부정')
+
+
+
 # # 결과는 긍정? 부정? 
 
 
+# x_predict = ['나는 형권이가 정말 재미없다 너무 정말']
+# test = token.texts_to_sequences(x_predict)
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+# x2 = model.predict(test)
+# print(x2,x2.shape) #(21, 1)
 
 
