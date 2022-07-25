@@ -1,8 +1,14 @@
-# rkas43 1 
+import numpy as np
+import time
+from tensorflow.python.keras.models import Sequential, Model
+from tensorflow.python.keras.layers import Dense, Conv2D, Flatten, Conv1, concatenate, Concatenate, Input
+from tensorflow.python.keras.callbacks import EarlyStopping
+from sklearn.model_selection import train_test_split
+from keras.preprocessing.image import ImageDataGenerator
 
 #1. data 
 
-import numpy as np
+
 x1_datasets = np.array([range(100), range(301, 401)]) # 삼성전자 증가 , 하이닉스 증가,  첫번째 데이터 셋 
 x2_datasets = np.array([range(101, 201), range(411, 511), range(150,250)]) #  원유, 돈육, 밀
 x3_datasets = np.array([range(100,200), range(1301, 1401)]) # 우리반 아이큐 , 우리반 키 
@@ -14,7 +20,40 @@ print(x1.shape, x2.shape, x3.shape)  #  ( 100,2 ) ( 100,3 ) (100, 2)
 
 y = np.array(range(2001, 2101)) # 금리  ( 100 , )
 print(y.shape)
-from sklearn.model_selection import train_test_split
+
+train_datagen = ImageDataGenerator(
+    # rescale=1./255,
+    horizontal_flip=True,
+    vertical_flip=True,
+    width_shift_range=0.1,
+    height_shift_range=5,
+    rotation_range=5,
+    zoom_range=1.2,
+    shear_range=0.7,
+    fill_mode='nearest'
+    )
+
+scale_datagen = ImageDataGenerator(rescale=1./255)
+
+xy_train = scale_datagen.flow_from_directory(
+    'd:/study_data/_data/cat_dog/training_set/',
+    target_size=(150, 150),
+    batch_size=500,
+    class_mode='binary',
+    color_mode='grayscale',
+    shuffle=True
+)
+
+xy_test = scale_datagen.flow_from_directory(
+    'd:/study_data/_data/cat_dog/test_set/',
+    target_size=(150, 150),
+    batch_size=500,
+    class_mode='binary',
+    color_mode='grayscale',
+    shuffle=True
+) # Found 120 images belonging to 2 classes.
+
+
 
 # x1_train, x1_test, x2_train, x_2test, y_train, y_test = train_test_split(
 #     x1, x2, y, train_size=0.8, random_state=55)
@@ -35,8 +74,7 @@ print(x3_train.shape, x3_test.shape)  # (80, 2) (20, 2)
 print(y_train.shape, y_test.shape)  # (70,) (30,)
 
 #2. model
-from tensorflow.python.keras.models import Model
-from tensorflow.python.keras.layers import Dense, Input
+
 
 #2 - 모델 1번째
 
@@ -63,7 +101,7 @@ dense114 = Dense(100, activation='relu', name='dj114')(dense113)
 output3 = Dense(10, activation='relu', name='out_dj3')(dense114)
 
 
-from tensorflow.python.keras.layers import concatenate, Concatenate   # 사슬 같이 잇다
+
 merge1 = concatenate([output1, output2, output3], name='mg1') # 두개의 아웃풋이 합쳐진 하나의 레이어 층 
 merge2 = Dense(80, activation='relu', name='mg2')(merge1)
 merge3 = Dense(50, name='mg3')(merge2)
@@ -76,8 +114,7 @@ model.summary()
 
 # 맹그러봐 
 
-import time
-from tensorflow.python.keras.callbacks import EarlyStopping
+
 
 start_time = time.time()
 
@@ -110,26 +147,3 @@ print('r2score : ', r2)
 print('loss : ', loss)
 print('걸린시간 : ', end_time)
 print('keras43_ensemble2.py')
-
-# acc = accuracy_score(y_test, y_predict)
-
-# print('acc.score : ', acc)
-
-
-# loss :  [0.21121379733085632, 0.0]
-# 걸린시간 :  48.75331115722656
-# loss :  [0.21121379733085632, 0.0]
-
-
-# loss :  [0.6263588666915894, 0.0]
-# r2score :  0.9994651295135405
-# 걸린시간 :  53.56546974182129
-# loss :  [0.6263588666915894, 0.0]
-
-
-
-# loss :  [0.04475238174200058, 0.0]
-# r2score :  0.9999617843168173
-# 걸린시간 :  63.443485498428345
-# loss :  [0.04475238174200058, 0.0]
-
