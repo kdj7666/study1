@@ -23,8 +23,8 @@ print(y.shape)        # (2,10) -> (10,2)
  #[ 실습 ] # 예측 : [[9, 30, 210]] 예상 10 , 1.9  로스가 얼마나 주느냐
  
 model = Sequential()
-model.add(Dense (5, input_dim=3)) #  <- 특성이 2개   열 피쳐 컬럼 특성 mldel.add(Dense (5, input_dim=1)) <- 특성이 1개 
-model.add(Dense (6))
+model.add(Dense (6, input_dim=3)) #  <- 특성이 2개   열 피쳐 컬럼 특성 mldel.add(Dense (6, input_dim=1)) <- 특성이 1개 
+model.add(Dense (5))
 model.add(Dense (5))
 model.add(Dense (4))
 model.add(Dense (5))

@@ -27,7 +27,7 @@ non_encording_columns = ['MSSubClass','LotFrontage','LotArea','OverallQual','Ove
                          'MiscVal','MoSold','YrSold']
 
 #1. 데이터
-path = './_data3/house/'
+path = './_data/house/'
 train_set = pd.read_csv(path + 'train.csv') # + 명령어는 문자를 앞문자와 더해줌  index_col=n n번째 컬럼을 인덱스로 인식
             
 test_set = pd.read_csv(path + 'test.csv') # 예측에서 쓸거임  3
@@ -252,7 +252,7 @@ model.add(Dense(1))
 
 #3. 컴파일, 훈련
 model.compile(loss='mae', optimizer='adam')
-model.fit(x_train, y_train, epochs=35000, batch_size=1450, verbose=1)
+model.fit(x_train, y_train, epochs=3500, batch_size=1450, verbose=1)
 
 #4. 평가, 예측
 loss = model.evaluate(x_test, y_test)

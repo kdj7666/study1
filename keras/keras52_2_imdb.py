@@ -53,9 +53,6 @@ model.add(LSTM(32))
 model.add(Flatten())
 model.add(Dense(32, activation='relu'))
 model.add(Dense(32, activation='relu'))
-model.add(Dense(32, activation='relu'))
-model.add(Dense(32, activation='relu'))
-model.add(Dense(32, activation='relu'))
 model.add(Dense(100, activation='softmax'))
 model.summary()
 
@@ -64,11 +61,19 @@ import time
 start_time = time.time()
 
 model.compile(loss='sparse_categorical_crossentropy', optimizer='adam', metrics=['acc'])
-model.fit(x_train,y_train, epochs=150, batch_size=450)
+model.fit(x_train,y_train, epochs=10, batch_size=450)
 
 end_time = time.time()-start_time
 
 # 4. evaluate , predict
-acc = model.evaluate(y_test)
-print('acc : ', acc)
 
+acc = model.evaluate(x_test, y_test)
+print('acc : ', acc)
+print('걸린시간 : ', end_time)
+# [3.3521790504455566, 0.8132399916648865]
+
+# acc :  [4.663558483123779, 0.8110799789428711]
+# 걸린시간 :  4834.566399097443
+
+# acc :  [5.228521347045898, 0.809440016746521]
+# 걸린시간 :  4679.518686771393

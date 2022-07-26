@@ -1,149 +1,39 @@
-import numpy as np
-import time
-from tensorflow.python.keras.models import Sequential, Model
-from tensorflow.python.keras.layers import Dense, Conv2D, Flatten, Conv1, concatenate, Concatenate, Input
-from tensorflow.python.keras.callbacks import EarlyStopping
-from sklearn.model_selection import train_test_split
+import numpy as np 
+from tensorflow.python.keras.models import Sequential
+from tensorflow.python.keras.layers import Dense, Conv2D
 from keras.preprocessing.image import ImageDataGenerator
 
-#1. data 
-
-
-x1_datasets = np.array([range(100), range(301, 401)]) # 삼성전자 증가 , 하이닉스 증가,  첫번째 데이터 셋 
-x2_datasets = np.array([range(101, 201), range(411, 511), range(150,250)]) #  원유, 돈육, 밀
-x3_datasets = np.array([range(100,200), range(1301, 1401)]) # 우리반 아이큐 , 우리반 키 
-x1 = np.transpose(x1_datasets)
-x2 = np.transpose(x2_datasets)
-x3 = np.transpose(x3_datasets)
-
-print(x1.shape, x2.shape, x3.shape)  #  ( 100,2 ) ( 100,3 ) (100, 2)
-
-y = np.array(range(2001, 2101)) # 금리  ( 100 , )
-print(y.shape)
-
-train_datagen = ImageDataGenerator(
-    # rescale=1./255,
-    horizontal_flip=True,
-    vertical_flip=True,
-    width_shift_range=0.1,
-    height_shift_range=5,
-    rotation_range=5,
-    zoom_range=1.2,
-    shear_range=0.7,
-    fill_mode='nearest'
-    )
-
-scale_datagen = ImageDataGenerator(rescale=1./255)
-
-xy_train = scale_datagen.flow_from_directory(
-    'd:/study_data/_data/cat_dog/training_set/',
-    target_size=(150, 150),
-    batch_size=500,
-    class_mode='binary',
-    color_mode='grayscale',
-    shuffle=True
+train_datagen = ImageDataGenerator( # 이미지 데이터를 수치화 
+    rescale=1./255,
+    horizontal_flip=True,   # 수평 반전
+    vertical_flip=True,     # 수직 반전
+    width_shift_range=0.1,  # 가로넒이을 0.1만 옮길수있다
+    height_shift_range=0.1,  # 세로넒이를 0.1만 옮길수있다            shitf 옮기다 
+    rotation_range=5,       # 회전은 5만 할수있다 
+    zoom_range=1.2,     # 확대
+    shear_range=0.7,    # 깎다
+    fill_mode='nearest'  # 채우다 
+)  # 트레인 데이터를 이렇게 수치화 할꺼야 ( 준비 ) 여기까지 안엮인것
+test_datagen = ImageDataGenerator(
+    rescale=1./255
 )
 
-xy_test = scale_datagen.flow_from_directory(
-    'd:/study_data/_data/cat_dog/test_set/',
-    target_size=(150, 150),
-    batch_size=500,
-    class_mode='binary',
-    color_mode='grayscale',
-    shuffle=True
-) # Found 120 images belonging to 2 classes.
+# xy_train 을 폴더에서 가져오겠다 폴더를 directory 
+xy_train = train_datagen.flow_from_directory(
+    'd:/pp/',
+    target_size=(200, 200),
+    batch_size=5,
+    class_mode='binary', # 0아니면 1 이기에 binary 2 이상은 categorical
+    color_mode='grayscale', # 컬러작업 쓰지않으면 디폴트는 칼라로 인식된다 
+    shuffle=True,
+)   # Found 405 images belonging to 3 classes.
 
+xy_test = test_datagen.flow_from_directory(
+    'd:/pp2/',
+    target_size=(200, 200),
+    batch_size=5,
+    class_mode='binary', # 0아니면 1 이기에   [ ad , normal ] binary 2 이상은 categorical
+    color_mode='grayscale',  # 컬러 작업 
+    shuffle=True,
+)   # Found 3 images belonging to 1 classes.
 
-
-# x1_train, x1_test, x2_train, x_2test, y_train, y_test = train_test_split(
-#     x1, x2, y, train_size=0.8, random_state=55)
-
-
-x1_train, x1_test, y_train, y_test = train_test_split(x1,y,
-    train_size=0.8, shuffle=True, random_state=55 )
-x2_train, x2_test, y_train, y_test = train_test_split(x2,y,
-    train_size=0.8, shuffle=True, random_state=55)
-x3_train, x3_test, y_train, y_test = train_test_split(x3,y,
-    train_size=0.8, shuffle=True, random_state=55)
-
-
-
-print(x1_train.shape, x1_test.shape)  # (80, 2) (20, 2)
-print(x2_train.shape, x2_test.shape)  # (80, 3) (20, 3)
-print(x3_train.shape, x3_test.shape)  # (80, 2) (20, 2)
-print(y_train.shape, y_test.shape)  # (70,) (30,)
-
-#2. model
-
-
-#2 - 모델 1번째
-
-input1 = Input(shape=(2,))  #  인풋쉐이프
-dense1 = Dense(100, activation='relu', name='dj1')(input1)
-dense2 = Dense(100, activation='relu', name='dj2')(dense1)
-dense3 = Dense(100, activation='relu', name='dj3')(dense2)
-output1 = Dense(10, activation='relu', name='out_dj1')(dense3)
-
-# 2-2 모델 2번째
-input2 = Input(shape=(3,))  #  인풋쉐이프
-dense11 = Dense(100, activation='relu', name='dj11')(input2)
-dense12 = Dense(100, activation='relu', name='dj12')(dense11)
-dense13 = Dense(100, activation='relu', name='dj13')(dense12)
-dense14 = Dense(100, activation='relu', name='dj14')(dense13)
-output2 = Dense(10, activation='relu', name='out_dj2')(dense14)
-
-# 2 - 3 모델 3번째 
-input3 = Input(shape=(2,))
-dense111 = Dense(100, activation='relu', name='dj111')(input3)
-dense112 = Dense(100, activation='relu', name='dj112')(dense111)
-dense113 = Dense(100, activation='relu', name='dj113')(dense112)
-dense114 = Dense(100, activation='relu', name='dj114')(dense113)
-output3 = Dense(10, activation='relu', name='out_dj3')(dense114)
-
-
-
-merge1 = concatenate([output1, output2, output3], name='mg1') # 두개의 아웃풋이 합쳐진 하나의 레이어 층 
-merge2 = Dense(80, activation='relu', name='mg2')(merge1)
-merge3 = Dense(50, name='mg3')(merge2)
-merge4 = Dense(30, name='mg4')(merge3)
-last_output = Dense(1, name='last')(merge4)
-
-model = Model(inputs=[input1, input2, input3],outputs=last_output) # 모델의 정의가 됨
-
-model.summary()
-
-# 맹그러봐 
-
-
-
-start_time = time.time()
-
-earlystopping = EarlyStopping(monitor='val_loss', patience=200, mode='min', verbose=1,
-                              restore_best_weights=True)
-
-model.compile(loss = 'mse', optimizer = 'adam',
-              metrics = ['accuracy'])
-
-a = model.fit([x1_train, x2_train, x3_train], y_train, epochs=1250, batch_size=200,
-              validation_split=0.2,
-              callbacks= [earlystopping], verbose=1)
-
-end_time = time.time()-start_time
-print(a)
-print(a.history['val_loss'])
-
-# 4. evaluate , perdict
-
-loss = model.evaluate([x1_test,x2_test, x3_test], y_test)
-print('loss : ', loss)
-
-y_predict = model.predict([x1_test,x2_test, x3_test])
-
-from sklearn.metrics import r2_score
-
-r2 = r2_score(y_test, y_predict)
-
-print('r2score : ', r2)
-print('loss : ', loss)
-print('걸린시간 : ', end_time)
-print('keras43_ensemble2.py')

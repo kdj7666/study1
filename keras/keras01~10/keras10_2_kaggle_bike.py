@@ -27,7 +27,7 @@ print(train_set.columns)
 print(train_set.info())  
 print(train_set.describe())  
 
-x = train_set.drop(['count','casual','registered',], axis=1)
+x = train_set.drop(['count','casual','registered'], axis=1)
 print(x)
 print(x.columns)
 print(x.shape)  # 10886 , 10 

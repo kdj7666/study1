@@ -12,8 +12,8 @@ datasets = load_boston()              # load_boston 에서 x, y  데이터를 �
 x = datasets.data          #  ( x 의 데이터 로 )
 y = datasets.target        #  ( y 의 값을 구한다 )
 
-print(x)     
-print(y)     
+print(x)
+print(y)
 
 print(x.shape, y.shape)     # x = (506, 13)  y [506개의 스칼라에 1 벡터] = (506,)  506개의 데이터 13개의 컬럼 인풋 13 아웃풋 1
 

@@ -7,7 +7,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.metrics import nan_euclidean_distances, r2_score, mean_squared_error
 
 #1. data  # 10번 경로  +는 문자가 연결이 된다
-path = './_data3/house/' 
+path = './_data/house/' 
 train_set = pd.read_csv(path + 'train.csv', 
                         index_col=0) 
 print(train_set)             
