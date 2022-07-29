@@ -19,25 +19,33 @@ train_datagen = ImageDataGenerator(             # 이미지를 수치화. 증폭
     width_shift_range=0.1,                      # width_shift그림을 수직 또는 수평으로 무작위로 변환하는 범위(총 너비 또는 높이의 일부)입니다.
     height_shift_range=-0.1,                    # height_shift 수직 또는 수평으로 무작위로 변환하는 범위(총 너비 또는 높이의 일부)입니다.
     rotation_range=5,                           # 사진을 무작위로 회전할 범위인 도(0-180) 값입니다.
-    zoom_range=[0.8,2.0],                       # 내부 사진을 무작위로 확대하기 위한 것입니다
+    zoom_range=0.8,                       # 내부 사진을 무작위로 확대하기 위한 것입니다
     shear_range=0.7,                            # 무작위로 전단 변환 을 적용하기 위한 것입니다. # 찌그러,기울려 
-    fill_mode='nearest'                         # 회전 또는 너비/높이 이동 후에 나타날 수 있는 새로 생성된 픽셀을 채우는 데 사용되는 전략입니다.
-)
+    fill_mode='nearest')                         # 회전 또는 너비/높이 이동 후에 나타날 수 있는 새로 생성된 픽셀을 채우는 데 사용되는 전략입니다.
 
 test_datagen =ImageDataGenerator(               # 평가데이터는 증폭하지 않는다. (수정x)
-    rescale=1./255
-)
+    rescale=1./255)
 
 xy = train_datagen.flow_from_directory(
     'D:\pp',
-    target_size=(150,150),                       
+    target_size=(100,100),                       
     batch_size=4000,
     class_mode='categorical',                        
-    shuffle=True,
-    )                                            
+    shuffle=True,)
+# Found 1639 images belonging to 5 classes.
+
+k_test = train_datagen.flow_from_directory(
+    'D:/pp2',
+    target_size=(100, 100),
+    batch_size=1,
+    class_mode='binary', # 0아니면 1 이기에 binary 2 이상은 categorical   / ? classes 의 갯수로 덩어리를 쪼갤수 있다
+    # color_mode='', # 컬러작업 쓰지않으면 디폴트는 칼라로 인식된다 
+    shuffle=True,)
+# Found 1 images belonging to 1 classes.
 
 x = xy[0][0]
 y = xy[0][1]
+f = k_test[0][0]
 
 print(x.shape,y.shape)  # (5, 100, 100, 3) (5,)
 
@@ -48,9 +56,9 @@ print(x_train.shape, x_train.shape) #  (1450, 150, 150, 3) (1450, 150, 150, 3)
 print(y_test.shape, y_test.shape)   # (550,) (550,)                          
 
 
-augument_size = 15000                   # 반복횟수
+augument_size = 15                   # 반복횟수
 randidx =np.random.randint(x_train.shape[0],size=augument_size)
-
+ 
 print(np.min(randidx),np.max(randidx))      # random 함수 적용가능. 
 print(type(randidx))            # <class 'numpy.ndarray'>  
 
@@ -98,33 +106,30 @@ from sklearn.preprocessing import MaxAbsScaler, RobustScaler
 # x_test = np.load('d:/study_data/_save/_npy/project_test4_x.npy')
 # y_test = np.load('d:/study_data/_save/_npy/project_test4_y.npy')
 
-print(x_train.shape)            # (2000, 150, 150, 3)
-print(y_train.shape)            # (2000,)
-print(x_test.shape)             # (550, 150, 150, 3)
-print(y_test.shape)             # (550,)
-
+print(x_train.shape)            # (1244, 100, 100, 3)
+print(y_train.shape)            # (1244, 5)
+print(x_test.shape)             # (410, 100, 100, 3)
+print(y_test.shape)             # (410, 5)
+print(f.shape)                  # (1, 100, 100, 3)
 # x_train = x_train.reshape(2000,450,150)
 # x_test = x_test.reshape(550,450,150)
 
 
 from tensorflow.python.keras.models import Sequential
-from tensorflow.python.keras.layers import Dense, Conv2D, Flatten , Dropout,MaxPooling2D,LSTM
+from tensorflow.python.keras.layers import Dense, Conv2D, Flatten, Dropout, MaxPooling2D, LSTM
 
 
 #2. 모델 
 model = Sequential()
-model.add(Conv2D(64,(3,3), input_shape = (150,150,3), padding='same', activation='relu'))
+model.add(Conv2D(64,(3,3), input_shape = (100,100,3), padding='same', activation='relu'))
 model.add(MaxPooling2D())
-model.add(Conv2D(256,(3,3), padding='same',activation='relu'))
-model.add(MaxPooling2D())
-model.add(Conv2D(128,(3,3), padding='same',activation='relu'))
+model.add(Conv2D(32,(3,3), padding='same',activation='relu'))
 model.add(Flatten())
-model.add(Dense(128,activation='relu'))
 model.add(Dense(64,activation='relu'))
 model.add(Dense(32,activation='relu'))
 model.add(Dense(16,activation='relu'))
-model.add(Dense(3,activation='softmax'))
-
+model.add(Dense(5,activation='softmax'))
+model.summary()
 
 #3. 컴파일.훈련
 
@@ -133,7 +138,7 @@ model.compile(loss='categorical_crossentropy', optimizer='adam', metrics= ['accu
 earlystopping =EarlyStopping(monitor='loss', patience=20, mode='auto', 
               verbose=1, restore_best_weights = True)     
 
-hist = model.fit(x_train,y_train, epochs=150,validation_split=0.1,verbose=2,batch_size=32,
+hist = model.fit(x_train,y_train, epochs=10,validation_split=0.1,verbose=2,batch_size=320,
                  callbacks=[earlystopping])
 
 #4. 예측
@@ -144,6 +149,16 @@ val_loss = hist.history['val_loss']
 
 print('loss : ',loss[-1])
 print('accuracy : ', accuracy[-1])
+
+y_predict = model.predict(f)
+print(y_predict)
+
+if 	y_predict >= 0.5 :
+    print('여자') # 출력값: 
+else :
+    print('남자') # 출력값:
+print('keras47_4_에ㅔ베베')
+
 # loss = model.evaluate(x_test, y_test)
 # x_predict = model.predict(x_test)
 
@@ -158,9 +173,9 @@ print('accuracy : ', accuracy[-1])
 # y_predict = np.argmax(season_predict, axis=1) 
 # print('predict : ',season_predict)
 ############################################
-loss = model.evaluate(x_test, y_test)
+# loss = model.evaluate(x_test, y_test)
 # y_predict = model.predict(season)
-print('loss : ', loss)
+# print('loss : ', loss)
 
 # y_test = np.argmax(y_test, axis= 1)
 # y_predict = np.argmax(y_predict, axis=1) 
