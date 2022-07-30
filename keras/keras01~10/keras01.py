@@ -24,10 +24,10 @@ model.fit(x, y, epochs=880, batch_size=1) #가중치 보관 밑 xy로 # 훈련�
 
 #4. 평가, 예측
 loss = model.evaluate(x, y) # x y 값을 평가할것이다 그 값을 로스에 넣어주세요 # 웨이트값 # 로스값 
-print("loss : ", loss) #y=wx+b x값을 범위 밖 수를 넣을때 y는 예측값 #최종로스값을 여기다 넣어주세요
+print("loss = ", loss) #y=wx+b x값을 범위 밖 수를 넣을때 y는 예측값 #최종로스값을 여기다 넣어주세요
 
 result = model.predict([113]) 
-print('113의 예측값은 : ', result) # 항상 결과값은 밑에 주석으로 첨부할것
+print('113의 예측값은 = ', result) # 항상 결과값은 밑에 주석으로 첨부할것
 
 # loss :  4.8553754739650776e-14
 # 83의 예측값은 :  [[83.00007]]

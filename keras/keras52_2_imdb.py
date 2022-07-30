@@ -53,20 +53,20 @@ model.add(LSTM(32))
 model.add(Flatten())
 model.add(Dense(32, activation='relu'))
 model.add(Dense(32, activation='relu'))
-model.add(Dense(32, activation='relu'))
-model.add(Dense(32, activation='relu'))
-model.add(Dense(32, activation='relu'))
-model.add(Dense(32, activation='relu'))
 model.add(Dense(100, activation='softmax'))
 model.summary()
 
 # 3. compile , epochs
 import time
 start_time = time.time()
+
 model.compile(loss='sparse_categorical_crossentropy', optimizer='adam', metrics=['acc'])
-model.fit(x_train,y_train, epochs=350, batch_size=500)
+model.fit(x_train,y_train, epochs=10, batch_size=450)
+
 end_time = time.time()-start_time
+
 # 4. evaluate , predict
+
 acc = model.evaluate(x_test, y_test)
 print('acc : ', acc)
 print('걸린시간 : ', end_time)
