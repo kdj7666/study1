@@ -20,11 +20,11 @@ from sklearn.model_selection import train_test_split
 # np.save('d:/study_data/_save/_npy/keras47_4_test_k(men_women).npy', arr=kim[0][0])
 # # 넌파이 파일로 저장한다 넌파일수치로 저장이 됨
 
-x_train = np.load('d:/study_data/_save/_npy/keras53_train_x(men_women).npy')
-y_train = np.load('d:/study_data/_save/_npy/keras53_train_y(men_women).npy')
-x_test = np.load('d:/study_data/_save/_npy/keras53_test_x(men_women).npy')
-y_test = np.load('d:/study_data/_save/_npy/keras53_test_y(men_women).npy')
-k_test = np.load('d:/study_data/_save/_npy/keras53_test_k(men_women).npy')
+x_train = np.load('d:/study_data/_save/_npy/keras53-2_train_x(men_women).npy')
+y_train = np.load('d:/study_data/_save/_npy/keras53-2_train_y(men_women).npy')
+x_test = np.load('d:/study_data/_save/_npy/keras53-2_test_x(men_women).npy')
+y_test = np.load('d:/study_data/_save/_npy/keras53-2_test_y(men_women).npy')
+k_test = np.load('d:/study_data/_save/_npy/keras53-2_test_k(men_women).npy')
 print(x_train.shape) # (2316, 100, 100, 3)
 print(y_train.shape) # (2316,)
 print(x_test.shape) # (993, 100, 100, 3)
@@ -41,6 +41,8 @@ model.add(Conv2D(32, (2,2), input_shape=(100, 100, 3),padding='same', activation
 model.add(MaxPool2D())
 model.add(Conv2D(64, (2,2), activation='relu'))
 model.add(Flatten())
+model.add(Dense(256, activation='relu'))
+model.add(Dense(128, activation='relu'))
 model.add(Dense(64, activation='relu'))
 model.add(Dense(64, activation='relu'))
 model.add(Dense(32, activation='relu'))
@@ -52,7 +54,7 @@ model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy']
 
 start_time = time.time()
 
-hist = model.fit(x_train,y_train, epochs=150, batch_size=20,
+hist = model.fit(x_train,y_train, epochs=1, batch_size=20,
           validation_split=0.2, verbose=1) # 허나 배치를 최대로 잡으면 이것도 가능하다
 
 

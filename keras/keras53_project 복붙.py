@@ -56,16 +56,32 @@ k = train_datagen.flow_from_directory(
 
 
 
-
-
 x_train, x_test, y_train, y_test = train_test_split(x,y,
             train_size=0.7, shuffle=True, random_state=55)
 
-np.save('d:/study_data/_save/_npy/keras53_train_x(men_women).npy', arr=x_train)
-np.save('d:/study_data/_save/_npy/keras53_train_y(men_women).npy', arr=y_train)
-np.save('d:/study_data/_save/_npy/keras53_test_x(men_women).npy', arr=x_test)
-np.save('d:/study_data/_save/_npy/keras53_test_y(men_women).npy', arr=y_test)
-np.save('d:/study_data/_save/_npy/keras53_test_k(men_women).npy', arr=k[0][0])
+augument_size = 150                   # 반복횟수
+randidx =np.random.randint(x_train.shape[0],size=augument_size)
+ 
+print(np.min(randidx),np.max(randidx))      # random 함수 적용가능. 
+print(type(randidx))            # <class 'numpy.ndarray'>  
+
+x_augumented = x_train[randidx].copy()
+y_augumented = y_train[randidx].copy()
+
+print(x_augumented.shape)       # (40000, 150, 150, 1)
+print(y_augumented.shape)       # (40000,)
+
+x_augumented = train_datagen.flow(x_augumented, y_augumented, batch_size=augument_size, shuffle=False).next()[0]
+
+# 원본train과 증폭train 합치기
+x_train = np.concatenate((x_train, x_augumented))
+y_train = np.concatenate((y_train, y_augumented))
+
+np.save('d:/study_data/_save/_npy/keras53-2_train_x(men_women).npy', arr=x_train)
+np.save('d:/study_data/_save/_npy/keras53-2_train_y(men_women).npy', arr=y_train)
+np.save('d:/study_data/_save/_npy/keras53-2_test_x(men_women).npy', arr=x_test)
+np.save('d:/study_data/_save/_npy/keras53-2_test_y(men_women).npy', arr=y_test)
+np.save('d:/study_data/_save/_npy/keras53-2_test_k(men_women).npy', arr=k[0][0])
 # # 넌파이 파일로 저장한다 넌파일수치로 저장이 됨
 
 # # x_train = np.load('d:/study_data/_save/_npy/keras47_4_train_x(men_women).npy')

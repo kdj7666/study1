@@ -56,7 +56,7 @@ print(x_train.shape, x_train.shape) #  (1450, 150, 150, 3) (1450, 150, 150, 3)
 print(y_test.shape, y_test.shape)   # (550,) (550,)                          
 
 
-augument_size = 15                   # 반복횟수
+augument_size = 1500                   # 반복횟수
 randidx =np.random.randint(x_train.shape[0],size=augument_size)
  
 print(np.min(randidx),np.max(randidx))      # random 함수 적용가능. 
@@ -138,7 +138,7 @@ model.compile(loss='categorical_crossentropy', optimizer='adam', metrics= ['accu
 earlystopping =EarlyStopping(monitor='loss', patience=20, mode='auto', 
               verbose=1, restore_best_weights = True)     
 
-hist = model.fit(x_train,y_train, epochs=10,validation_split=0.1,verbose=2,batch_size=320,
+hist = model.fit(x_train,y_train, epochs=150,validation_split=0.1,verbose=2,batch_size=320,
                  callbacks=[earlystopping])
 
 #4. 예측
