@@ -61,7 +61,7 @@ import time
 start_time = time.time()
 
 model.compile(loss='sparse_categorical_crossentropy', optimizer='adam', metrics=['acc'])
-model.fit(x_train,y_train, epochs=10, batch_size=450)
+model.fit(x_train,y_train, epochs=10, batch_size=450, validation_split=0.2)
 
 end_time = time.time()-start_time
 

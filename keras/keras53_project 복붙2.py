@@ -6,12 +6,11 @@
 import numpy as np
 from keras.preprocessing.image import ImageDataGenerator
 import time
+from sklearn.metrics import accuracy_score
 from sklearn.model_selection import train_test_split
+from tensorflow.python.keras.callbacks import EarlyStopping
 
 # 1. data
-
-
-
 
 # np.save('d:/study_data/_save/_npy/keras47_4_train_x(men_women).npy', arr=x_train)
 # np.save('d:/study_data/_save/_npy/keras47_4_train_y(men_women).npy', arr=y_train)
@@ -20,16 +19,16 @@ from sklearn.model_selection import train_test_split
 # np.save('d:/study_data/_save/_npy/keras47_4_test_k(men_women).npy', arr=kim[0][0])
 # # 넌파이 파일로 저장한다 넌파일수치로 저장이 됨
 
-x_train = np.load('d:/study_data/_save/_npy/keras53-2_train_x(men_women).npy')
-y_train = np.load('d:/study_data/_save/_npy/keras53-2_train_y(men_women).npy')
-x_test = np.load('d:/study_data/_save/_npy/keras53-2_test_x(men_women).npy')
-y_test = np.load('d:/study_data/_save/_npy/keras53-2_test_y(men_women).npy')
-k_test = np.load('d:/study_data/_save/_npy/keras53-2_test_k(men_women).npy')
-print(x_train.shape) # (2316, 100, 100, 3)
-print(y_train.shape) # (2316,)
-print(x_test.shape) # (993, 100, 100, 3)
-print(y_test.shape) # (993, 100, 100, 3)
-print(k_test.shape) # (  1, 100 , 100 , 3)
+x_train = np.load('d:/study_data/_save/_npy/keras53-3_train_x(men_women).npy')
+y_train = np.load('d:/study_data/_save/_npy/keras53-3_train_y(men_women).npy')
+x_test = np.load('d:/study_data/_save/_npy/keras53-3_test_x(men_women).npy')
+y_test = np.load('d:/study_data/_save/_npy/keras53-3_test_y(men_women).npy')
+k_test = np.load('d:/study_data/_save/_npy/keras53-3_test_k(men_women).npy')
+print(x_train.shape) # (15700, 100, 100, 3)
+print(y_train.shape) # (15700, 5)
+print(x_test.shape) # (300, 100, 100, 3)
+print(y_test.shape) # (300, 5 )
+print(k_test.shape) # (1, 100 , 100 , 3)
 
 
 #2. model
@@ -41,21 +40,24 @@ model.add(Conv2D(32, (2,2), input_shape=(100, 100, 3),padding='same', activation
 model.add(MaxPool2D())
 model.add(Conv2D(64, (2,2), activation='relu'))
 model.add(Flatten())
-model.add(Dense(256, activation='relu'))
 model.add(Dense(128, activation='relu'))
 model.add(Dense(64, activation='relu'))
-model.add(Dense(64, activation='relu'))
 model.add(Dense(32, activation='relu'))
-model.add(Dense(1, activation='sigmoid'))
-
+model.add(Dense(5, activation='softmax'))
+model.summary()
 #3. compile, epochs
 
-model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy'])
+model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
+
+# es =EarlyStopping(monitor='loss', patience=15, mode='auto', 
+#               verbose=1, restore_best_weights = True)
 
 start_time = time.time()
 
-hist = model.fit(x_train,y_train, epochs=1, batch_size=20,
-          validation_split=0.2, verbose=1) # 허나 배치를 최대로 잡으면 이것도 가능하다
+hist = model.fit(x_train,y_train, epochs=150, batch_size=30,
+          validation_split=0.2, verbose=1,
+        #   callbacks=[es],
+          ) # 허나 배치를 최대로 잡으면 이것도 가능하다
 
 
 # hist = model.fit_generator(xy_train, epochs=10, steps_per_epoch=32,    
@@ -67,32 +69,44 @@ end_time = time.time()-start_time
 
 
 acc = hist.history['accuracy']
-val_accuracy = hist.history['val_accuracy']
-loss = hist.history['loss']
-val_loss = hist.history['val_loss']
+# val_accuracy = hist.history['val_accuracy']
+# loss = hist.history['loss']
+# val_loss = hist.history['val_loss']
 
-print('loss : ', loss[-1]) # 마지막 괄호로 마지막 1개만 보겠다
-print('val_loss : ', val_loss[-1])
-print('val_accuracy : ', val_accuracy[-1])
+# print('loss : ', loss[-1]) # 마지막 괄호로 마지막 1개만 보겠다
+# print('val_loss : ', val_loss[-1])
+# print('val_accuracy : ', val_accuracy[-1])
 print('accuracy : ', acc[-1])
 print('걸린시간 : ', end_time)
 
 #4. evaluate, predict
 
-loss = model.evaluate(x_test, y_test)
-print("loss :",loss)
-print("====================")
+# loss = model.evaluate(x_test, y_test)
+# print("loss :",loss[-1])
+# print("==========================================")
 
 
+y_test2 = [3]
 y_predict = model.predict(k_test)
-print(y_predict)
+y_test = np.argmax(y_test, axis= 1)
+y_predict = np.argmax(y_predict, axis=1)
+print("==")
+print('predict : ',y_predict)
+print("==")
+acc = accuracy_score(y_test2,y_predict)
+print('acc : ',acc)
 
-if 	y_predict >= 0.5 :
-    print('여자다') # 출력값: 
-else :
-    print('남자다') # 출력값:
-print('keras47_4_에ㅔ베베')
-print('accuracy : ', acc[-1])
+if y_predict[0] == 0:
+    print('검지')
+elif  y_predict[0] ==1 :
+    print('소지')
+elif  y_predict[0] ==2 :
+    print('약지')
+elif  y_predict[0] ==3 :
+    print('엄지')
+elif  y_predict[0] ==4 :
+    print('중지')        
+
 
 # # 그림그리기
 
@@ -117,16 +131,3 @@ print('accuracy : ', acc[-1])
 # plt.show()
 
 
-# loss :  0.6771479249000549
-# val_loss :  0.6616235375404358
-# val_accuracy :  0.6499999761581421
-# accuracy :  0.5874999761581421
-# 걸린시간 :  478.4866187572479
-
-
-
-# loss :  9.948715887730941e-05
-# val_loss :  5.168074494577013e-05
-# val_accuracy :  1.0
-# accuracy :  1.0
-# 걸린시간 :  929.3208270072937

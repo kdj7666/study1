@@ -1,8 +1,3 @@
-# 실습
-# 본인 사진으로 predict 하시오 !!! 
-# d:/study_data/_data/image/ 안에 넣고 
-
-
 import numpy as np
 from keras.preprocessing.image import ImageDataGenerator
 import time
@@ -11,15 +6,15 @@ from sklearn.model_selection import train_test_split
 # 1. data
 
 train_datagen = ImageDataGenerator( # 이미지 데이터를 수치화 
-    rescale=1./255)
-    # horizontal_flip=True,   # 수평 반전
-    # vertical_flip=True,     # 수직 반전
-    # width_shift_range=0.1,  # 가로넒이을 0.1만 옮길수있다
-    # height_shift_range=0.1,  # 세로넒이를 0.1만 옮길수있다            shitf 옮기다 
-    # rotation_range=5,       # 회전은 5만 할수있다 
-    # zoom_range=1.2,     # 확대
-    # shear_range=0.7,    # 깎다
-    # fill_mode='nearest')  # 채우다 
+    rescale=1./255,
+    horizontal_flip=True,   # 수평 반전
+    vertical_flip=True,     # 수직 반전
+    width_shift_range=0.2,  # 가로넒이을 0.1만 옮길수있다
+    height_shift_range=0.2,  # 세로넒이를 0.1만 옮길수있다            shitf 옮기다 
+    rotation_range=5,       # 회전은 5만 할수있다 
+    zoom_range=1.2,     # 확대
+    shear_range=0.7,    # 깎다
+    fill_mode='nearest')  # 채우다 
 
 # test_datagen = ImageDataGenerator(
 #     rescale=1./255)
@@ -29,19 +24,19 @@ xy_train = train_datagen.flow_from_directory(
     'd:/pp',
     target_size=(100, 100),
     batch_size=10000,
-    class_mode='binary', # 0아니면 1 이기에 binary 2 이상은 categorical   / ? classes 의 갯수로 덩어리를 쪼갤수 있다
-    # color_mode='', # 컬러작업 쓰지않으면 디폴트는 칼라로 인식된다 
+    class_mode='categorical', # 0아니면 1 이기에 binary 2 이상은 categorical   / ? classes 의 갯수로 덩어리를 쪼갤수 있다
+    # color_mode='grayscale', # 컬러작업 쓰지않으면 디폴트는 칼라로 인식된다 
     shuffle=True,)
 
 print(xy_train[0][0].shape)
 
-# # Found 3309 images belonging to 2 classes.
+# Found 1000 images belonging to 5 classes.
 
 x = xy_train[0][0]
-print(x,x.shape)  # (3309, 50, 50, 3)
+print(x,x.shape)  # (100, 100, 100, 3)
 
 y = xy_train[0][1]
-print(y,y.shape) # (3309,)
+print(y,y.shape) # (1000,100,100,3,)
 
 
 k = train_datagen.flow_from_directory(
@@ -49,17 +44,15 @@ k = train_datagen.flow_from_directory(
     target_size=(100, 100),
     batch_size=1,
     class_mode='binary', # 0아니면 1 이기에 binary 2 이상은 categorical   / ? classes 의 갯수로 덩어리를 쪼갤수 있다
-    # color_mode='', # 컬러작업 쓰지않으면 디폴트는 칼라로 인식된다 
+    # color_mode='grayscale', # 컬러작업 쓰지않으면 디폴트는 칼라로 인식된다 
     shuffle=True,)
-# 1 images 1 classes
-
-
+# Found 1 images belonging to 1 classes.
 
 
 x_train, x_test, y_train, y_test = train_test_split(x,y,
-            train_size=0.7, shuffle=True, random_state=55)
+            train_size=0.8, shuffle=True, random_state=55)
 
-augument_size = 150                   # 반복횟수
+augument_size = 25000                   # 반복횟수
 randidx =np.random.randint(x_train.shape[0],size=augument_size)
  
 print(np.min(randidx),np.max(randidx))      # random 함수 적용가능. 
@@ -68,8 +61,8 @@ print(type(randidx))            # <class 'numpy.ndarray'>
 x_augumented = x_train[randidx].copy()
 y_augumented = y_train[randidx].copy()
 
-print(x_augumented.shape)       # (40000, 150, 150, 1)
-print(y_augumented.shape)       # (40000,)
+print(x_augumented.shape)       # (15000, 100, 100, 3)
+print(y_augumented.shape)       # (15000, 5)
 
 x_augumented = train_datagen.flow(x_augumented, y_augumented, batch_size=augument_size, shuffle=False).next()[0]
 
@@ -77,104 +70,9 @@ x_augumented = train_datagen.flow(x_augumented, y_augumented, batch_size=augumen
 x_train = np.concatenate((x_train, x_augumented))
 y_train = np.concatenate((y_train, y_augumented))
 
-np.save('d:/study_data/_save/_npy/keras53-2_train_x(men_women).npy', arr=x_train)
-np.save('d:/study_data/_save/_npy/keras53-2_train_y(men_women).npy', arr=y_train)
-np.save('d:/study_data/_save/_npy/keras53-2_test_x(men_women).npy', arr=x_test)
-np.save('d:/study_data/_save/_npy/keras53-2_test_y(men_women).npy', arr=y_test)
-np.save('d:/study_data/_save/_npy/keras53-2_test_k(men_women).npy', arr=k[0][0])
-# # 넌파이 파일로 저장한다 넌파일수치로 저장이 됨
-
-# # x_train = np.load('d:/study_data/_save/_npy/keras47_4_train_x(men_women).npy')
-# # y_train = np.load('d:/study_data/_save/_npy/keras47_4_train_y(men_women).npy')
-# # x_test = np.load('d:/study_data/_save/_npy/keras47_4_test_x(men_women).npy')
-# # y_test = np.load('d:/study_data/_save/_npy/keras47_4_test_y(men_women).npy')
-# # k_test = np.load('d:/study_data/_save/_npy/keras47_4_test_k(men_women).npy')
-# # print(x_train.shape) # (2316, 100, 100, 3)
-# # print(y_train.shape) # (2316,)
-# # print(x_test.shape) # (993, 100, 100, 3)
-# # print(y_test.shape) # (993, 100, 100, 3)
-
-
-
-# #2. model
-# from tensorflow.python.keras.models import Sequential
-# from tensorflow.python.keras.layers import Dense, Conv2D, Flatten
-
-# model = Sequential()
-# model.add(Conv2D(64, (2,2), input_shape=(100, 100, 3), activation='relu'))
-# model.add(Conv2D(128, (3,3), activation='relu'))
-# model.add(Flatten())
-# model.add(Dense(64, activation='relu'))
-# model.add(Dense(64, activation='relu'))
-# model.add(Dense(32, activation='relu'))
-# model.add(Dense(1, activation='sigmoid'))
-
-# #3. compile, epochs
-
-# model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy'])
-
-# start_time = time.time()
-
-# hist = model.fit(x, y, epochs=1, batch_size=15,
-#           validation_split=0.1, verbose=1) # 허나 배치를 최대로 잡으면 이것도 가능하다
-
-
-# # hist = model.fit_generator(xy_train, epochs=10, steps_per_epoch=32,    
-# #                          # 스텝 펄 에포 ( 통상적으로 batch= 160/5 = 32)  # 훈련 배치 사이즈가 32가 넘어서도 돌아가긴한다 추가적 환경 제공 가능
-# #                     validation_data=xy_test,                    # 발리데이션 범주를 테스트로
-# #                     validation_steps=2, verbose=1)                         # 발리데이션 스텝 : 한 epoch 종료 시 마다 검증할 때 사용되는 검증 스텝 수를 지정합니다
-
-# end_time = time.time()-start_time
-
-# #4. evluate, predict
-# acc = hist.history['accuracy']
-# val_accuracy = hist.history['val_accuracy']
-# loss = hist.history['loss']
-# val_loss = hist.history['val_loss']
-
-# print('loss : ', loss[-1]) # 마지막 괄호로 마지막 1개만 보겠다
-# print('val_loss : ', val_loss[-1])
-# print('val_accuracy : ', val_accuracy[-1])
-# print('accuracy : ', acc[-1])
-# print('걸린시간 : ', end_time)
-
-
-
-# # 그림그리기 
-
-# import matplotlib.pyplot as plt
-# from matplotlib import font_manager, rc
-
-# font_path = 'C:\Windows\Fonts\malgun.ttf'
-# font = font_manager.FontProperties(fname=font_path).get_name()
-# rc('font', family=font)
-# plt.figure(figsize=(9,6))
-# plt.plot(hist.history['loss'], marker='.', c='red', label='loss')
-# plt.plot(hist.history['val_loss'], marker='.', c='blue', label='val_loss')
-# plt.plot(hist.history['val_accuracy'], marker='.', c='pink', label='val_accuracy')
-# plt.plot(hist.history['accuracy'], marker='.', c='green', label='accuracy')
-# plt.grid()
-# plt.title('loss & val_loss')    
-# plt.title('로스값과 검증로스값')    
-# plt.ylabel('loss')
-# plt.xlabel('epochs')
-# plt.legend(loc='upper right')   # 우측상단에 라벨표시
-# plt.legend()   # 자동으로 빈 공간에 라벨표시
-# plt.show()
-
-
-# # loss :  0.6771479249000549
-# # val_loss :  0.6616235375404358
-# # val_accuracy :  0.6499999761581421
-# # accuracy :  0.5874999761581421
-# # 걸린시간 :  478.4866187572479
-
-
-
-# # loss :  9.948715887730941e-05
-# # val_loss :  5.168074494577013e-05
-# # val_accuracy :  1.0
-# # accuracy :  1.0
-# # 걸린시간 :  929.3208270072937
-
-
+np.save('d:/study_data/_save/_npy/keras53-3_train_x(men_women).npy', arr=x_train)
+np.save('d:/study_data/_save/_npy/keras53-3_train_y(men_women).npy', arr=y_train)
+np.save('d:/study_data/_save/_npy/keras53-3_test_x(men_women).npy', arr=x_test)
+np.save('d:/study_data/_save/_npy/keras53-3_test_y(men_women).npy', arr=y_test)
+np.save('d:/study_data/_save/_npy/keras53-3_test_k(men_women).npy', arr=k[0][0])
+print('================================================================')

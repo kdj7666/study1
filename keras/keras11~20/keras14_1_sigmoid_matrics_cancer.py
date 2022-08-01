@@ -49,7 +49,7 @@ earlystopping = EarlyStopping(monitor='val_loss', patience=120, mode='auto', ver
              # 모니터로 보겟다 vla_loss / patience 참다 10번 / mode = 'min'  최솟값을 / verbose=1 프로그래스바를 간략하게 
              # 깃허브 참조 
              # 이름을 짓는다 earlystopping 변수는 첫번째를 소문자로 
-             
+
 a = model.fit(x_train, y_train, epochs=1000, batch_size=50,
           validation_split=0.2,
           callbacks = [earlystopping],    # 이것도 리스트 형식이라는것 더 넣을수있음 
@@ -89,3 +89,4 @@ print('acc.score : ', acc)
 # EarlyStopping
 # 성능비교
 # 감상문 , 느낀점 2줄 이상 
+
