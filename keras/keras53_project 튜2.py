@@ -1,8 +1,3 @@
-# 실습
-# 본인 사진으로 predict 하시오 !!! 
-# d:/study_data/_data/image/ 안에 넣고 
-
-
 import numpy as np
 from keras.preprocessing.image import ImageDataGenerator
 import time
@@ -19,42 +14,50 @@ from tensorflow.python.keras.callbacks import EarlyStopping
 # np.save('d:/study_data/_save/_npy/keras47_4_test_k(men_women).npy', arr=kim[0][0])
 # # 넌파이 파일로 저장한다 넌파일수치로 저장이 됨
 
-x_train = np.load('d:/study_data/_save/_npy/keras53-3_train_x(men_women).npy')
-y_train = np.load('d:/study_data/_save/_npy/keras53-3_train_y(men_women).npy')
-x_test = np.load('d:/study_data/_save/_npy/keras53-3_test_x(men_women).npy')
-y_test = np.load('d:/study_data/_save/_npy/keras53-3_test_y(men_women).npy')
-k_test = np.load('d:/study_data/_save/_npy/keras53-3_test_k(men_women).npy')
-print(x_train.shape) # (15700, 100, 100, 3)
-print(y_train.shape) # (15700, 5)
-print(x_test.shape) # (300, 100, 100, 3)
+x_train = np.load('d:/study_data/_save/_npy/keras53-13_train_x.npy')
+y_train = np.load('d:/study_data/_save/_npy/keras53-13_train_y.npy')
+x_test = np.load('d:/study_data/_save/_npy/keras53-13_test_x.npy')
+y_test = np.load('d:/study_data/_save/_npy/keras53-13_test_y.npy')
+k_test = np.load('d:/study_data/_save/_npy/keras53-13_test_k.npy')
+print(x_train.shape) # (1700, 150, 150, 3)
+print(y_train.shape) # (1700, 5)
+print(x_test.shape) # (300, 150, 150, 3)
 print(y_test.shape) # (300, 5 )
-print(k_test.shape) # (1, 100 , 100 , 3)
+print(k_test.shape) # (1, 150 , 150 , 3)
 
 
 #2. model
 from tensorflow.python.keras.models import Sequential
-from tensorflow.python.keras.layers import Dense, Conv2D, Flatten, MaxPool2D
+from tensorflow.python.keras.layers import Dense, Conv2D, Flatten, MaxPooling2D, Dropout, MaxPool2D
 
 model = Sequential()
-model.add(Conv2D(32, (2,2), input_shape=(100, 100, 3),padding='same', activation='relu'))
-model.add(MaxPool2D())
-model.add(Conv2D(64, (2,2), activation='relu'))
+model.add(Conv2D(128,(2,2),input_shape=(150,150,3),padding='same',activation='relu'))
+# model.add(conv_base)
+model.add(MaxPool2D((2,2)))
+model.add(Conv2D(128,(2,2),padding='same',activation='relu'))
+model.add(MaxPool2D((2,2)))
+model.add(Conv2D(64,(2,2),padding='same',activation='relu'))
+model.add(MaxPool2D((2,2)))
+model.add(Conv2D(64,(2,2),padding='same',activation='relu'))
+model.add(MaxPool2D((2,2)))
+# model.add(Conv2D(128,(2,2),padding='same',activation='relu'))
+# model.add(MaxPool2D((2,2)))
 model.add(Flatten())
-model.add(Dense(128, activation='relu'))
-model.add(Dense(64, activation='relu'))
-model.add(Dense(32, activation='relu'))
-model.add(Dense(5, activation='softmax'))
+model.add(Dense(128,activation='relu'))
+# model.add(Dropout(0.6))                 #과적합방지
+model.add(Dense(5,activation='softmax'))
 model.summary()
+
 #3. compile, epochs
 
 model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
 
-# es =EarlyStopping(monitor='loss', patience=15, mode='auto', 
-#               verbose=1, restore_best_weights = True)
+es =EarlyStopping(monitor='loss', patience=35, mode='min', 
+              verbose=1, restore_best_weights = True)
 
 start_time = time.time()
 
-hist = model.fit(x_train,y_train, epochs=150, batch_size=30,
+hist = model.fit(x_train,y_train, epochs=45, batch_size=35,
           validation_split=0.2, verbose=1,
         #   callbacks=[es],
           ) # 허나 배치를 최대로 잡으면 이것도 가능하다
@@ -86,13 +89,12 @@ print('걸린시간 : ', end_time)
 # print("==========================================")
 
 
-y_test2 = [3]
+y_test2 = [0,1,2,3]
 y_predict = model.predict(k_test)
 y_test = np.argmax(y_test, axis= 1)
 y_predict = np.argmax(y_predict, axis=1)
-print("==")
 print('predict : ',y_predict)
-print("==")
+print('2')
 acc = accuracy_score(y_test2,y_predict)
 print('acc : ',acc)
 
@@ -108,26 +110,29 @@ elif  y_predict[0] ==4 :
     print('중지')        
 
 
-# # 그림그리기
 
-# import matplotlib.pyplot as plt
-# from matplotlib import font_manager, rc
+# accuracy :  0.6264705657958984
+# 걸린시간 :  92.64283895492554
+# ==
+# predict :  [4]
+# ==
+# 22222222
+# acc :  1.0
+# 중지
 
-# font_path = 'C:\Windows\Fonts\malgun.ttf'
-# font = font_manager.FontProperties(fname=font_path).get_name()
-# rc('font', family=font)
-# plt.figure(figsize=(9,6))
-# plt.plot(hist.history['loss'], marker='.', c='red', label='loss')
-# plt.plot(hist.history['val_loss'], marker='.', c='blue', label='val_loss')
-# plt.plot(hist.history['val_accuracy'], marker='.', c='pink', label='val_accuracy')
-# plt.plot(hist.history['accuracy'], marker='.', c='green', label='accuracy')
-# plt.grid()
-# plt.title('loss & val_loss')    
-# plt.title('로스값과 검증로스값')    
-# plt.ylabel('loss')
-# plt.xlabel('epochs')
-# plt.legend(loc='upper right')   # 우측상단에 라벨표시
-# plt.legend()   # 자동으로 빈 공간에 라벨표시
-# plt.show()
+# accuracy :  0.625
+# 걸린시간 :  92.93881940841675
+# ==
+# predict :  [0]
+# ==
+# 22222222
+# acc :  0.0
+# 검지
 
+# accuracy :  0.6205882430076599
+# 걸린시간 :  92.5685567855835
+# predict :  [3]
+# 2
+# acc :  0.0
+# 엄지
 
